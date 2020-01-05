@@ -7,12 +7,16 @@
 </template>
 
 <script>
+import {mapGetters} from 'vuex'
 export default {
     name:'backPrev',
     data() {
         return {
             
         }
+    },
+    computed:{
+        ...mapGetters(['getFooterRoute'])
     },
     props:['tabRoutePath'],  //父组件传递过来的routeName
     methods:{

@@ -73,7 +73,7 @@ export default {
     watch:{
         async keyword(){
             // this.$store.state.searchKey = null;
-            if((this.keyword===''||this.keyword===' ')){
+            if(!this.keyword){
                 this.ismohu = false; //显示模糊搜索列表
                 this.isX = false; //隐藏一键删除
                 this.isSearch = false; //关闭二级路由
@@ -110,15 +110,11 @@ export default {
             });
             this.heatTG = [...arr]
         }),
-        this.routePath = this.$store.state.route //接收mysearch组件传递过来的routeName
+        this.routePath = this.$store.state.route //接收vuex传递过来的routePath
     },
     components: {
         coll,myPrevNav,searchRouter
     },
-    activated() {
-
-        
-    }
 }
 </script>
 

@@ -2,7 +2,7 @@
   <div id="app">
     <my-audio></my-audio>
     <my-footer musicG='音遇' recom='推荐' dynamic='动态' mine='我的'></my-footer>
-    
+
       <keep-alive :exclude="this.$store.state.cache"> 
         <router-view></router-view>
       </keep-alive>
@@ -65,10 +65,8 @@ export default {
         //判断是否缓存搜索页面
         let current = ['songList','album','singer','single'].includes(to.name); //判断当前页面是否符合数组条件
         let previous = ['songList','album','singer','single'].includes(from.name); //判断之前页面是否符合数组条件
-        if(current||previous){
+        if(current||(previous&&to.name==='particulars')){
             this.$store.state.cache = ''; //缓存页面
-        }else if(this.getFooterRoute.includes(to.path)){ //如果进入tab 页面 取消缓存
-            this.$store.state.cache = 'search';
         }else {
           this.$store.state.cache = 'search';
         }

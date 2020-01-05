@@ -1,8 +1,8 @@
 <template>
     <div>
         <div class="single"
+        :infinite-scroll-disabled='true'
         v-infinite-scroll="loadMore"
-        infinite-scroll-disabled="loading"
         infinite-scroll-distance="10">
             <mt-cell 
             :title="item.name" 
@@ -30,7 +30,7 @@ export default {
         ...mapGetters(['getAudioData'])
     },
     methods:{
-        ...mapActions(['play','getDuration']),
+        ...mapActions(['play']),
         loadMore() {
         console.log('fff')
         this.offset++;
@@ -99,8 +99,9 @@ export default {
             })
             this.arr.push(...arr)
         })
-    }
+    },
 }
+
 </script>
 
 <style>

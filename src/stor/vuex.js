@@ -39,8 +39,8 @@ const state = {
     previous:'',
 
     //keep
-    cache:'search'
-    
+    cache:'search',
+
 }
 
 const getters = {

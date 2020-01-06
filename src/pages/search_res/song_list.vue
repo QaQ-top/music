@@ -23,12 +23,6 @@ export default {
             console.log(res.result.playlists)
         })
     },
-    beforeDestroy() {
-        console.log('fffaaa')
-         console.log(this.isSollor)
-        this.isSollor = true;
-        console.log(this.isSollor)
-    },
 }
 </script>
 

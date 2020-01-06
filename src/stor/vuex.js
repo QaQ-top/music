@@ -17,9 +17,11 @@ const state = {
         muted:false, //false为不静音  true静音
         volume:50,  //音量大小调整
         title:'', //歌名
+        id:'',//歌曲id
         img:'' , //歌曲图片
         albumName:'', //当前歌曲的专辑名Id
-        albumId:'' //当前歌曲的专辑id
+        albumId:'', //当前歌曲的专辑id,
+        storage:false
     },
     //首页app的foot的四个路径
     footerRoute:[
@@ -59,6 +61,9 @@ const actions = {
     play({commit}){
         commit('play')
     },
+    pause({commit}){
+        commit('pause')
+    },
     AudioPlay({commit}){
         commit('AudioPlay')
     },
@@ -93,10 +98,18 @@ const mutations = {
     /*********************** Audio ****************************/
     getDuration (state) {  //canplay
         state.audio.duration = state.audio.dom.duration; //当浏览器能够开始播放指定的音频/视频时触发 获取总时间
+        if(state.audio.storage){
+            state.audio.dom.currentTime = state.audio.currentTime
+            state.audio.storage = false;
+        }
     },
     play(state){
         state.audio.dom.play();
         state.audio.play=true;
+    },
+    pause(state){
+        state.audio.dom.pause();
+        state.audio.play=false;
     },
     AudioPlay(state){  //播放|暂停
         if(state.audio.play){ //关

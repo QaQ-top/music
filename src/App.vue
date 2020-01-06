@@ -75,6 +75,7 @@ export default {
     }
   },
   beforeCreate() {
+    this.$store.state.audio = JSON.parse(window.localStorage.getItem('audio')) //获取上此播放歌曲
     this.$router.push('/musicG')
   },
   mounted() {
@@ -95,9 +96,10 @@ export default {
         }
       });
       window.addEventListener("beforeunload", () => {
-        //  this.sendCurVideoTime(localStorage.getItem("webviewDuration"));
-        // window.open('http://www.baidu.com')
-        return false
+        this.$store.commit('pause'); //暂停歌曲
+        this.$store.state.audio.storage = true; //改变状态
+        let storage = window.localStorage;
+        storage.setItem('audio',JSON.stringify(this.$store.state.audio)) //关闭网页时将audio的数据存入本地缓存
       });
     }
   },

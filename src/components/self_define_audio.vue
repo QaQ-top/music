@@ -51,6 +51,7 @@
         <div :class="{audioBox:isAudioBox,audioBox2:!isAudioBox,transition:true}" @click="particulars(routeName)" v-if="this.$route.name!=='particulars'">
             
             <div class="audioDetail">
+                <!-- 歌曲图片 名称 专辑名称 -->
                 <div class="audioImg">
                     <img :src="getAudioData.img" alt="">
                 </div>
@@ -188,7 +189,8 @@ export default {
         font-size: 12px;
         text-align: left;
         margin-top: 0.3rem;
-        padding-left: 1.7rem
+        padding-left: 1.7rem;
+        white-space: nowrap;
     }
     .audioTitle>p:nth-child(2){
         font-size: 10px;
@@ -196,5 +198,6 @@ export default {
         text-align: left;
         margin-bottom: 0.3rem;
         transform: scale(0.8);
+        white-space: nowrap;
     }
 </style>

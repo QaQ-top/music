@@ -32,7 +32,6 @@ export default {
     methods:{
         ...mapActions(['play']),
         loadMore() {
-        console.log('fff')
         this.offset++;
         this.loading = true;
         this.$ajax.single(this.$store.state.searchVal,this.offset).then(res=>{
@@ -60,17 +59,20 @@ export default {
         })
         },
         song(id,index){ //点击触发
+            let plays = ()=> {
+                this.play()
+            }
             this.getAudioData.albumId = this.arr[index].album.albumId; //将点击的歌曲专辑id 存入audio详情
             this.getAudioData.albumName = this.arr[index].album.albumName; //将点击的歌曲专辑名称 存入audio详情
-            this.getAudioData.dom.addEventListener('canplay',()=>{  //对audio进行音频监听 当歌曲可播放时 自动播放
-                this.play()
-            })
+            this.getAudioData.id = id //将歌曲id 存入audio详情
             this.$ajax.song(id).then(res=>{ //通过歌曲id发送请求
                 this.getAudioData.url = res.data[0].url; //将audio的src替换
+                this.getAudioData.dom.addEventListener('canplay',plays())
             }).then(res=>{
                 this.$ajax.songDetail(id).then(res=>{ //通过id 获取歌曲详情
                     this.getAudioData.img = res.songs[0].al.picUrl; //歌曲封面
                     this.getAudioData.title = res.songs[0].al.name //歌曲名称
+                    this.getAudioData.dom.removeEventListener('canplay',plays())
                 })
             })
         }

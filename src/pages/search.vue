@@ -3,7 +3,7 @@
         <my-prev-nav class="search" :tabRoutePath='routePath'>
             <div slot="prev_center">
                 <span class="iocn iconfont icon-iconfonticonfontsousuo1 search_icon"></span>
-                <input type="text" v-model="keyword" placeholder="搜索音乐、歌手、歌单" ref="inpKeyWord" v-focus/>
+                <input type="text" v-model="keyword" placeholder="搜索音乐、歌手、歌单" ref="inpKeyWord" v-focus @keydown="enter"/>
                 <span class="iocn iconfont icon-yduicuowukongxin" v-if='isX' @click='inpNull'></span>
             </div>
         </my-prev-nav>
@@ -21,7 +21,7 @@
 
         <coll txt='热门推荐' v-if="!isSearch">
             <div slot="dom" class="heat_box">
-                <mt-cell :title="item.name" :label="item.content" v-for="(item, index) in heatTG" :key="index" @click.native="search(item.name)">
+                <mt-cell :title="item.name" :label="item.content" v-for="(item, index) in heatTG" :key="index" @click.native="search(item.name,true)">
                     <div>{{item.heat}}</div>
                     <div slot="icon">{{index+1}}</div>
                 </mt-cell>
@@ -30,7 +30,7 @@
 
         <div class="search_result" v-if="ismohu">
             <!-- song single album singer songList MV lyric FM video -->
-            <div v-for="(item, index) in searchData" :key="index" @click="search(item.name)">
+            <div v-for="(item, index) in searchData" :key="index" @click="search(item.name,true)">
                 <span class="icon iconfont icon-iconfonticonfontsousuo1 sousuo_img"></span>
                 <span class="sousuo_text">{{item.name}}</span>
             </div>
@@ -42,10 +42,15 @@
 <script>
 import myPrevNav from '../components/back_prev'
 import coll from '../components/coll'
-import {mapActions} from 'vuex'
+import { mapState,mapActions,mapGetters} from 'vuex'
 import searchRouter from '../components/search_router'
 export default {
     name:'search',
+    //-------------------
+    components: {
+        coll,myPrevNav,searchRouter
+    },
+    //-------------------
     data () {
         return {
             keyword:null,
@@ -54,15 +59,29 @@ export default {
             heatTG:[],
             routePath:null,
             isX:false ,//搜索框 一键清空 是否显示
-            ismohu:false //显示模糊搜索列表
+            ismohu:false, //显示模糊搜索列表
+            isHuo:false
         }
     },
+    //--------------------
+    computed:{
+        
+    },
+    //--------------------
     methods: {
+        enter(ev){
+            let e = ev||window.event
+            if(e.key==='Enter'){
+                this.search(this.keyword)
+            }
+        },
         inpNull(){
+            this.isSearch = false;
             this.keyword='' //搜索框 一键清空;
             this.$store.state.searchVal = null;
         },
-        search(key){
+        search(key,booler=false){
+             this.isHuo = booler
              this.isSearch = true;
              this.$store.state.searchVal = key; //将点击的cell的name存入vuex
              this.keyword = key;
@@ -70,23 +89,29 @@ export default {
              this.$router.push('/search/single')
         }
     },
+
+
+    //--------------------------
     watch:{
         async keyword(){
-            // this.$store.state.searchKey = null;
+            
             if(!this.keyword){
-                this.ismohu = false; //显示模糊搜索列表
+                this.ismohu = false; //隐藏模糊搜索列表
                 this.isX = false; //隐藏一键删除
-                this.isSearch = false; //关闭二级路由
                 this.searchData = [];
+                this.isSearch = false;
+                this.isHuo = false
                 return
             }else{
-                this.isX = true //显示一键删除
-                if(this.keyword===this.$store.state.searchVal){
+                if(this.isHuo){
                     this.ismohu = false; //隐藏模糊搜索列表
-                    return
+                    this.isSearch = true;
+                }else{
+                    this.ismohu = true; //显示模糊搜索列表
+                    this.isSearch = false; //关闭二级路由
                 }
-                this.ismohu = true; //隐藏模糊搜索列表
-                let data = await this.$ajax.searchMH(this.keyword) //api 模糊搜索 input 内的值发生改变的时候 触发
+                this.isX = true //显示一键删除
+                let data = await this.$request.searchMH(this.keyword) //api 模糊搜索 input 内的值发生改变的时候 触发
                 var arr = []; 
                 data.result.songs.map(item=>{
                     arr.push({
@@ -95,11 +120,13 @@ export default {
                     })
                 });
                 this.searchData = [...arr]
+                this.isHuo = false
             }
         }
     },
+    //-------------------------
     mounted() {
-        this.$ajax.heat().then(res=>{  //热门推荐
+        this.$request.heat().then(res=>{  //热门推荐
             var arr = []; 
             res.data.map(item=>{
                 arr.push({
@@ -112,9 +139,7 @@ export default {
         }),
         this.routePath = this.$store.state.route //接收vuex传递过来的routePath
     },
-    components: {
-        coll,myPrevNav,searchRouter
-    },
+    
 }
 </script>
 

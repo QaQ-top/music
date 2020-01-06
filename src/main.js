@@ -20,8 +20,8 @@ router.beforeEach((to,fom, next) => {
 // Router.afterEach(to,fom)
 
 //axios
-import ajax from './api/api'
-Vue.prototype.$ajax = ajax
+import request from './api/api'
+Vue.prototype.$request = request
 
 //字适应
 import './assets/js/rem'
@@ -43,7 +43,7 @@ Vue.use(InfiniteScroll);
 import "./assets/fonts/iconfont.css"
 
 //vuex
-import store from './stor/vuex';
+import store from './store/vuex';
 
 //vue 自定义指令
 import './v-custom/custom'

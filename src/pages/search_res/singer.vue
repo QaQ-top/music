@@ -17,7 +17,7 @@ export default {
         
     },
     mounted(){
-       this.$ajax.singer(this.$store.state.searchVal,0).then(res=>{
+       this.$request.singer(this.$store.state.searchVal,0).then(res=>{
             console.log(res.result.artists)
         })
     }

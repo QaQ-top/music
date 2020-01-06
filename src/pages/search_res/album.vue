@@ -17,7 +17,7 @@ export default {
 
     },
     mounted(){
-        this.$ajax.album(this.$store.state.searchVal,0).then(res=>{
+        this.$request.album(this.$store.state.searchVal,0).then(res=>{
             console.log(res.result.albums)
         })
         

@@ -17,17 +17,21 @@ Router.prototype.push = function push(location) {
   return routerPush.call(this, location).catch(error=> error)
 }
 //自定义音频
-import myAudio from './components/self_define_audio'
+import myAudio from './components/self_define_audio';
 
 //myFooter
-import myFooter from './components/footer'
+import myFooter from './components/footer';
 
-//路由切换
+//vuex
+import {mapState,mapActions,mapGetters,mapMutations} from 'vuex';
 
-//getFooterRoute
-import {mapState,mapActions,mapGetters,mapMutations} from 'vuex'
 export default {
   name: 'App',
+  //------------------
+  components: {
+      myAudio,myFooter
+  },
+  //-----------------
   data () {
     return {
         transName:'rlcut-left',
@@ -35,26 +39,28 @@ export default {
         active:0, //当前页面路径在getFooterRoute的索引
     }
   },
-  methods: {
-    success(a){
-      
-    }
-  },
+  //------------------
   computed:{
-    ...mapGetters(['getFooterRoute'])
+    ...mapState({
+      stroeAudio:'audio',
+      stroeFooterRoute:'footerRoute'
+    })
   },
-  components: {
-      myAudio,myFooter
+  //-----------------
+  methods: {
+    
   },
-  watch: {
+
+  //------------------
+  watch: { // 使用 mapState,mapGetters 会出现settr gettr报错 用this.$store比较好
     'active'(to, from) {
-      this.$router.push(this.getFooterRoute[to])
+      this.$router.push(this.stroeFooterRoute[to])
     },
-    '$route':{
+    '$route':{ 
       handler:function(to,from){
-          if(this.getFooterRoute.includes(to.path)&&this.getFooterRoute.includes(from.path)){
-          let toIndex = this.getFooterRoute.findIndex(item=>to.path==item)
-          let fromIndex = this.getFooterRoute.findIndex(item=>from.path==item)
+          if(this.stroeFooterRoute.includes(to.path)&&this.stroeFooterRoute.includes(from.path)){
+          let toIndex = this.stroeFooterRoute.findIndex(item=>to.path==item)
+          let fromIndex = this.stroeFooterRoute.findIndex(item=>from.path==item)
           this.$store.state.route = to.path  //将当前路径存入vuex
           this.active = toIndex //储存当前页面路径索引
         }
@@ -70,18 +76,16 @@ export default {
         }else {
           this.$store.state.cache = 'search';
         }
-        
       }
     }
   },
-  beforeCreate() {
+  //----------------------
+  beforeCreate() { //数据加载前不能使用 mapState,mapActions,mapGetters,mapMutations 所以只能使用this.$store.state
     this.$store.state.audio = JSON.parse(window.localStorage.getItem('audio')) //获取上此播放歌曲
     this.$router.push('/musicG')
   },
-  mounted() {
-    // this.$store.state.ajax = this.$ajax
-
-
+  //---------------------
+   mounted() {
     if (typeof document.addEventListener === "undefined") {
       console.error("浏览器不支持addEventListener,请升级");
     } else {
@@ -97,7 +101,7 @@ export default {
       });
       window.addEventListener("beforeunload", () => {
         this.$store.commit('pause'); //暂停歌曲
-        this.$store.state.audio.storage = true; //改变状态
+        this.stroeAudio.storage = true; //改变状态
         let storage = window.localStorage;
         storage.setItem('audio',JSON.stringify(this.$store.state.audio)) //关闭网页时将audio的数据存入本地缓存
       });

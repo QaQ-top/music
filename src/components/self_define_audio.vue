@@ -163,14 +163,20 @@ export default {
     .transition{
         transition: all ease 0.2s;
     }
-    .audioImg img{
+    .audioImg{
         width: 4rem;
         height: 4rem;
         border-radius: 50%;
         position: relative;
         left: 0.7rem;
-        bottom: 0.5rem
-
+        bottom: 0.5rem;
+        box-shadow: 0 -10px 10px -14px #000;
+        background-color: white;
+        overflow: hidden;
+    }
+    .audioImg img{
+        width: 4rem;
+        height: 4rem;
     }
     .audioDetail{
         height: 100%;

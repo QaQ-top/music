@@ -1,6 +1,7 @@
 import Vuex from 'vuex'
 import Vue from 'vue'
 import router from '@/router'
+import request from '@/api/api'
 
 
 Vue.use(Vuex)
@@ -21,7 +22,8 @@ const state = {
         img:'' , //歌曲图片
         albumName:'', //当前歌曲的专辑名Id
         albumId:'', //当前歌曲的专辑id,
-        storage:false
+        storage:false,
+        type:''
     },
     //首页app的foot的四个路径
     footerRoute:[
@@ -51,7 +53,19 @@ const getters = {
     },
     getFooterRoute(state){
         return state.footerRoute
-    }
+    },
+    getCache(state){
+        return state.cache
+    },
+    getSearchVal(state){
+        return state.searchVal
+    },
+    getRoute(state){
+        return state.route
+    },
+    getPrevious(state){
+        return state.previous
+    },
 }
 const actions = {
     //音乐
@@ -82,13 +96,17 @@ const actions = {
     volume({commit}){
         commit('volume')
     },
+
+    //播放新歌曲
+    newSrc({commit},data){
+        commit('newSrc',data)
+    },
+
     particulars({commit},routePath){
         commit('particulars',routePath)
     },
     //控制
-    prev({commit}){
-        commit('prev')
-    },
+    
     
     
     //single album singer songList MV lyric FM video
@@ -140,14 +158,44 @@ const mutations = {
      slider(state){
         state.audio.dom.play();
         state.audio.play=true;
-        state.audio.dom.currentTime = state.audio.duration*(state.audio.percent/100) //拖拽音乐跟进 并且播放 
+        state.audio.dom.currentTime = state.audio.duration*(state.audio.percent/ 100) //拖拽音乐跟进 并且播放 
     },
     isLoop(state){
         state.audio.loop = !state.audio.loop //是否循环播放
     },
     volume(state){
-        state.audio.dom.volume = state.audio.volume/100 //音量控制
+        state.audio.dom.volume = state.audio.volume / 100 //音量控制
     },
+
+    //播放新的src
+    // {
+    //     id:'',
+    //     album:{
+    //         albumId : '', 
+    //         albumName : '' 
+    //     }
+    // }
+    newSrc(state,data){  //参数需要歌曲id 专辑id 专辑name
+        let plays = ()=> {
+            state.audio.dom.play();
+            state.audio.play=true;
+        }
+        state.audio.albumId = data.album.albumId; //将点击的歌曲专辑id 存入audio详情
+        state.audio.albumName = data.album.albumName; //将点击的歌曲专辑名称 存入audio详情
+        state.audio.id = data.id //将歌曲id 存入audio详情
+        request.song(data.id).then(res=>{ //通过歌曲id发送请求
+            state.audio.type = 'new'
+            state.audio.url = res.data[0].url; //将audio的src替换
+            state.audio.dom.addEventListener('canplay',plays())
+        }).then(res=>{
+            request.songDetail(data.id).then(res=>{ //通过id 获取歌曲详情
+                state.audio.img = res.songs[0].al.picUrl; //歌曲封面
+                state.audio.title = res.songs[0].name //歌曲名称
+                state.audio.dom.removeEventListener('canplay',plays())
+            })
+        })
+    },
+
     particulars(state,routePath){
         router.push({
             name:'particulars',

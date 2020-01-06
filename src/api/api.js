@@ -64,7 +64,7 @@ const single  = (keywords,num) =>{
     return get('/music/search',keyWord) ///song/detail
 }
 
-//歌曲需求信息
+//歌曲详情信息
 const songDetail = (songId) => {
     return get('/music/song/detail',{
         ids:songId

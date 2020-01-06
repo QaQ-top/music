@@ -11,6 +11,7 @@
 
 <script>
 import myPrevNav from '../components/back_prev'
+import { mapGetters } from 'vuex';
 export default {
     name:'particulars',
     data() {
@@ -22,6 +23,9 @@ export default {
     watch:{
         
     },
+    computed:{
+        ...mapGetters(['getAudioData'])
+    },
     components:{
         myPrevNav
     },
@@ -29,7 +33,12 @@ export default {
         
     },
     activated(){
-        this.routePath = this.$route.params.routePath
+        this.routePath = this.$route.params.routePath;
+        if(this.getAudioData.type==='new'){
+            console.log(this.getAudioData.type)
+            this.getAudioData.type = 'used'
+            
+        }  
     }
 }
 </script>

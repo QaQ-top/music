@@ -5,6 +5,7 @@
         v-infinite-scroll="loadMore"
         infinite-scroll-distance="10">
             <mt-cell 
+            :class="{isBule:index===clickIndex}"
             :title="item.name" 
             :label="`${item.artists.map(item=>item.artistsName).join(' / ')} - ${item.album.albumName}`" 
             v-for="(item, index) in arr" 
@@ -24,17 +25,18 @@ export default {
         return {
             arr:[],
             offset:0,
+            clickIndex:-1
         }
     },
     computed:{
         ...mapGetters(['getAudioData'])
     },
     methods:{
-        ...mapActions(['play']),
+        ...mapActions(['newSrc']),
         loadMore() {
         this.offset++;
         this.loading = true;
-        this.$ajax.single(this.$store.state.searchVal,this.offset).then(res=>{
+        this.$request.single(this.$store.state.searchVal,this.offset).then(res=>{
             this.loading = false;
             let arr = [];
             res.result.songs.map(item=>{
@@ -59,26 +61,19 @@ export default {
         })
         },
         song(id,index){ //点击触发
-            let plays = ()=> {
-                this.play()
-            }
-            this.getAudioData.albumId = this.arr[index].album.albumId; //将点击的歌曲专辑id 存入audio详情
-            this.getAudioData.albumName = this.arr[index].album.albumName; //将点击的歌曲专辑名称 存入audio详情
-            this.getAudioData.id = id //将歌曲id 存入audio详情
-            this.$ajax.song(id).then(res=>{ //通过歌曲id发送请求
-                this.getAudioData.url = res.data[0].url; //将audio的src替换
-                this.getAudioData.dom.addEventListener('canplay',plays())
-            }).then(res=>{
-                this.$ajax.songDetail(id).then(res=>{ //通过id 获取歌曲详情
-                    this.getAudioData.img = res.songs[0].al.picUrl; //歌曲封面
-                    this.getAudioData.title = res.songs[0].al.name //歌曲名称
-                    this.getAudioData.dom.removeEventListener('canplay',plays())
-                })
+            this.clickIndex = index;
+            this.newSrc({
+                id,
+                album:{
+                    albumId : this.arr[index].album.albumId, //将点击的歌曲专辑id 存入audio详情
+                    albumName : this.arr[index].album.albumName //将点击的歌曲专辑名称 存入audio详情
+                }
             })
+            
         }
     },
     mounted(){
-        this.$ajax.single(this.$store.state.searchVal,this.offset).then(res=>{ //通过name获取歌曲
+        this.$request.single(this.$store.state.searchVal,this.offset).then(res=>{ //通过name获取歌曲
             let arr = [];
             // console.log(res)
             res.result.songs.map(item=>{  //遍历数组里的歌曲
@@ -106,8 +101,8 @@ export default {
 
 </script>
 
-<style>
- .single .mint-cell-text{
+<style scoped>
+ .single >>> .mint-cell-text{
     font-size: 2rem;
     font-weight: bold; 
     text-align: left;
@@ -116,17 +111,26 @@ export default {
     width: 25rem;
     white-space: nowrap;
  }
- .single .mint-cell{
+ .single >>> .mint-cell{
      padding: 0.25rem 0
  }
- .single .mint-cell-label{
+ .single >>> .mint-cell-label{
      text-align: left;
      display: block;
      overflow: hidden;
      width: 25rem;
      white-space:nowrap;
  }
- .single .mint-cell-value{
-     font-size: 2rem;
+ .single  >>>.icon-diandiandianshu{
+     font-size: 2.5rem;
+ }
+ .single  .isBule{
+    color: rgb(64,158,255)!important;
+ }
+ .single .isBule >>> .mint-cell-label{
+     color: rgb(64,158,255)!important;
+ }
+ .single .isBule >>> .mint-cell-value{
+     color: rgb(64,158,255)!important;
  }
 </style>

@@ -19,7 +19,7 @@ export default {
         ]),
     },
     mounted(){
-        this.$ajax.songList(this.$store.state.searchVal,0).then(res=>{
+        this.$request.songList(this.$store.state.searchVal,0).then(res=>{
             console.log(res.result.playlists)
         })
     },

@@ -39,9 +39,9 @@ export default {
         display: flex;
         position: fixed;
         top: 4rem;
-        background: white;
-        border-top:1px solid rgb(241, 240, 240);
-        border-bottom:1px solid rgb(241, 240, 240);
+        z-index: 9999;
+        background: rgb(252,252,252);
+        box-shadow: 0 5px 7px -10px #000
     }
     .search-nav>div{
         flex:1;

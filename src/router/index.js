@@ -83,6 +83,9 @@ export default new Router({
       path:'/particulars',
       name:'particulars',
       component:Particulars, //歌曲详情页面
+      meta:{
+        type:'part'
+      }
     }
   ]
 })

@@ -6,12 +6,10 @@ const path = require('path')
 
 module.exports = {
   dev: {
-
     // Paths
     assetsSubDirectory: 'static',
     assetsPublicPath: '/',
     proxyTable: {
-      
       '/music':{
         target:'http://39.108.182.125:3000',
         changeOrigin:true,

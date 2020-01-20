@@ -22,7 +22,7 @@ export default {
    text-align: left;
    width:96%;
    margin-left: 4%;
-   font-size: 2.2rem;
+   font-size: 2rem;
    margin-top:1rem;
 }
 </style>

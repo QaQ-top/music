@@ -69,7 +69,6 @@ export default {
                     albumName : this.arr[index].album.albumName //将点击的歌曲专辑名称 存入audio详情
                 }
             })
-            
         }
     },
     mounted(){
@@ -103,22 +102,24 @@ export default {
 
 <style scoped>
  .single >>> .mint-cell-text{
-    font-size: 2rem;
+    font-size: 1.7rem;
     font-weight: bold; 
     text-align: left;
     display: block;
     overflow: hidden;
-    width: 25rem;
+    width: 32rem;
     white-space: nowrap;
  }
  .single >>> .mint-cell{
-     padding: 0.25rem 0
+     padding: 0.25rem 0;
+     height: 4rem;
  }
  .single >>> .mint-cell-label{
+     font-size: 1.3rem;
      text-align: left;
      display: block;
      overflow: hidden;
-     width: 25rem;
+     width: 32rem;
      white-space:nowrap;
  }
  .single  >>>.icon-diandiandianshu{

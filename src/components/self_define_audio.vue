@@ -10,44 +10,6 @@
         >
         </audio>
 
-
-        <!-- 进度条 -->
-        <div class="block">
-            <el-slider 
-            v-model="getAudioData.percent" 
-            @change="slider()" 
-            :show-tooltip='false'
-            >
-            </el-slider>
-        </div>
-
-        <!-- 开关静音 -->
-        <el-switch
-        v-model="getAudioData.muted"
-        active-color="#ff4949"
-        inactive-color="#13ce66"
-        @change="muted()"
-        >
-        </el-switch>
-
-
-
-        <button @click="isLoop()">
-            循环播放
-        </button>
-        
-
-        <!-- 音量控制 -->
-        <el-slider
-        v-model='getAudioData.volume'
-        vertical
-        height="100px"
-        tooltip-class="none"
-        @change="volume()"
-        :show-tooltip='false'
-        >
-        </el-slider>
-
         <div :class="{audioBox:isAudioBox,audioBox2:!isAudioBox,transition:true}" @click="particulars(routeName)" v-if="this.$route.name!=='particulars'">
             
             <div class="audioDetail">
@@ -63,15 +25,6 @@
             </div>
             
             <div class="pro_play_pause">
-                <!-- 环状进度条 -->
-                <el-progress 
-                type="circle" 
-                :percentage="getAudioData.percent"
-                :text-inside="true"
-                :width="30"
-                :stroke-width="2"
-                >
-                </el-progress>
                 <span class="icon iconfont icon-caret-right play" @click.stop="AudioPlay()" v-if="!getAudioData.play">
                 </span>
                 <span class="icon iconfont icon-iconstop pause" @click.stop="AudioPlay()" v-if="getAudioData.play">
@@ -90,36 +43,35 @@ export default {
     data () {
         return {
            isAudioBox : true,
-           refs:this.$refs,
            routeName:this.$route.name
         }
     },
     watch: {
-        '$route'(){
-            let ret = ['musicG','recommend','dynamic','mine']
-            this.isAudioBox = ret.includes(this.$route.name)
-            this.routeName = this.$route.path
+        '$route':{
+            handler:function(to,from){
+                let ret = ['musicG','recommend','dynamic','mine']
+                this.isAudioBox = ret.includes(this.$route.name)
+                this.routeName = this.$route.path
+            }
         }
     },
-    computed:mapGetters([
+    computed:{
+        ...mapGetters([
         'getAudioData'
-    ]),
+        ]),
+        
+    },
     methods: {
         ...mapActions([
             'getDuration', //获取duration，默认获取音频总时间解决bug
             'AudioPlay', //播放暂停
             'time', //获取当前时间，和已播放百分比
-            'muted', //是否静音
-            'slider', //点击进度条，播放
-            'isLoop', //是否循环播放
-            'volume',//音量大小调节
             'particulars',//进入详情
         ]),
-        
     },
     mounted() {
         this.getAudioData.dom = this.$refs.audio;
-    },
+    }
 }
 </script>
 
@@ -192,14 +144,14 @@ export default {
         justify-content:space-around;
     }
     .audioTitle>p:nth-child(1){
-        font-size: 12px;
+        font-size: 1.6rem;
         text-align: left;
         margin-top: 0.3rem;
         padding-left: 1.7rem;
         white-space: nowrap;
     }
     .audioTitle>p:nth-child(2){
-        font-size: 10px;
+        font-size: 1.4rem;
         color: rgb(199, 199, 199);
         text-align: left;
         margin-bottom: 0.3rem;

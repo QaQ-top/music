@@ -38,7 +38,7 @@ export default {
         justify-content: center;
     }
     .atteChoi{
-        width: 10rem;
+        width: 20rem;
         height: 2rem;
         background:rgb(235,235,235);
         display: flex;
@@ -49,6 +49,7 @@ export default {
     }
     .atteChoi span{
         flex: 1;
+        font-size: 1.4rem;
         height: 100%;
         line-height: 2rem;
         position: relative;

@@ -81,6 +81,9 @@ const actions = {
     AudioPlay({commit}){
         commit('AudioPlay')
     },
+    toPlay({commit},date){
+        commit('toPlay',date)
+    },
     time({commit}){
         commit('time')
     },
@@ -138,6 +141,12 @@ const mutations = {
             state.audio.play=true;
         }
     },
+    toPlay(state,date){
+        state.audio.percent = (date / state.audio.duration)*100//当前播放比例 `%`
+        state.audio.dom.play();
+        state.audio.play=true;
+        state.audio.dom.currentTime = state.audio.duration*(state.audio.percent / 100)
+    },
     time(state){
         if(Boolean(state.audio.dom.duration)===Boolean(NaN)){
             state.audio.percent = 0;
@@ -150,6 +159,7 @@ const mutations = {
             state.audio.dom.pause();
             state.audio.play=false;
             state.audio.percent=0;
+            state.audio.currentTime = 0;
         }
     },
     muted(state){
@@ -158,7 +168,7 @@ const mutations = {
      slider(state){
         state.audio.dom.play();
         state.audio.play=true;
-        state.audio.dom.currentTime = state.audio.duration*(state.audio.percent/ 100) //拖拽音乐跟进 并且播放 
+        state.audio.dom.currentTime = state.audio.duration*(state.audio.percent / 100) //拖拽音乐跟进 并且播放 
     },
     isLoop(state){
         state.audio.loop = !state.audio.loop //是否循环播放
@@ -184,8 +194,9 @@ const mutations = {
         state.audio.albumName = data.album.albumName; //将点击的歌曲专辑名称 存入audio详情
         state.audio.id = data.id //将歌曲id 存入audio详情
         request.song(data.id).then(res=>{ //通过歌曲id发送请求
-            state.audio.type = 'new'
+            state.audio.type = 'new' //标记未新歌曲
             state.audio.url = res.data[0].url; //将audio的src替换
+            state.audio.storage = false; //关闭storage缓存状态
             state.audio.dom.addEventListener('canplay',plays())
         }).then(res=>{
             request.songDetail(data.id).then(res=>{ //通过id 获取歌曲详情

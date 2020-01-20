@@ -1,5 +1,5 @@
 <template>
-  <div id="app">
+  <div id="app" :style="height" ref='app'>
     <my-audio></my-audio>
     <my-footer musicG='音遇' recom='推荐' dynamic='动态' mine='我的'></my-footer>
 
@@ -37,6 +37,9 @@ export default {
         transName:'rlcut-left',
         routeIndex:0,
         active:0, //当前页面路径在getFooterRoute的索引
+        height:{
+          
+        }
     }
   },
   //------------------
@@ -81,11 +84,19 @@ export default {
   },
   //----------------------
   beforeCreate() { //数据加载前不能使用 mapState,mapActions,mapGetters,mapMutations 所以只能使用this.$store.state
-    this.$store.state.audio = JSON.parse(window.localStorage.getItem('audio')) //获取上此播放歌曲
+    let audio = window.localStorage.getItem('audio')
+    if(audio){
+      this.$store.state.audio = JSON.parse(audio) //获取上此播放歌曲
+    }
     this.$router.push('/musicG')
   },
   //---------------------
    mounted() {
+    // if(window.innerHeight>this.$refs.app.offsetHeight){
+    //   this.height = {
+    //         'height':`${window.innerHeight}px`
+    //       }
+    // }
     if (typeof document.addEventListener === "undefined") {
       console.error("浏览器不支持addEventListener,请升级");
     } else {
@@ -102,6 +113,7 @@ export default {
       window.addEventListener("beforeunload", () => {
         this.$store.commit('pause'); //暂停歌曲
         this.stroeAudio.storage = true; //改变状态
+        this.stroeAudio.type = 'new'
         let storage = window.localStorage;
         storage.setItem('audio',JSON.stringify(this.$store.state.audio)) //关闭网页时将audio的数据存入本地缓存
       });
@@ -115,6 +127,7 @@ export default {
   margin: 0;
   padding: 0;
 }
+
 #app {
   font-family: 'Avenir', Helvetica, Arial, sans-serif;
   -webkit-font-smoothing: antialiased;
@@ -123,7 +136,7 @@ export default {
   color: #2c3e50;
   overflow: hidden;
   background: rgb(252,252,252);
-  /* margin-top: 60px; */
+  padding: 4rem 0;
 }
 input[placeholder]{
   font-size:1.2rem

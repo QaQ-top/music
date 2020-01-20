@@ -51,6 +51,7 @@ export default {
         background: white;
         border-top:1px solid rgb(241, 240, 240);
         z-index: 1000;
+        font-size: 1.2rem
     }
     .foot>div{
         flex: 1;
@@ -64,6 +65,6 @@ export default {
         color:rgb(64,158,255)
     }
     .foot span{
-        font-size: 3rem
+        font-size: 2.2rem
     }
 </style>

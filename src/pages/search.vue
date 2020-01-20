@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div :class="{searchBox:isSearch}">
         <my-prev-nav class="search" :tabRoutePath='routePath'>
             <div slot="prev_center">
                 <span class="iocn iconfont icon-iconfonticonfontsousuo1 search_icon"></span>
@@ -94,7 +94,6 @@ export default {
     //--------------------------
     watch:{
         async keyword(){
-            
             if(!this.keyword){
                 this.ismohu = false; //隐藏模糊搜索列表
                 this.isX = false; //隐藏一键删除
@@ -144,6 +143,9 @@ export default {
 </script>
 
 <style>
+    .searchBox{
+        padding-top:4.3rem;
+    }
     .search>div{
         width: 80%;
         height: 2rem;
@@ -193,6 +195,10 @@ export default {
         margin-top:1rem;
         padding-bottom:48px
     }
+    .heat_box .mint-cell {
+        height: 4rem;
+        background: rgb(252,252,252);
+    }
     .heat_box .mint-cell-wrapper{
         background: rgb(252,252,252);
         padding: 0;
@@ -204,14 +210,15 @@ export default {
     .heat_box .mint-cell-text{
         display: inline-block;
         width: 100%;
-        font-size: 2rem;
+        font-size: 1.7rem;
         text-align: left;
     }
     .heat_box .mint-cell-label{
         text-align: left;
-        font-size: 10px
+        font-size: 1.3rem;
     }
     .heat_box .mint-cell-title{
+        font-size: 1.3rem;
         box-sizing: border-box;
         padding-left: 3rem;
         position: relative;

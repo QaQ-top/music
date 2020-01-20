@@ -39,7 +39,7 @@ export default {
     color:#000
 }
 .topNav span:nth-child(3){
-    font-size: 4rem;
+    font-size: 3rem;
     color: rgb(100, 100, 100);
 }
 </style>

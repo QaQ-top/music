@@ -43,7 +43,7 @@ export default {
 
     }
     .icon-jiantou-zuo-cuxiantiao{
-        font-size: 4.5rem;
+        font-size: 4rem;
     }
     
 </style>

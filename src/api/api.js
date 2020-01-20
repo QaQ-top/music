@@ -17,6 +17,13 @@ axios.interceptors.response.use(function (response) {
 });
 //page=1
 
+// axios.defaults.baseURL = '/music' //npm run dev  启动后使用代理后的没问题
+//为什么npm run build后不能使用了，显示跨域
+
+axios.defaults.baseURL = 'http://39.108.182.125:3000' //npm run dev  启动后使用代理后 显示跨域
+//为什么npm run build可用使用
+
+
 const get = (url,data={})=>{
     return new Promise((resolve,reject)=>{
         axios
@@ -46,10 +53,10 @@ const post = (url,data) =>{
 }
 
 //模糊搜索
-const searchMH  =  (key) => get(`/music/search?keywords=${key}&type=1`)
+const searchMH  =  (key) => get(`/search?keywords=${key}&type=1`)
 
 //热门推荐
-const heat = () => get(`/music/search/hot/detail`)
+const heat = () => get(`/search/hot/detail`)
 
 //单曲
 //limit : 返回数量 , 默认为 30 offset
@@ -58,15 +65,15 @@ const single  = (keywords,num) =>{
     let keyWord = {
         keywords,
         type:1,
-        limit:8,
+        limit:16,
         offset:num
     }
-    return get('/music/search',keyWord) ///song/detail
+    return get('/search',keyWord) ///song/detail
 }
 
 //歌曲详情信息
 const songDetail = (songId) => {
-    return get('/music/song/detail',{
+    return get('/song/detail',{
         ids:songId
     })
 }
@@ -80,7 +87,7 @@ const album = (keywords,num) =>{
         limit:8,
         offset:num
     }
-   return get('/music/search',keyWord)
+   return get('/search',keyWord)
 }
 
 //歌手
@@ -91,7 +98,7 @@ const singer = (keywords,num)=>{
         limit:8,
         offset:num
     }
-    return get('/music/search',keyWord)
+    return get('/search',keyWord)
 }
 //歌单
 const songList = (keywords,num) =>{
@@ -101,7 +108,7 @@ const songList = (keywords,num) =>{
         limit:8,
         offset:num
     }
-    return get('/music/search',keyWord)
+    return get('/search',keyWord)
 }
 //MV
 const MV = (keywords,num) =>{
@@ -111,7 +118,7 @@ const MV = (keywords,num) =>{
         limit:6,
         offset:num
     }
-    return get('/music/search',keyWord)
+    return get('/search',keyWord)
 }
 //歌词 
 const lyric = (keywords,num) =>{
@@ -121,7 +128,7 @@ const lyric = (keywords,num) =>{
         limit:8,
         offset:num
     }
-    return get('/music/search',keyWord)
+    return get('/search',keyWord)
 }
 //电台,
 const FM = (keywords,num) =>{
@@ -131,7 +138,7 @@ const FM = (keywords,num) =>{
         limit:8,
         offset:num
     }
-    return get('/music/search',keyWord)
+    return get('/search',keyWord)
 }
 //视频,
 const video = (keywords,num) =>{
@@ -141,7 +148,7 @@ const video = (keywords,num) =>{
         limit:6,
         offset:num
     }
-    return get('/music/search',keyWord)
+    return get('/search',keyWord)
 }
  //通过id搜索歌曲
  const song = async (id) =>{
@@ -149,11 +156,20 @@ const video = (keywords,num) =>{
         id,
         type:'mp3'
     }
-   let check = await get('/music/check/music',keyWord)
+   let check = await get('/check/music',keyWord)
    if(check.success){
-        return get('/music/song/url',keyWord)
+        return get('/song/url',keyWord)
    }
+};
+
+//歌词
+const ci = (id) => {
+    let keyWord = {
+        id
+    };
+    return get('/lyric',keyWord);
 }
+
 
 export default {
     get,
@@ -170,5 +186,6 @@ export default {
     FM,
     video,
     song,
-    songDetail
+    songDetail,
+    ci
 }

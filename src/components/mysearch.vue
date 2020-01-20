@@ -26,8 +26,9 @@ export default {
 
 <style>
     .mySearch{
+        font-size: 1.5rem;
         background: white;
-        width:15rem;
+        width:20rem;
         height: 2rem;
         border-radius: 2rem;
         display: flex;

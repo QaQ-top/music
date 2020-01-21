@@ -54,11 +54,6 @@ const state = {
     //keep
     cache:'search',
 
-    a:{
-        c:1
-    },
-    t:2
-
 }
 
 const getters = {

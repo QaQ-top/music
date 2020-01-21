@@ -55,6 +55,8 @@ export default {
     },
     //pull！
 //yes？ 
+//git pull music master
+
 }
 </script>
 

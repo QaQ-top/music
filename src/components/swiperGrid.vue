@@ -53,10 +53,6 @@ export default {
     mounted() {
         console.log(this.swiper)
     },
-    //pull！
-//yes？ 
-//git pull music master
-
 }
 </script>
 

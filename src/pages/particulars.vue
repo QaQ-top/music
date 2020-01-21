@@ -1,93 +1,131 @@
 <template>
     <div class="heiop">
-        <my-prev-nav :tabRoutePath ='routePath'>
-            <div slot='prev_center' class="music_name">
-                <span>{{musicName}}</span>
+        <div @click="noSetUp()">
+            <my-prev-nav :tabRoutePath ='routePath'>
+                <div slot='prev_center' class="music_name">
+                    <span>{{getAudioData.title}}</span>
+                </div>
+                <span slot='prev_right' class="icon iconfont icon-diandiandianshu dian_part" @click.stop="setUps()"></span>
+            </my-prev-nav>
+
+            <div class="partBoxBack">
+                <img :src="getAudioData.img" alt="">
             </div>
-            <span slot='prev_right' class="icon iconfont icon-diandiandianshu dian_part"></span>
-        </my-prev-nav>
 
-        <div class="partBoxBack" :style="backImg">
+            <div class="partBox" >
+                
+                <div class="albLrc">
+                    <div class="albumImg" v-if="!isLrc" @mousedown="down" @mouseup="up">
+                        <div>
+                            <img :src="getAudioData.img" alt="">
+                        </div>
+                    </div>
+                    <div class="lyrc" v-if="isLrc">
+                        <!-- 歌词 -->
+                        <div v-for="(item, index) in lrc" :key="index" @click="playDate(index)" @mousedown="down" @mouseup="up">
+                            {{item}}
+                        </div>
+                    </div>
+                </div>
 
+                <div class="bomt">
+                    <div class="slider">
+                        <div class="ms">{{curTimeMS}}</div>
+                        <!-- 进度条 -->
+                        <div class="block">
+                            <el-slider 
+                            v-model="getAudioData.percent" 
+                            @change="slider()" 
+                            :show-tooltip='false'
+                            >
+                            </el-slider>
+                        </div>
+                        <div class="ms">{{durationMS}}</div>
+                    </div>
+                    <div class="control">
+                        
+                        <div>
+                            <span class="iocn iconfont icon-step-backward" @click="LastSong()"></span>
+                        </div>
+                        <div class="playpase">
+                            <span class="iocn iconfont icon-bofang" v-if="!getAudioData.play" @click.stop="AudioPlay()"></span>
+                            <span class="iocn iconfont icon-poweroff-circle-fill" v-if="getAudioData.play" @click.stop="AudioPlay()"></span>
+                        </div>
+                        <div>
+                            <span class="iocn iconfont icon-step-forward" @click="NextSong()"></span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
         </div>
 
-        <div class="partBox" >
-            
-            <div class="albLrc">
-                <div class="albumImg" v-if="!isLrc" @mousedown="down" @mouseup="up">
-                    <div>
-                        <img :src="getAudioData.img" alt="">
-                    </div>
-                </div>
-                <div class="lyrc" v-if="isLrc">
-                    <!-- 歌词 -->
-                    <div v-for="(item, index) in lrc" :key="index" @click="playDate(index)" @mousedown="down" @mouseup="up">
-                        {{item}}
-                    </div>
-                </div>
-            </div>
-
-            <div class="bomt">
-                <div class="slider">
-                    <div class="ms">{{curTimeMS}}</div>
-                    <!-- 进度条 -->
-                    <div class="block">
-                        <el-slider 
-                        v-model="getAudioData.percent" 
-                        @change="slider()" 
-                        :show-tooltip='false'
-                        >
-                        </el-slider>
-                    </div>
-                    <div class="ms">{{durationMS}}</div>
-                </div>
-                <div class="control">
-                    <div>
-                        <span class="iocn iconfont icon-step-backward"></span>
-                    </div>
-                    <div class="playpase">
-                        <span class="iocn iconfont icon-bofang" v-if="!getAudioData.play" @click.stop="AudioPlay()"></span>
-                        <span class="iocn iconfont icon-poweroff-circle-fill" v-if="getAudioData.play" @click.stop="AudioPlay()"></span>
-                    </div>
-                    <div>
-                        <span class="iocn iconfont icon-step-forward"></span>
-                    </div>
-                </div>
-            </div>
-
+        <div class="setUp" v-if="setUp">
             <!-- 开关静音 -->
-            <el-switch
-            v-model="getAudioData.muted"
-            active-color="#ff4949"
-            inactive-color="#13ce66"
-            @change="muted()"
-            >
-            </el-switch>
+            <div class="setList">
+                <div>
+                    静音
+                </div>
+                <div>
+                    <el-switch
+                    v-model="getAudioData.muted"
+                    active-color="#3399FF"
+                    inactive-color="#DDDDDD"
+                    @change="muted()"
+                    >
+                    </el-switch>
+                </div>
+            </div>
 
-
-
-            <button @click="isLoop()">  
-                循环播放
-            </button>
-
+            <div class="setList">
+                <div>
+                    单曲循环
+                </div>
+                <div>
+                    <el-switch
+                    v-model="getAudioData.loop"
+                    active-color="#3399FF"
+                    inactive-color="#DDDDDD"
+                    @change="isLoop()"
+                    >
+                    </el-switch>
+                </div>
+            </div>
+            <div class="setList">
+                <div>
+                    列表循环
+                </div>
+                <div>
+                    <el-switch
+                    v-model="getAudioState.randomPlay"
+                    :disabled='getAudioState.disabled'
+                    active-color="#3399FF"
+                    inactive-color="#DDDDDD"
+                    @change='isListFor()'
+                    >
+                    </el-switch>
+                </div>
+            </div>
+               
             <!-- 音量控制 -->
-            <el-slider
-            v-model='getAudioData.volume'
-            vertical
-            height="100px"
-            tooltip-class="none"
-            @change="volume()"
-            :show-tooltip='false'
-            >
-            </el-slider>
+            <div class="setList">
+                <div>
+                    音量大小：{{getAudioData.volume}}
+                </div>
+                <el-slider
+                v-model='getAudioData.volume'
+                @change="volume()"
+                :show-tooltip='false'
+                >
+                </el-slider>
+            </div>
         </div>
-
     </div>
 </template>
 
 <script>
 import myPrevNav from '../components/back_prev'
-import { mapGetters,mapActions } from 'vuex';
+import { mapState,mapGetters,mapActions } from 'vuex';
 export default {
     components:{
         myPrevNav
@@ -95,23 +133,16 @@ export default {
     name:'particulars',
     data() {
         return {
-            musicName:this.$store.state.audio.title,
             routePath:'',
             lrc:[],
             lrcDtate:[],
-            backImg:{
-                'background-image':`url(${this.$store.state.audio.img})`,
-                'background-repeat':'no-repeat',
-                'background-size': 'cover',
-                'background-position':'center',
-                'filter': 'blur(120px)'
-            },
             isLrc:false,
-            old:null
+            old:null,
+            setUp:false,
         }
     },
     computed:{
-        ...mapGetters(['getAudioData']),
+        ...mapGetters(['getAudioData','getAudioState']),
         curTimeMS(){
             let num = this.$store.state.audio.currentTime/60
             let second = parseInt(this.$store.state.audio.currentTime - (Math.floor(num)*60))
@@ -133,7 +164,10 @@ export default {
             'slider', //点击进度条，播放
             'isLoop', //是否循环播放
             'volume',//音量大小调节,
-            'toPlay'
+            'toPlay',//点击歌词去到点击歌曲的地方播放
+            'LastSong',//上一曲
+            'NextSong',//下一曲
+            'isListFor',
         ]),
         playDate(index){
             let data = this.lrcDate[index].split(':');
@@ -149,27 +183,26 @@ export default {
         },
         up(){
             clearTimeout(this.old);
+        },
+        setUps(){
+            this.setUp = !this.setUp;
+        },
+        noSetUp(){
+            this.setUp = false;
         }
     },
     watch:{
-        
+
     },
     mounted() {
         
     },
     activated(){
-        this.backImg = {
-                'background-image':`url(${this.$store.state.audio.img})`,
-                'background-repeat':'no-repeat',
-                'background-size': 'cover',
-                'background-position':'center',
-                'filter': 'blur(120px)'
-            }
-        this.musicName = this.$store.state.audio.title
+        this.setUp = false;
         this.routePath = this.$route.params.routePath;
         if(this.getAudioData.type==='new'){ //如果是新src 发送歌词请求
-            console.log(this.getAudioData.type)
             this.$request.ci(this.$store.state.audio.id).then(res=>{
+                console.log(res)
                 let lrcDate = res.lrc.lyric.replace(/[^\[(0-9:.)\]$]/g,'').split(/[\[\]]/); //将时间戳 提取  为数组
                 let lrc = res.lrc.lyric.replace(/[\[(0-9:.)]/g,'').split(']'); //将歌词提取 为数组
                 lrc.splice(0,1)
@@ -231,6 +264,11 @@ export default {
         bottom: 0;
         z-index: 998;
     }
+    .partBoxBack img{
+        height: 100%;
+        margin-left: -35%;
+        filter: blur(90px)
+    }
     .albumImg{
         padding: 28% 0;
     }
@@ -281,5 +319,28 @@ export default {
     }
     .playpase span{
         font-size: 4.5rem
+    }
+    .setUp{
+        position: absolute;
+        width: 40%;
+        height: 50%;
+        background-color: white;
+        z-index: 9999;
+        right: 0;
+    }
+    .setList{
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        width: 100%;
+        height: 4rem;
+    }
+    .setList div:nth-child(1){
+        text-align: left;
+        width: 38%;
+    }
+    .setList div:nth-child(2){
+        width: 58%;
+        text-align: right;
     }
 </style>

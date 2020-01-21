@@ -5,7 +5,7 @@
         v-infinite-scroll="loadMore"
         infinite-scroll-distance="10">
             <mt-cell 
-            :class="{isBule:index===clickIndex}"
+            :class="{isBule:index===getAudioData.index}"
             :title="item.name" 
             :label="`${item.artists.map(item=>item.artistsName).join(' / ')} - ${item.album.albumName}`" 
             v-for="(item, index) in arr" 
@@ -57,13 +57,14 @@ export default {
                     }
                 })
             })
-            this.arr.push(...arr)
+            this.arr.push(...arr);
         })
         },
         song(id,index){ //点击触发
-            this.clickIndex = index;
+            this.$store.state.audio.arr = this.arr;
             this.newSrc({
                 id,
+                index,
                 album:{
                     albumId : this.arr[index].album.albumId, //将点击的歌曲专辑id 存入audio详情
                     albumName : this.arr[index].album.albumName //将点击的歌曲专辑名称 存入audio详情

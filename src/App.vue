@@ -85,8 +85,10 @@ export default {
   //----------------------
   beforeCreate() { //数据加载前不能使用 mapState,mapActions,mapGetters,mapMutations 所以只能使用this.$store.state
     let audio = window.localStorage.getItem('audio')
+    let audioState = window.localStorage.getItem('audioState')
     if(audio){
-      this.$store.state.audio = JSON.parse(audio) //获取上此播放歌曲
+      this.$store.state.audio = JSON.parse(audio) //获取上次播放歌曲
+      this.$store.state.audioState = JSON.parse(audioState) //获取此播放歌曲状态
     }
     this.$router.push('/musicG')
   },
@@ -114,8 +116,10 @@ export default {
         this.$store.commit('pause'); //暂停歌曲
         this.stroeAudio.storage = true; //改变状态
         this.stroeAudio.type = 'new'
+        this.stroeAudio.index = -1;
         let storage = window.localStorage;
         storage.setItem('audio',JSON.stringify(this.$store.state.audio)) //关闭网页时将audio的数据存入本地缓存
+        storage.setItem('audioState',JSON.stringify(this.$store.state.audioState))
       });
     }
   },

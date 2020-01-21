@@ -71,6 +71,8 @@ export default {
     },
     mounted() {
         this.getAudioData.dom = this.$refs.audio;
+        this.$store.commit('volume');
+        this.$store.commit('muted');
     }
 }
 </script>

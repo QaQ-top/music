@@ -6,6 +6,9 @@ import request from '@/api/api'
 
 Vue.use(Vuex)
 
+
+//页面使用mapState,mapGetters
+//无法直接更改state里面属性的值
 const state = {
     audio:{
         dom:null,//mounted加载完将audioDOM传入！
@@ -14,7 +17,7 @@ const state = {
         duration:0, //音乐总时长
         currentTime:0, //音乐当前播放时长
         percent:0,  //占比 （100%）
-        loop:false, //false为不循环  true循环
+        loop:false, //false为不单曲循环  true单曲循环
         muted:false, //false为不静音  true静音
         volume:50,  //音量大小调整
         title:'', //歌名
@@ -22,8 +25,14 @@ const state = {
         img:'' , //歌曲图片
         albumName:'', //当前歌曲的专辑名Id
         albumId:'', //当前歌曲的专辑id,
-        storage:false,
-        type:''
+        storage:false, //是否退出程序
+        type:'', //是否是新url
+        arr:[], //歌单
+        index:-1,//歌曲在歌单中的索引
+    },
+    audioState:{
+        randomPlay:false,//是否循环播放整个歌单
+        disabled:false
     },
     //首页app的foot的四个路径
     footerRoute:[
@@ -45,11 +54,19 @@ const state = {
     //keep
     cache:'search',
 
+    a:{
+        c:1
+    },
+    t:2
+
 }
 
 const getters = {
     getAudioData(state){
         return state.audio
+    },
+    getAudioState(){
+        return state.audioState
     },
     getFooterRoute(state){
         return state.footerRoute
@@ -83,6 +100,15 @@ const actions = {
     },
     toPlay({commit},date){
         commit('toPlay',date)
+    },
+    LastSong({commit}){
+        commit('LastSong')
+    },
+    NextSong({commit}){
+        commit('NextSong')
+    },
+    isListFor({commit}){
+        commit('isListFor')
     },
     time({commit}){
         commit('time')
@@ -147,6 +173,32 @@ const mutations = {
         state.audio.play=true;
         state.audio.dom.currentTime = state.audio.duration*(state.audio.percent / 100)
     },
+    LastSong(state){
+        let currentId = state.audio.id;
+        let index = state.audio.arr.findIndex(i=>i.id===currentId)
+        if(index===0){
+            index = state.audio.arr.length-1;
+        }else{
+            index--
+        }
+        let data = state.audio.arr[index];
+        data.index = index;
+        let newSrc = this._mutations.newSrc[0]
+        newSrc(data,index);
+    },
+    NextSong(state){
+        let currentId = state.audio.id;
+        let index = state.audio.arr.findIndex(i=>i.id===currentId)
+        if(index===state.audio.arr.length){
+            index = 0;
+        }else{
+            index++
+        }
+        let data = state.audio.arr[index]
+        data.index = index;
+        let newSrc = this._mutations.newSrc[0]
+        newSrc(data,index);
+    },
     time(state){
         if(Boolean(state.audio.dom.duration)===Boolean(NaN)){
             state.audio.percent = 0;
@@ -156,10 +208,27 @@ const mutations = {
             state.audio.percent = (state.audio.currentTime / state.audio.duration)*100//当前播放比例 `%`
         }
         if(state.audio.percent===100){  //播放完毕 关闭播放
-            state.audio.dom.pause();
-            state.audio.play=false;
-            state.audio.percent=0;
-            state.audio.currentTime = 0;
+            console.log(state.audioState.randomPlay)
+            if(state.audioState.randomPlay){
+                console.log(true)
+                let currentId = state.audio.id;
+                let index = state.audio.arr.findIndex(i=>i.id===currentId)
+                if(index===state.audio.arr.length){
+                    index = 0;
+                }else{
+                    index++
+                }
+                let data = state.audio.arr[index];
+                data.index = index;
+                let newSrc = this._mutations.newSrc[0]
+                newSrc(data,index);
+            }else{
+                console.log(false)
+                state.audio.dom.pause();
+                state.audio.play=false;
+                state.audio.percent=0;
+                state.audio.currentTime = 0;
+            }
         }
     },
     muted(state){
@@ -171,7 +240,16 @@ const mutations = {
         state.audio.dom.currentTime = state.audio.duration*(state.audio.percent / 100) //拖拽音乐跟进 并且播放 
     },
     isLoop(state){
-        state.audio.loop = !state.audio.loop //是否循环播放
+         if(state.audio.loop){
+            state.audioState.disabled = true;
+         }else{
+            state.audioState.disabled = false;
+         }
+    },
+    isListFor(){
+        if(state.audioState.randomPlay){
+            state.audio.loop = false;
+         }
     },
     volume(state){
         state.audio.dom.volume = state.audio.volume / 100 //音量控制
@@ -186,6 +264,7 @@ const mutations = {
     //     }
     // }
     newSrc(state,data){  //参数需要歌曲id 专辑id 专辑name
+        state.audio.index = data.index;
         let plays = ()=> {
             state.audio.dom.play();
             state.audio.play=true;

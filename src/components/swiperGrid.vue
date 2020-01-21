@@ -53,6 +53,7 @@ export default {
     mounted() {
         console.log(this.swiper)
     },
+    //pull！
 }
 </script>
 

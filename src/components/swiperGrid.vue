@@ -54,6 +54,7 @@ export default {
         console.log(this.swiper)
     },
     //pull！
+//yes？ 
 }
 </script>
 

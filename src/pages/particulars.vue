@@ -14,14 +14,14 @@
         <div class="partBox" >
             
             <div class="albLrc">
-                <div class="albumImg" v-if="!isLrc">
+                <div class="albumImg" v-if="!isLrc" @mousedown="down" @mouseup="up">
                     <div>
                         <img :src="getAudioData.img" alt="">
                     </div>
                 </div>
                 <div class="lyrc" v-if="isLrc">
                     <!-- 歌词 -->
-                    <div v-for="(item, index) in lrc" :key="index" @click="playDate(index)">
+                    <div v-for="(item, index) in lrc" :key="index" @click="playDate(index)" @mousedown="down" @mouseup="up">
                         {{item}}
                     </div>
                 </div>
@@ -106,7 +106,8 @@ export default {
                 'background-position':'center',
                 'filter': 'blur(120px)'
             },
-            isLrc:true
+            isLrc:false,
+            old:null
         }
     },
     computed:{
@@ -139,6 +140,15 @@ export default {
             let date = (parseInt(data[0])*60)+Number(data[1])
             console.log(this.lrc[index],this.lrcDate[index],date)
             this.toPlay(date)
+        },
+        down(){
+            clearTimeout(this.old);
+            this.old = setTimeout(()=>{
+                this.isLrc = !this.isLrc
+            },1000)
+        },
+        up(){
+            clearTimeout(this.old);
         }
     },
     watch:{
@@ -160,13 +170,13 @@ export default {
         if(this.getAudioData.type==='new'){ //如果是新src 发送歌词请求
             console.log(this.getAudioData.type)
             this.$request.ci(this.$store.state.audio.id).then(res=>{
-                console.log(res)
                 let lrcDate = res.lrc.lyric.replace(/[^\[(0-9:.)\]$]/g,'').split(/[\[\]]/); //将时间戳 提取  为数组
                 let lrc = res.lrc.lyric.replace(/[\[(0-9:.)]/g,'').split(']'); //将歌词提取 为数组
                 lrc.splice(0,1)
                 screen(lrcDate);
                 this.lrcDate = lrcDate;
                 this.lrc = lrc;
+                this.isLrc = false;
                 function screen(array) {
                     array.forEach((item,index)=>{
                         if(item.length!==8){ //如果 item 不是时间戳 将其删除
@@ -249,8 +259,9 @@ export default {
         width: 70%;
     }
     .lyrc{
-        margin-top: 10%;
-        height: 51rem;
+        position: absolute;
+        width: 100%;
+        height: 75%;
         overflow: scroll;
     }
     .lyrc div {

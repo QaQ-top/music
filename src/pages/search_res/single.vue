@@ -108,18 +108,23 @@ export default {
     display: block;
     overflow: hidden;
     width: 32rem;
+    height: 1.9rem;
+    line-height: 1.9rem;
     white-space: nowrap;
  }
  .single >>> .mint-cell{
      padding: 0.25rem 0;
-     height: 4rem;
+     height: 4.5rem;
  }
  .single >>> .mint-cell-label{
      font-size: 1.3rem;
+     margin: 0;
      text-align: left;
      display: block;
      overflow: hidden;
      width: 32rem;
+     height: 1.5rem;
+     line-height: 1.5rem;
      white-space:nowrap;
  }
  .single  >>>.icon-diandiandianshu{

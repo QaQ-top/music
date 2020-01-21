@@ -19,8 +19,8 @@ module.exports = {
     path: config.build.assetsRoot,
     filename: '[name].js',
     publicPath: process.env.NODE_ENV === 'production'
-      ? './'+config.build.assetsPublicPath
-      : './'+config.dev.assetsPublicPath
+      ? './'+config.build.assetsPublicPath //解决打包空白问题
+      : './'+config.dev.assetsPublicPath //解决打包空白问题
   },
   resolve: {
     extensions: ['.js', '.vue', '.json'],

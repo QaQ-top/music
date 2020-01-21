@@ -38,6 +38,11 @@ Vue.component(Cell.name, Cell);
 import { InfiniteScroll } from 'mint-ui';
 Vue.use(InfiniteScroll);
 
+//swiper轮播图
+import Swiper from 'vue-awesome-swiper'
+// styles
+import 'swiper/css/swiper.css'
+Vue.use(Swiper)
 
 //字体图标fonts
 import "./assets/fonts/iconfont.css"

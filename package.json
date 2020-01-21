@@ -17,6 +17,7 @@
     "tab-slider": "^1.1.3",
     "v-touch": "^1.5.2",
     "vue": "^2.5.2",
+    "vue-awesome-swiper": "^3.1.3",
     "vue-router": "^3.0.1",
     "vue-touch": "^2.0.0-beta.4",
     "vuex": "^3.1.2"

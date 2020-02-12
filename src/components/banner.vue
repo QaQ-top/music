@@ -1,8 +1,14 @@
 <template>
   <swiper :options="swiperOption" ref="mySwiper" class="swiper">
     <!-- slides -->
-    <swiper-slide v-for="(item, index) in imgArray" :key="index">
-        I'm Slide {{item}}
+    <swiper-slide v-for="(item, index) in bannerArray" :key="index">
+      <div class="img">
+        <img :src="item.pic" alt="">
+        <div>
+          {{item.typeTitle}}
+        </div>
+      </div>
+       
     </swiper-slide>
     <!-- Optional controls -->
     <div class="swiper-pagination"  slot="pagination"></div>
@@ -17,7 +23,7 @@
 
 <script>
   export default {
-    name: 'mySwiper', //name不能为swiper
+    name: 'banner', //name不能为swiper
     data() {
       return {
         swiperOption: {
@@ -32,9 +38,9 @@
       }
     },
     props:{
-        imgArray:{
+        bannerArray:{
             type:Array,
-            default:[]
+            default:[1,2,3]
         }
     },
     computed: {
@@ -51,6 +57,26 @@
   }
 </script>
 
-<style>
-
+<style scoped>
+  .img{
+    width: 96%;
+    margin: 0 auto;
+    position: relative;
+    font-size: 0;
+  }
+  .img img{
+    width: 100%;
+    border-radius: 0.5rem;
+  }
+  .img div{
+    position: absolute;
+    bottom: 0;
+    right: 0;
+    z-index: 1;
+    color: white;
+    background-color:#007aff;
+    padding: 1%;
+    font-size: 1rem;
+    border-radius: 0.5rem 0 0.5rem 0
+  }
 </style>

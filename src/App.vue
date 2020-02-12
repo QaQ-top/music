@@ -143,6 +143,6 @@ export default {
   padding: 4rem 0;
 }
 input[placeholder]{
-  font-size:1.2rem
+  font-size:1.2rem;
 }
 </style>

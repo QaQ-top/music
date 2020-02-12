@@ -3,14 +3,7 @@
       <span>{{columnType}}</span>
       <swiper ref='myGrid' :options='optionsSwiper' class="grid">
           <swiper-slide v-for="(item, index) in imgArray" :key="index">
-              <div class="boxImgTxt">
-                  <div class="palyVolume">
-                      <span class="iconfont icon-z"></span>
-                      <span>{{item.playCount}}</span>
-                  </div>
-                  <img :src="item.picUrl" alt="">
-                  <p>{{item.name}}</p>
-              </div>
+              
           </swiper-slide>
       </swiper>
   </div>
@@ -18,7 +11,7 @@
 
 <script>
 export default {
-    name:'grid',
+    name:'recommendNewSong',
     data() {
         return {
             optionsSwiper:{
@@ -63,10 +56,9 @@ export default {
         }
     },
     mounted() {
-        console.log(this.swiper)
+
     },
 }
-
 </script>
 
 <style scoped>
@@ -79,22 +71,5 @@ export default {
         font-size: 2rem;
         line-height: 2.5rem;
     }
-    .boxImgTxt{
-        width: 100%;
-        position: relative;
-    }
-    .boxImgTxt img{
-        width: 100%;
-        border-radius: 0.5rem;
-    }
-    .boxImgTxt p{
-        font-size: 1rem;
-    }
-    .palyVolume{
-        position: absolute;
-        right: 0;
-        top:0;
-        color: white;
-        font-size: 1rem;
-    }
+    
 </style>

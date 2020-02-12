@@ -169,17 +169,17 @@ const mutations = {
         state.audio.dom.currentTime = state.audio.duration*(state.audio.percent / 100)
     },
     LastSong(state){
-        let currentId = state.audio.id;
-        let index = state.audio.arr.findIndex(i=>i.id===currentId)
+        let currentId = state.audio.id; //当前歌曲id
+        let index = state.audio.arr.findIndex(i=>i.id===currentId) //通过当前id找到当前歌曲的在arr中的index
         if(index===0){
             index = state.audio.arr.length-1;
         }else{
             index--
         }
-        let data = state.audio.arr[index];
+        let data = state.audio.arr[index]; //通过改变后的index找到歌曲信息
         data.index = index;
-        let newSrc = this._mutations.newSrc[0]
-        newSrc(data,index);
+        let newSrc = this._mutations.newSrc[0] //找到vuex中的newSrc方法
+        newSrc(data,index); //然后调用newSrc 播放歌曲 实现上一曲
     },
     NextSong(state){
         let currentId = state.audio.id;
@@ -203,22 +203,10 @@ const mutations = {
             state.audio.percent = (state.audio.currentTime / state.audio.duration)*100//当前播放比例 `%`
         }
         if(state.audio.percent===100){  //播放完毕 关闭播放
-            console.log(state.audioState.randomPlay)
-            if(state.audioState.randomPlay){
-                console.log(true)
-                let currentId = state.audio.id;
-                let index = state.audio.arr.findIndex(i=>i.id===currentId)
-                if(index===state.audio.arr.length){
-                    index = 0;
-                }else{
-                    index++
-                }
-                let data = state.audio.arr[index];
-                data.index = index;
-                let newSrc = this._mutations.newSrc[0]
-                newSrc(data,index);
+            if(state.audioState.randomPlay){ //如果randomPlay=true 表明处于列表循环状态
+                let NextSong = this._mutations.NextSong[0] //找到vuex中的下一曲方法
+                NextSong(); //调用NextSong 实现列表循环播放
             }else{
-                console.log(false)
                 state.audio.dom.pause();
                 state.audio.play=false;
                 state.audio.percent=0;
@@ -253,6 +241,7 @@ const mutations = {
     //播放新的src
     // {
     //     id:'',
+    //     index：'',
     //     album:{
     //         albumId : '', 
     //         albumName : '' 

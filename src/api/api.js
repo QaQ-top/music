@@ -170,7 +170,31 @@ const ci = (id) => {
     return get('/lyric',keyWord);
 }
 
+// 0: pc
 
+// 1: android
+
+// 2: iphone
+
+// 3: ipad
+//首页轮播图
+const banner = () =>{
+    let keyWord = {
+        type:1
+    };
+    return get('/banner',keyWord)
+}
+//推荐歌单
+const personalized = () => {
+    let keyWord = {
+        limit: 8
+    };
+    return get('/personalized',keyWord)
+}
+//推荐新音乐
+const recommendNewSong = () => {
+    return get('/personalized/newsong')
+}
 export default {
     get,
     post,
@@ -187,5 +211,8 @@ export default {
     video,
     song,
     songDetail,
-    ci
+    ci,
+    banner,
+    personalized,
+    recommendNewSong
 }

@@ -8,6 +8,7 @@
                 <span slot='prev_right' class="icon iconfont icon-diandiandianshu dian_part" @click.stop="setUps()"></span>
             </my-prev-nav>
 
+            <!-- 背景虚化 -->
             <div class="partBoxBack">
                 <img :src="getAudioData.img" alt="">
             </div>
@@ -15,6 +16,7 @@
             <div class="partBox" >
                 
                 <div class="albLrc">
+                    <!-- 专辑封面 -->
                     <div class="albumImg" v-if="!isLrc" @mousedown="down" @mouseup="up">
                         <div>
                             <img :src="getAudioData.img" alt="">
@@ -60,6 +62,8 @@
             </div>
         </div>
 
+
+        <!-- 设置 -->
         <div class="setUp" v-if="setUp">
             <!-- 开关静音 -->
             <div class="setList">
@@ -175,6 +179,7 @@ export default {
             console.log(this.lrc[index],this.lrcDate[index],date)
             this.toPlay(date)
         },
+        //长按切换歌词和专辑封面
         down(){
             clearTimeout(this.old);
             this.old = setTimeout(()=>{
@@ -184,6 +189,8 @@ export default {
         up(){
             clearTimeout(this.old);
         },
+
+        //设置栏显示与关闭
         setUps(){
             this.setUp = !this.setUp;
         },
@@ -202,7 +209,6 @@ export default {
         this.routePath = this.$route.params.routePath;
         if(this.getAudioData.type==='new'){ //如果是新src 发送歌词请求
             this.$request.ci(this.$store.state.audio.id).then(res=>{
-                console.log(res)
                 let lrcDate = res.lrc.lyric.replace(/[^\[(0-9:.)\]$]/g,'').split(/[\[\]]/); //将时间戳 提取  为数组
                 let lrc = res.lrc.lyric.replace(/[\[(0-9:.)]/g,'').split(']'); //将歌词提取 为数组
                 lrc.splice(0,1)

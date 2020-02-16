@@ -77,7 +77,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
     
     .audioBox{
         width: 100%;
@@ -107,12 +107,14 @@ export default {
         right: 5.5px;
         top:7px;
         color:rgb(64,158,255);
+        font-size: 2rem
     }
     .pause{
         position: absolute;
         right: 6.6px;
         top:7px;
         color:rgb(64,158,255);
+        font-size: 2rem
     }
     .transition{
         transition: all ease 0.2s;

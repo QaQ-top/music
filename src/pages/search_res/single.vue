@@ -25,7 +25,8 @@ export default {
         return {
             arr:[],
             offset:0,
-            clickIndex:-1
+            clickIndex:-1,
+            loading:false
         }
     },
     computed:{
@@ -38,26 +39,7 @@ export default {
         this.loading = true;
         this.$request.single(this.$store.state.searchVal,this.offset).then(res=>{
             this.loading = false;
-            let arr = [];
-            res.result.songs.map(item=>{
-                let artists = []
-                item.artists.map(art=>{
-                    artists.push({
-                        artistsName : art.name,
-                        artistsId : art.id
-                    })
-                }),
-                arr.push({
-                    name:item.name,
-                    id:item.id,
-                    artists,
-                    album:{
-                        albumId:item.album.id,
-                        albumName:item.album.name
-                    }
-                })
-            })
-            this.arr.push(...arr);
+            this.SongArray(res.result.songs,this.arr)
         })
         },
         song(id,index){ //点击触发
@@ -73,28 +55,8 @@ export default {
         }
     },
     mounted(){
-        this.$request.single(this.$store.state.searchVal,this.offset).then(res=>{ //通过name获取歌曲
-            let arr = [];
-            // console.log(res)
-            res.result.songs.map(item=>{  //遍历数组里的歌曲
-                let artists = []
-                item.artists.map(art=>{
-                    artists.push({ //将某一首歌曲的歌手名与歌手id提取放入artists
-                        artistsName : art.name,
-                        artistsId : art.id
-                    })
-                }),
-                arr.push({ //将某一首歌曲id 歌曲名称 专辑名 专辑id 歌手名 歌手id push入arr中
-                    name:item.name, //歌曲名称 
-                    id:item.id,  //歌曲id
-                    artists, //歌曲的歌手名与歌手id
-                    album:{
-                        albumId:item.album.id, // 专辑id
-                        albumName:item.album.name // 专辑名
-                    }
-                })
-            })
-            this.arr.push(...arr)
+        this.$request.single(this.$store.state.searchVal,this.offset).then(res=>{
+            this.SongArray(res.result.songs,this.arr)
         })
     },
 }

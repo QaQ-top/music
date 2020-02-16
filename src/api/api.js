@@ -195,6 +195,33 @@ const personalized = () => {
 const recommendNewSong = () => {
     return get('/personalized/newsong')
 }
+
+
+// 排行榜
+//"2": 网易原创歌曲榜,
+
+//"3": 云音乐飙升榜,
+
+//"4": 云音乐电音榜,
+const rankingList = (num) => {
+    let keyWord = {
+        idx:num
+    };
+    return get('/top/list',keyWord)
+}
+//电台推荐
+const category = () => {
+    return get('dj/category/recommend')
+}
+//热门电台
+const hotDj = () =>{
+    let keyWord = {
+        limit:8,
+        offset:1
+    }
+    return get('/dj/hot',keyWord)
+}
+
 export default {
     get,
     post,
@@ -214,5 +241,8 @@ export default {
     ci,
     banner,
     personalized,
-    recommendNewSong
+    recommendNewSong,
+    rankingList,
+    category,
+    hotDj
 }

@@ -22,12 +22,23 @@
 
         <recommend-new-song 
         :imgArray='recommendNewSong' 
-        :row='1' :column='3.2' 
+        :row='5' :column='1' 
         :bet='10'
         columnType='推荐新歌'
         >
-
         </recommend-new-song>
+
+        <ranking-list
+        :imgArray='rankingList' 
+        :row='1' :column='1.05' 
+        :bet='10'
+        columnType='排行榜'
+        :original='original'
+        :soar='soar'
+        :electricSound='electricSound'
+        >
+
+        </ranking-list>
     </div>
 </template>
 
@@ -38,6 +49,7 @@ import myBanner from '../components/banner'
 import mySwiperGrid from '../components/swiperGrid'
 import homeList from '../components/homeList'
 import recommendNewSong from '../components/recommendNewSong'
+import rankingList from '../components/rankingList';
 export default {
     name:"musicG",
     data () {
@@ -46,6 +58,10 @@ export default {
             bannerArray:[],
             dailySongSheet:[],//推荐歌单
             recommendNewSong:[],//推荐新歌
+            rankingList:[],//排行榜
+            original:[],//原创
+            soar:[],//飙升
+            electricSound:[],//电音
         }
     },
     components: {
@@ -54,7 +70,8 @@ export default {
         myBanner,
         mySwiperGrid,
         homeList,
-        recommendNewSong
+        recommendNewSong,
+        rankingList
     },
     beforeMount(){
         this.$request.banner().then(res=>{
@@ -64,8 +81,26 @@ export default {
             this.dailySongSheet = res.result
         })
         this.$request.recommendNewSong().then(res=>{
+            this.recommendNewSong = res.result;
+        })
+        // 排行榜
+        //"2": 网易原创歌曲榜,
+        //"3": 云音乐飙升榜,
+        //"4": 云音乐电音榜,
+        this.$request.rankingList(2).then(res=>{
+            this.original = res.playlist.tracks.slice(0,3);
+        })
+        this.$request.rankingList(3).then(res=>{
+            this.soar = res.playlist.tracks.slice(0,3);
+        })
+        this.$request.rankingList(4).then(res=>{
+            this.electricSound = res.playlist.tracks.slice(0,3);
+            console.log(this.electricSound)
+        })
+
+        //电台推荐
+        this.$request.hotDj().then(res=>{
             console.log(res)
-            this.recommendNewSong;
         })
     },
     mounted(){

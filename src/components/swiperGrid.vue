@@ -73,7 +73,7 @@ export default {
     .dailySongSheet{
         text-align: left;
         width: 96%;
-        margin: 1rem auto
+        margin: 2rem auto
     }
     .dailySongSheet>span{
         font-size: 2rem;

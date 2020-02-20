@@ -22,6 +22,9 @@ import Singer from '../pages/search_res/singer'
 import Single from '../pages/search_res/single'
 import songList from '../pages/search_res/song_list'
 
+//登录
+import login from '../pages/login'
+
 
 export default new Router({
   routes: [
@@ -86,6 +89,11 @@ export default new Router({
       meta:{
         type:'part'
       }
+    },
+    {
+      path:'/login',
+      name:'login',
+      component:login //登录页面
     }
   ]
 })

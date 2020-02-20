@@ -140,7 +140,8 @@ export default {
   color: #2c3e50;
   overflow: hidden;
   background: rgb(252,252,252);
-  padding: 4rem 0;
+  padding-top: 4rem;
+  padding-bottom: 8.3rem;
 }
 input[placeholder]{
   font-size:1.2rem;

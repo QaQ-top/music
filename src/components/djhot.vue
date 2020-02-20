@@ -1,24 +1,20 @@
 <template>
-  <div class="dailySongSheet">
-      <span>{{columnType}}</span>
-      <swiper ref='myGrid' :options='optionsSwiper' class="grid">
-          <swiper-slide v-for="(item, index) in imgArray" :key="index">
-              <div class="boxImgTxt">
-                  <div class="palyVolume">
-                      <span class="iconfont icon-z"></span>
-                      <span>{{item.playCount}}</span>
-                  </div>
+    <div class="dailySongSheet">
+         <span>{{columnType}}</span>
+        <swiper ref='djhot' :options='optionsSwiper' class="grid">
+            <swiper-slide v-for="(item, index) in imgArray" :key="index">
+                <div class="boxImgTxt">
                   <img :src="item.picUrl" alt="">
-                  <p>{{item.name}}</p>
+                  <p>{{item.copywriter}}</p>
               </div>
-          </swiper-slide>
-      </swiper>
-  </div>
+            </swiper-slide>
+        </swiper>
+    </div>
 </template>
 
 <script>
 export default {
-    name:'grid',
+    name:'djhot',
     data() {
         return {
             optionsSwiper:{
@@ -29,6 +25,11 @@ export default {
                 freeModeMomentum : true,
                 freeModeMomentumRatio : 0.5,
             }
+        }
+    },
+    computed:{
+        swiper(){
+            return this.$refs.djhot.swiper
         }
     },
     props:{
@@ -55,18 +56,12 @@ export default {
         columnType:{
             type:String,
             default:''
-        }
+        },
     },
-    computed:{
-        swiper(){
-            return this.$refs.myGrid.swiper
-        }
-    },
-    mounted() {
-        // console.log(this.swiper)
+    mounted(){
+        console.log(this.swiper)
     },
 }
-
 </script>
 
 <style scoped>
@@ -88,13 +83,6 @@ export default {
         border-radius: 0.5rem;
     }
     .boxImgTxt p{
-        font-size: 1rem;
-    }
-    .palyVolume{
-        position: absolute;
-        right: 0;
-        top:0;
-        color: white;
         font-size: 1rem;
     }
 </style>

@@ -37,8 +37,15 @@
         :soar='soar'
         :electricSound='electricSound'
         >
-
         </ranking-list>
+
+        <dj-hot
+        :imgArray='djhot' 
+        :row='1' :column='3.2' 
+        :bet='10'
+        columnType='推荐电台'
+        >
+        </dj-hot>
     </div>
 </template>
 
@@ -50,6 +57,7 @@ import mySwiperGrid from '../components/swiperGrid'
 import homeList from '../components/homeList'
 import recommendNewSong from '../components/recommendNewSong'
 import rankingList from '../components/rankingList';
+import djHot from '../components/djhot'
 export default {
     name:"musicG",
     data () {
@@ -62,6 +70,7 @@ export default {
             original:[],//原创
             soar:[],//飙升
             electricSound:[],//电音
+            djhot:[], //推荐电台
         }
     },
     components: {
@@ -71,7 +80,8 @@ export default {
         mySwiperGrid,
         homeList,
         recommendNewSong,
-        rankingList
+        rankingList,
+        djHot
     },
     beforeMount(){
         this.$request.banner().then(res=>{
@@ -95,12 +105,11 @@ export default {
         })
         this.$request.rankingList(4).then(res=>{
             this.electricSound = res.playlist.tracks.slice(0,3);
-            console.log(this.electricSound)
         })
 
         //电台推荐
         this.$request.hotDj().then(res=>{
-            console.log(res)
+            this.djhot = res.djRadios
         })
     },
     mounted(){

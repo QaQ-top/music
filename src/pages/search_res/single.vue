@@ -5,7 +5,7 @@
         v-infinite-scroll="loadMore"
         infinite-scroll-distance="10">
             <mt-cell 
-            :class="{isBule:index===getAudioData.index}"
+            :class="{isBule:item.id===getAudioData.id}"
             :title="item.name" 
             :label="`${item.artists.map(item=>item.artistsName).join(' / ')} - ${item.album.albumName}`" 
             v-for="(item, index) in arr" 

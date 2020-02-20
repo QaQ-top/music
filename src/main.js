@@ -32,11 +32,16 @@ import MintUI from 'mint-ui'
 import 'mint-ui/lib/style.css'
 Vue.use(MintUI)
 
+//单元格，可用作展示列表信息、链接或者表单等。
 import { Cell } from 'mint-ui';
 Vue.component(Cell.name, Cell);
 
+//无限滚动加载
 import { InfiniteScroll } from 'mint-ui';
 Vue.use(InfiniteScroll);
+
+//加载弹框
+
 
 //swiper轮播图
 import Swiper from 'vue-awesome-swiper'

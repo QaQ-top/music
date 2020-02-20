@@ -10,7 +10,7 @@
         >
         </audio>
 
-        <div :class="{audioBox:isAudioBox,audioBox2:!isAudioBox,transition:true}" @click="particulars(routeName)" v-if="this.$route.name!=='particulars'">
+        <div :class="{audioBox:isAudioBox,audioBox2:!isAudioBox,transition:true}" @click="particulars(routeName)" v-if="this.$route.name!=='login'">
             
             <div class="audioDetail">
                 <!-- 歌曲图片 名称 专辑名称 -->

@@ -1,7 +1,7 @@
 <template>
   <div class="dailySongSheet">
       <span>{{columnType}}</span>
-      <swiper ref='myGrid' :options='optionsSwiper' class="grid">
+      <swiper ref='recommendNewSong' :options='optionsSwiper' class="grid">
           <swiper-slide v-for="(item, index) in imgArray" :key="index">
               <div class="song">
                   <img :src="item.picUrl" alt="">
@@ -60,7 +60,7 @@ export default {
     },
     computed:{
         swiper(){
-            return this.$refs.myGrid.swiper
+            return this.$refs.recommendNewSong.swiper
         }
     },
     methods:{

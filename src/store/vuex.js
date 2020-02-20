@@ -32,7 +32,8 @@ const state = {
     },
     audioState:{
         randomPlay:false,//是否循环播放整个歌单
-        disabled:false
+        disabled:false,
+        alreadyPlay:[]
     },
     //首页app的foot的四个路径
     footerRoute:[
@@ -266,6 +267,24 @@ const mutations = {
                 state.audio.img = res.songs[0].al.picUrl; //歌曲封面
                 state.audio.title = res.songs[0].name //歌曲名称
                 state.audio.dom.removeEventListener('canplay',plays())
+
+                if(state.audioState.alreadyPlay.length===10){ //最多储存最近10首
+                    if(state.audioState.alreadyPlay.includes(data.id)){ //如果最近已经播放，再次播放，将其放置第一个
+                        state.audioState.alreadyPlay.splice(array.findIndex(item => item === data.id),1); //先删
+                        state.audioState.alreadyPlay.unshift(data.id) //再放
+                    }else{
+                        state.audioState.alreadyPlay.pop();
+                        state.audioState.alreadyPlay.unshift(data.id)
+                    }
+                    
+                }else{
+                    if(state.audioState.alreadyPlay.includes(data.id)){
+                        state.audioState.alreadyPlay.splice(array.findIndex(item => item === data.id),1);
+                        state.audioState.alreadyPlay.unshift(data.id)
+                    }else{
+                        state.audioState.alreadyPlay.unshift(data.id)
+                    }
+                }
             })
         })
     },

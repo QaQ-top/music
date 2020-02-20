@@ -1,7 +1,7 @@
 <template>
   <div class="dailySongSheet">
       <span>{{columnType}}</span>
-      <swiper ref='myGrid' :options='optionsSwiper' class="grid">
+      <swiper ref='rankingList' :options='optionsSwiper' class="grid">
           <swiper-slide>
               <div class="rank">
                   <h3>原创歌曲榜</h3>
@@ -104,7 +104,7 @@ export default {
     },
     computed:{
         swiper(){
-            return this.$refs.myGrid.swiper
+            return this.$refs.rankingList.swiper
         }
     },
     methods:{

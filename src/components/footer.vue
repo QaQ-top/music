@@ -10,7 +10,7 @@
                 <p>{{recom}}</p>
             </router-link>
             <router-link to="/dynamic" tag="div" active-class="font-color">
-                <p><span class="iconfont icon-compasszhinanzhen"></span></p>
+                <p><span class="iconfont icon-changge"></span></p>
                 <p>{{dynamic}}</p>
             </router-link>
             <router-link to="/mine" tag="div" active-class="font-color">

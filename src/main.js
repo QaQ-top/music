@@ -1,7 +1,12 @@
 // The Vue build version to load with the `import` command
 // (runtime-only or standalone) has been set in webpack.base.conf with an alias.
 import Vue from 'vue'
+
+//渲染dom
 import App from './App'
+
+
+//路由
 import router from './router'
 
 Vue.config.productionTip = false
@@ -40,7 +45,7 @@ Vue.component(Cell.name, Cell);
 import { InfiniteScroll } from 'mint-ui';
 Vue.use(InfiniteScroll);
 
-//加载弹框
+
 
 
 //swiper轮播图

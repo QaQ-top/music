@@ -59,7 +59,7 @@ export default {
         },
     },
     mounted(){
-        console.log(this.swiper)
+        // console.log(this.swiper,this.imgArray)
     },
 }
 </script>

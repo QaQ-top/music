@@ -2,7 +2,7 @@
     <div>
         <top-nav txt='音乐'>
             <my-search slot="cun" txt='搜索'></my-search>
-            <span class="icon iconfont icon-yinle1" slot="icon"></span>
+            <span class="icon iconfont icon-tubiaozhizuomoban" slot="icon"></span>
         </top-nav>
 
         <my-banner  :bannerArray='bannerArray'>
@@ -107,9 +107,9 @@ export default {
             this.electricSound = res.playlist.tracks.slice(0,3);
         })
 
-        //电台推荐
-        this.$request.hotDj().then(res=>{
-            this.djhot = res.djRadios
+        //热门电台
+        this.$request.djProgram().then(res=>{
+            this.djhot = res.result
         })
     },
     mounted(){

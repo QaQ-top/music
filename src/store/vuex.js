@@ -268,22 +268,15 @@ const mutations = {
                 state.audio.title = res.songs[0].name //歌曲名称
                 state.audio.dom.removeEventListener('canplay',plays())
 
+                if(state.audioState.alreadyPlay.includes(data.id)){ //如果最近已经播放，再次播放，将其放置第一个
+                    let index = array.findIndex(item => item === data.id)
+                    state.audioState.alreadyPlay.splice(index,1); //先删
+                }
                 if(state.audioState.alreadyPlay.length===10){ //最多储存最近10首
-                    if(state.audioState.alreadyPlay.includes(data.id)){ //如果最近已经播放，再次播放，将其放置第一个
-                        state.audioState.alreadyPlay.splice(array.findIndex(item => item === data.id),1); //先删
-                        state.audioState.alreadyPlay.unshift(data.id) //再放
-                    }else{
-                        state.audioState.alreadyPlay.pop();
-                        state.audioState.alreadyPlay.unshift(data.id)
-                    }
-                    
+                    state.audioState.alreadyPlay.pop(); //删掉最后一个
+                    state.audioState.alreadyPlay.unshift(data.id) 
                 }else{
-                    if(state.audioState.alreadyPlay.includes(data.id)){
-                        state.audioState.alreadyPlay.splice(array.findIndex(item => item === data.id),1);
-                        state.audioState.alreadyPlay.unshift(data.id)
-                    }else{
-                        state.audioState.alreadyPlay.unshift(data.id)
-                    }
+                    state.audioState.alreadyPlay.unshift(data.id)
                 }
             })
         })

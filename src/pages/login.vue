@@ -29,15 +29,16 @@ export default {
     methods: {
         login(){
             this.$request.login(this.username,this.password).then(res=>{
-                console.log(res)
+                console.log(res);
+                console.log(Date.parse(new Date()))
                 if(res.code===200){
                     let local = window.localStorage;
                     let str = JSON.stringify({
-                        name:res.profile.nickname,
-                        userId:res.profile.userId,
-                        avatarUrl:res.profile.avatarUrl,
-                        bgUrl:res.profile.backgroundUrl,
-                        token:res.token
+                        name:res.profile.nickname, //用户信息
+                        userId:res.profile.userId, //用户id
+                        avatarUrl:res.profile.avatarUrl, //用户头像
+                        bgUrl:res.profile.backgroundUrl, //用户背景
+                        token:res.token  //token
                     })
                     local.setItem('user',str)
                 }

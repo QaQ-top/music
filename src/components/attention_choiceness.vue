@@ -22,10 +22,12 @@ export default {
         isleft(){
             this.left = true;
             this.right = false;
+            this.$emit('chengar',this.left)
         },
         isright(){
             this.left = false;
             this.right = true;
+            this.$emit('chengar',this.left)
         }
     },
 }

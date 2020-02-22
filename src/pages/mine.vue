@@ -2,7 +2,7 @@
     <div>
         <top-nav txt='我的'>
             <my-search txt='搜索' slot="cun"></my-search>
-            <span class="icon iconfont icon-gengduo-tongyong" slot="icon"></span>
+            <span class="icon iconfont icon-tubiaozhizuomoban" slot="icon"></span>
         </top-nav>
         <div class="mine">
             <div>
@@ -45,7 +45,12 @@
                     <p>{{audioState.alreadyPlay.length}}首</p>
                 </div>
             </div>
+
+            <my-song-list :newBuilb='newbuild' :collEction='collection'>
+            
+            </my-song-list>
         </div>
+        
     </div>
 </template>
 
@@ -53,7 +58,8 @@
 import topNav from '../components/top_nav'
 import mySearch from '../components/mysearch'
 import mineList from '../components/mineList'
-import {mapState} from 'vuex'
+import {mapState} from 'vuex';
+import mySongList from '../components/mySongList';
 export default {
     name:"mine",
     data () {
@@ -62,12 +68,16 @@ export default {
             name:null,
             isImg:null,
             isLogin:null,
+            ilikeIt:{},
+            newbuild:[],
+            collection:[]
         }
     },
     components: {
         topNav,
         mySearch,
-        mineList
+        mineList,
+        mySongList
     },
     computed:{
        ...mapState(['audio','audioState'])
@@ -105,11 +115,27 @@ export default {
             this.name = user.name;
             this.isLogin = true;
             this.isImg = true;
+            this.$request.usePlaylist(user.userId).then(res=>{  //获取用户歌单
+                let arr = res.playlist;
+                this.ilikeIt = arr.slice(0,1)[0]  //数组中第一个对象 永远为我喜欢的音乐
+                arr.splice(0,1)
+                this.collection = arr.filter(item => {
+                    return item.ordered===true;  //ordered 为 true  收藏歌单
+                });
+                this.newbuild = arr.filter(item => {
+                    return item.ordered===false; //ordered 为 true  新键歌单
+                })
+                // console.log(this.ilikeIt,this.collection,this.newbuild)
+            })
         }else{
             this.name = '您还没有登录~';
             this.isLogin = false;
             this.isImg = false;
-        }
+            this.ilikeIt = {};
+            this.collection = [];
+            this.newbuild = []
+        };
+        
     }
 }
 </script>
@@ -139,7 +165,7 @@ export default {
         background-color: white;
         margin-top:-17rem;
         border-radius: 2rem 2rem 0 0;
-        height: 30rem;
+        /* height: 30rem; */
     }
     .avatar{
         width: 16%;
@@ -151,12 +177,12 @@ export default {
         text-align: left;
         margin-left: 1rem;
     }
-    .myMusic div:nth-child(2){
+    .myMusic>div:nth-child(2){
         display: flex;
         justify-content: space-around;
     }
     .bd,.love{
-        width: 40%;
+        width: 45%;
         margin: 0 auto;
         background-color: #f0f0f0;
         border-radius: 1rem;
@@ -183,5 +209,10 @@ export default {
     .zjPaly img{
         width: 16%;
         border-radius: 1rem;
+    }
+    .zjPaly div{
+        width: 80%;
+        text-align: left;
+
     }
 </style>

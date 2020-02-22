@@ -1,7 +1,7 @@
 <template>
   <div id="app" :style="height" ref='app'>
     <my-audio></my-audio>
-    <my-footer musicG='音遇' recom='推荐' dynamic='动态' mine='我的'></my-footer>
+    <my-footer musicG='音遇' recom='推荐' dynamic='歌手' mine='我的'></my-footer>
 
       <keep-alive :exclude="this.$store.state.cache"> 
         <router-view></router-view>
@@ -139,7 +139,7 @@ export default {
   text-align: center;
   color: #2c3e50;
   overflow: hidden;
-  background: rgb(252,252,252);
+  /* background: rgb(252,252,252); */
   padding-top: 4rem;
   padding-bottom: 8.3rem;
 }

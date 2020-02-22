@@ -1,5 +1,7 @@
 import axios from 'axios'
 import qs from 'qs'
+
+//加载弹框
 import { Indicator } from 'mint-ui';
 
 axios.interceptors.request.use( //请求前
@@ -38,25 +40,27 @@ axios.interceptors.response.use( //响应前
     }
 );
 //page=1
-
+axios.defaults.timeout = 10000;
+axios.defaults.withCredentials=true;//让ajax携带cookie
 // axios.defaults.baseURL = '/music' //npm run dev  启动后使用代理后的没问题
 //为什么npm run build后不能使用了，显示跨域
-axios.defaults.timeout = 10000;
+
 axios.defaults.baseURL = 'http://39.108.182.125:3000' //npm run dev  启动后使用代理后 显示跨域
-//为什么npm run build可用使用
+// //为什么npm run build可用使用
 
 
 const get = (url,data={})=>{
     return new Promise((resolve,reject)=>{
         axios
-        .get(`http://39.108.182.125:3000${url}`,{
+        .get(url,{
             params:data
-        })
+        },{withCredentials:true})
         .then((response)=>{
             resolve(response.data)
         },
         (err)=>{
             reject(err)
+            
         })
     })
 };
@@ -64,7 +68,7 @@ const get = (url,data={})=>{
 const post = (url,data) =>{
     return new Promise((resolve,reject)=>{
         axios
-        .post(`http://39.108.182.125:3000${url}`,qs.stringify(data))
+        .post(url,qs.stringify(data),{withCredentials:true})
         .then((response)=>{
             resolve(response.data)
         },
@@ -192,6 +196,15 @@ const ci = (id) => {
     return get('/lyric',keyWord);
 }
 
+
+/**
+   * 热搜
+   */
+  const  HotSearchKey = ()=>{
+    return fetchGet('/search/hot')
+ }
+
+
 // 0: pc
 
 // 1: android
@@ -218,7 +231,6 @@ const recommendNewSong = () => {
     return get('/personalized/newsong')
 }
 
-
 // 排行榜
 //"2": 网易原创歌曲榜,
 
@@ -231,10 +243,21 @@ const rankingList = (num) => {
     };
     return get('/top/list',keyWord)
 }
-//电台推荐
-const category = () => {
+
+
+
+
+
+//电台 - 推荐类型
+const category = () => { ///personalized/djprogram
     return get('dj/category/recommend')
 }
+
+//电台 - 推荐电台
+const djProgram = () => { //
+    return get('/personalized/djprogram')
+}
+
 //热门电台
 const hotDj = () =>{
     let keyWord = {
@@ -243,6 +266,10 @@ const hotDj = () =>{
     }
     return get('/dj/hot',keyWord)
 }
+
+
+
+
 
 //手机登录 /login/cellphone?phone=xxx&password=yyy
 const login = (username,pwd) => {
@@ -257,16 +284,36 @@ const logout = () => {
     return get('/logout')
 }
 
-//查看登录状态
-// const logStatus = (timestamp,token) => {
-//     let keyWord = {
-//         timestamp,
-//         token,
-//         id:670035926
-//     }
-//     console.log(keyWord)
-//     return post('/login/status',keyWord)
-// }
+
+// 获取用户歌单
+const usePlaylist = (id)=>{
+    let keyWord = {
+        uid:id
+    };
+    return get('/user/playlist',keyWord)
+}
+
+
+//获取歌手
+ 
+const artist = (cat,offset=1) =>{
+    let keyWord = {
+        limit:16,
+        offset,
+        cat
+    }
+    return get('/artist/list',keyWord)
+}
+
+// 查看登录状态
+const logStatus = () => {
+    // let keyWord = {
+    //     timestamp,
+    //     token,
+    //     id:670035926
+    // }
+    return post('/login/status')
+}
 // //刷新登录
 // const refresh = (timestamp,token) =>{
 //     let keyWord = {
@@ -278,12 +325,7 @@ const logout = () => {
 //     return post('/login/refresh',keyWord)
 // }
 
-/**
-   * 热搜
-   */
-const  HotSearchKey = ()=>{
-    return fetchGet('/search/hot')
- }
+
 
 export default {
     get,
@@ -306,9 +348,13 @@ export default {
     personalized,
     recommendNewSong,
     rankingList,
+    djProgram,
     category,
     hotDj,
     login,
     logout,
-    HotSearchKey
+    HotSearchKey,
+    usePlaylist,
+    artist,
+    logStatus
 }

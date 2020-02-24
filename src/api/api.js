@@ -9,10 +9,10 @@ axios.interceptors.request.use( //请求前
         let arr = [
             '/song/detail',
             '/song/url',
-            '/check/music'
+            '/check/music',
+            '/search'
         ]
         if(arr.includes(config.url)){
-            
         }else{
             Indicator.open({
                 text: '',
@@ -79,7 +79,13 @@ const post = (url,data) =>{
 }
 
 //模糊搜索
-const searchMH  =  (key) => get(`/search?keywords=${key}&type=1`)
+const searchMH  =  (key) => {
+    let keywords = {
+        'keywords':key,
+        'type':1
+    }
+   return get(`/search`,keywords)
+}
 
 //热门推荐
 const heat = () => get(`/search/hot/detail`)
@@ -268,9 +274,6 @@ const hotDj = () =>{
 }
 
 
-
-
-
 //手机登录 /login/cellphone?phone=xxx&password=yyy
 const login = (username,pwd) => {
     let keyWord ={
@@ -307,24 +310,17 @@ const artist = (cat,offset=1) =>{
 
 // 查看登录状态
 const logStatus = () => {
-    // let keyWord = {
-    //     timestamp,
-    //     token,
-    //     id:670035926
-    // }
-    return post('/login/status')
+    return get('/login/status')
 }
-// //刷新登录
-// const refresh = (timestamp,token) =>{
-//     let keyWord = {
-//         timestamp,
-//         token,
-//         id:670035926
-//     }
-//     console.log(keyWord)
-//     return post('/login/refresh',keyWord)
-// }
+//刷新登录
+const refresh = (timestamp,token) =>{
+    return get('/login/refresh')
+}
 
+//收藏的歌手列表
+const sublist = (timestamp,token) =>{
+    return get('/artist/sublist')
+}
 
 
 export default {
@@ -356,5 +352,7 @@ export default {
     HotSearchKey,
     usePlaylist,
     artist,
-    logStatus
+    logStatus,
+    refresh,
+    sublist
 }

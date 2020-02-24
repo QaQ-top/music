@@ -90,7 +90,7 @@ export default {
       this.$store.state.audio = JSON.parse(audio) //获取上次播放歌曲
       this.$store.state.audioState = JSON.parse(audioState) //获取此播放歌曲状态
     }
-    this.$router.push('/musicG')
+    this.$router.push('/musicG');
   },
   //---------------------
    mounted() {

@@ -38,6 +38,8 @@ Vue.prototype.SongArray = (array,variable) =>{
         }
 }
 
+
+//歌手分类
 Vue.prototype.singerType = [
         {
                 type:'入驻歌手',
@@ -104,3 +106,21 @@ Vue.prototype.singerType = [
                 id:4003
         },
 ]
+
+//封装设置cookie
+Vue.prototype.setCookie = (name,value,exdays)=>{ 
+        let date = new Date();
+        date.setTime(date.getTime()+(exdays*24*60*60*1000));
+        let expires =  `expires=${date.toGMTString()}`;
+        document.cookie = `${name}=${value};${expires}`
+}
+
+//获取cookie的键
+Vue.prototype.cookieKey = ()=>{
+        let cookieArray = document.cookie.split(';')
+        let key = []
+        cookieArray.map(item=>{
+                key.push(item.split('=')[0])
+        })
+        return key;
+}

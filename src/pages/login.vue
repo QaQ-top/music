@@ -29,8 +29,7 @@ export default {
     methods: {
         login(){
             this.$request.login(this.username,this.password).then(res=>{
-                console.log(res);
-                console.log(Date.parse(new Date()))
+                this.$store.state.cookie = document.cookie;
                 if(res.code===200){
                     let local = window.localStorage;
                     let str = JSON.stringify({
@@ -40,7 +39,8 @@ export default {
                         bgUrl:res.profile.backgroundUrl, //用户背景
                         token:res.token  //token
                     })
-                    local.setItem('user',str)
+                    local.setItem('user',str);
+                    this.setCookie('MUSIC_U','Synchronize with server cookie',15)
                 }
             })
         },

@@ -91,6 +91,7 @@ export default {
         logout(){
             this.$request.logout().then(res=>{
                 if(res.code===200){
+                this.setCookie('MUSIC_U',null,-1)
                 let local = window.localStorage;
                     let str = JSON.stringify({
                         name:'',

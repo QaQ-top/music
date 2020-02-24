@@ -20,14 +20,23 @@
                     <span>
                         {{item.name}}
                     </span>
-                    <div>
-                        <span class="iconfont icon-heart"></span>
-                        <span class="iconfont icon-heart-fill"></span>
-                    </div>
+                    <!-- <div>
+                        <span class="iconfont icon-heart" v-if="!item.followed"></span>
+                        <span class="iconfont icon-heart-fill" v-if="item.followed"></span>
+                    </div> -->
                 </div>
             </div>
             <div v-if="!switchs" @click="logStatus">
-                右
+                <div v-for="(item, index) in likeList" :key="index" class="blurb">
+                    <img :src="item.img1v1Url" alt="">
+                    <span>
+                        {{item.name}}
+                    </span>
+                    <!-- <div>
+                        <span class="iconfont icon-heart" v-if="!item.followed"></span>
+                        <span class="iconfont icon-heart-fill" v-if="item.followed"></span>
+                    </div> -->
+                </div>
             </div>
         </div>
     </div>
@@ -37,6 +46,12 @@
 import topNav from '../components/top_nav'
 import atteChoi from '../components/attention_choiceness'
 import watchSlides from '../components/watchSlides';
+import {mapState} from 'vuex'
+/**
+ * 弹框
+ */
+import { MessageBox } from 'mint-ui';
+
 export default {
     name:"dynamic",
     data () {
@@ -45,10 +60,16 @@ export default {
             switchs:true,
             arr:[],
             singerList:[],
+            likeList:[],
             cat:null,
             offset:1,
-            loading:true
+            loading:true,
+            load:true,
+            messBox:false
         }
+    },
+    computed:{
+        ...mapState(['cookie'])
     },
     components: {
         topNav,atteChoi,watchSlides
@@ -62,6 +83,24 @@ export default {
         },
         breha(bol){
             this.switchs = bol;
+           
+            if(!bol){
+                let isLogin = this.cookieKey().includes('MUSIC_U')
+                if(isLogin){
+                    this.$request.sublist().then(res=>{
+                        this.likeList = res.data;
+                    })
+                }else{
+                    if(this.messBox) return
+                    MessageBox.confirm('您还没有登录，是否前往登录？').then(action => {
+                        this.$router.push({
+                            path:'/login'
+                        })
+                    })
+                    this.messBox = true;
+                }
+                
+            }
         },
         Obtain(id){ //监听子组件数据加载后
             this.cat = id;
@@ -70,10 +109,18 @@ export default {
             });
         },
         loadMore() {
+            if(!this.load) return
             this.offset++;
             this.loading = true;
+            // console.log(this.offset)
             this.$request.artist(this.cat,this.offset).then(res=>{
                 this.loading = false;
+                for(let i of this.singerList){
+                    let index = res.artists.findIndex(item=>item.name===i.name);
+                    if(index>=0){
+                        res.artists.splice(index,1);
+                    }
+                }
                 this.singerList.push(...res.artists);
             });
         },
@@ -83,6 +130,12 @@ export default {
             });
         }
     },
+    activated(){
+        this.load = true;
+    },
+    deactivated(){
+        this.load = false;
+    }
     
 }
 </script>

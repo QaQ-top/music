@@ -1,9 +1,9 @@
 <template>
     <div>
-        <swiper :options="swiperOption" ref="wtSlideSwiper">
+        <swiper :options="swiperOption" ref="slTypeSwiper">
             <swiper-slide v-for="(item, index) in arr" :key="index" >
-                <div @click="visit(item.id)" :class="{color:id===item.id,vis:true}">
-                    {{item.type}}
+                <div @click="visit(item.name)" :class="{color:name===item.name,vis:true}">
+                    {{item.name}}
                 </div>
             </swiper-slide>
         </swiper>
@@ -12,7 +12,7 @@
 
 <script>
 export default {
-    name:'slide',
+    name:'slType',
     data() {
         return {
             swiperOption: {
@@ -23,22 +23,31 @@ export default {
                 freeModeMomentum : true,
                 freeModeMomentumRatio : 0.5,
             },
-            arr:[],
-            id:5001
+            name:5001
         }
     },
-    methods:{
-        visit(id){
-            if(id !== this.id){
-                this.id = id
-                this.$emit('esid',id)
+    props:{
+        arr:{
+            default:[],
+            type:Array
+        }
+    },
+    watch:{
+        arr:{
+            handler:function (to,from) {
+                this.name = to[0].name
+                this.$emit('transmission',this.name);
             }
         }
     },
-    created(){
-        this.arr = this.singerType;
-        this.$emit('created',this.id)
-    }
+    methods:{
+        visit(name){
+            if(name !== this.name){
+                this.name = name
+                this.$emit('esName',name)
+            }
+        }
+    },
 }
 </script>
 
@@ -47,6 +56,7 @@ export default {
         font-size: 1.5rem;
         line-height: 3rem;
         margin:2rem 0 2rem 0;
+        border-radius: 2rem;
     }
     .color{
         font-size: 1.5rem;

@@ -81,21 +81,21 @@ export default {
     
     .audioBox{
         width: 100%;
-        height:3.8rem;
+        height:4.8rem;
         box-shadow: 0 0 1rem -0.68rem #000;
         z-index: 100;
         position: fixed;
         background: white;
-        bottom: 4.3rem;
+        bottom: 6.2rem;
     }
     .audioBox2{
         width: 100%;
-        height:3.8rem;
+        height:6rem;
         box-shadow: 0 0 1rem -0.68rem #000;
         z-index: 100;
         position: fixed;
         background: white;
-        bottom: 0;
+        bottom: -1px;
     }
     .pro_play_pause{
         position: absolute;
@@ -141,7 +141,7 @@ export default {
     }
     .audioTitle{
         height:100%;
-        width: 17rem;
+        width: 60%;
         overflow: hidden;
         display: flex;
         flex-direction: column;
@@ -155,11 +155,11 @@ export default {
         white-space: nowrap;
     }
     .audioTitle>p:nth-child(2){
-        font-size: 1.4rem;
+        font-size: 1rem;
         color: rgb(199, 199, 199);
         text-align: left;
+        padding-left: 1.7rem;
         margin-bottom: 0.3rem;
-        transform: scale(0.8);
         white-space: nowrap;
     }
 </style>

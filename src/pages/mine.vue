@@ -5,7 +5,7 @@
             <span class="icon iconfont icon-tubiaozhizuomoban" slot="icon"></span>
         </top-nav>
         <div class="mine">
-            <div>
+            <div class="user">
                 <img :src="img" alt="" v-if="isImg" class="avatar">
                 <div class="icon iconfont icon-wode" v-if="!isImg"></div>
                 <div class="name">
@@ -164,19 +164,22 @@ export default {
     }
     .myMusic{
         background-color: white;
-        margin-top:-17rem;
-        border-radius: 2rem 2rem 0 0;
+        margin-top:-14rem;
+        border-radius: 3rem 3rem 0 0;
         /* height: 30rem; */
     }
+    .user{
+        padding: 1rem 0 0 0;
+    }
     .avatar{
-        width: 16%;
+        height:100%;
         border-radius: 50%;
     }
     .myMusic h2 {
         font-size: 1.6rem;
         line-height: 4rem;
         text-align: left;
-        margin-left: 1rem;
+        padding: 2rem 0 0 2rem;
     }
     .myMusic>div:nth-child(2){
         display: flex;
@@ -186,8 +189,8 @@ export default {
         width: 45%;
         margin: 0 auto;
         background-color: #f0f0f0;
-        border-radius: 1rem;
-        height: 10rem;
+        border-radius: 2rem;
+        height: 15rem;
         display: flex;
         justify-content: space-around;
         align-items: center;

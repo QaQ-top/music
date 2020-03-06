@@ -28,7 +28,6 @@ const state = {
         storage:false, //是否退出程序
         type:'', //是否是新url
         arr:[], //歌单
-        index:-1,//歌曲在歌单中的索引
     },
     audioState:{
         randomPlay:false,//是否循环播放整个歌单
@@ -186,7 +185,7 @@ const mutations = {
     NextSong(state){
         let currentId = state.audio.id;
         let index = state.audio.arr.findIndex(i=>i.id===currentId)
-        if(index===state.audio.arr.length){
+        if(index===state.audio.arr.length-1){
             index = 0;
         }else{
             index++
@@ -250,7 +249,6 @@ const mutations = {
     //     }
     // }
     newSrc(state,data){  //参数需要歌曲id 专辑id 专辑name
-        state.audio.index = data.index;
         let plays = ()=> {
             state.audio.dom.play();
             state.audio.play=true;
@@ -270,7 +268,7 @@ const mutations = {
                 state.audio.dom.removeEventListener('canplay',plays())
 
                 if(state.audioState.alreadyPlay.includes(data.id)){ //如果最近已经播放，再次播放，将其放置第一个
-                    let index = array.findIndex(item => item === data.id)
+                    let index = state.audioState.alreadyPlay.findIndex(item => item === data.id)
                     state.audioState.alreadyPlay.splice(index,1); //先删
                 }
                 if(state.audioState.alreadyPlay.length===10){ //最多储存最近10首

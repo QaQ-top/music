@@ -1,38 +1,38 @@
 <template>
     <div>
        <div class="list">
-           <div>
+           <router-link :to="{name:'red',query:{routePath:this.$route.path}}" tag="div">
                <div class="icon">
                    <span class="iconfont icon-jinrituijian"></span>
                </div>
                <p>
                    每日推荐
                </p>
-           </div>
-           <div>
+           </router-link>
+           <router-link :to="{name:'sl',query:{routePath:this.$route.path}}" tag="div">
                <div class="icon">
                    <span class="iconfont icon-yinle2"></span>
                </div>
                <p>
                    歌单
                </p>
-           </div>
-           <div>
+           </router-link>
+           <router-link :to="{name:'rank',query:{routePath:this.$route.path}}" tag="div">
                <div class="icon">
                    <span class="iconfont icon-xingxiaoxiaoguo"></span>
                </div>
                <p>
                    排行榜
                </p>
-           </div>
-           <div>
+           </router-link>
+           <router-link :to="{name:'dj',query:{routePath:this.$route.path}}" tag="div">
                <div class="icon">
                    <span class="iconfont icon-diantai"></span>
                </div>
                <p>
                    电台
                </p>
-           </div>
+           </router-link>
         </div> 
     </div>
 </template>
@@ -42,7 +42,7 @@ export default {
     name:'homeList',
     data() {
         return {
-            
+
         }
     },
 }
@@ -64,18 +64,23 @@ export default {
         align-items: center;
     }
     .list .icon{
-        width: 4rem;
-        height: 4rem;
+        width: 5rem;
+        height: 5rem;
         border-radius: 50%;
         background-color: #007aff;
         line-height: 4rem;
         color:white;
+        display: flex;
+        justify-content: center;
+        align-content: center;
     }
     .icon>span{
-        font-size: 3rem;
+        font-size: 2.5rem;
+        line-height: 5rem;
     }
     .list p{
         font-size: 1.5rem;
-        line-height: 2rem
+        line-height: 2rem;
+        margin-top: 1rem;
     }
 </style>

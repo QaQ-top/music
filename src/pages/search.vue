@@ -124,7 +124,7 @@ export default {
         }
     },
     //-------------------------
-    mounted() {
+    created() {
         this.$request.heat().then(res=>{  //热门推荐
             var arr = []; 
             res.data.map(item=>{
@@ -142,15 +142,15 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
     .searchBox{
-        padding-top:4.3rem;
+        padding-top:6.3rem;
     }
     .search>div{
         width: 80%;
-        height: 2rem;
+        height: 3rem;
         background: white;
-        border-radius:2rem;
+        border-radius:3rem;
         display:flex;
         align-items: center;
     }
@@ -158,7 +158,7 @@ export default {
         width:80%;
         border: none;
         outline: none;
-        height: 2rem;
+        height: 3rem;
     }
     .search_icon{
         font-size: 2rem;
@@ -191,39 +191,39 @@ export default {
     }
     .heat_box{
         width: 100%;
-        background:rgb(252,252,252);
+        /* background:rgb(252,252,252); */
         margin-top:1rem;
         padding-bottom:48px
     }
-    .heat_box .mint-cell {
-        height: 4rem;
-        background: rgb(252,252,252);
+    .heat_box >>> .mint-cell {
+        height: 6rem;
+        /* background: rgb(252,252,252); */
     }
-    .heat_box .mint-cell-wrapper{
-        background: rgb(252,252,252);
+    .heat_box >>> .mint-cell-wrapper{
+        /* background: rgb(252,252,252); */
         padding: 0;
     }
-    .heat_box .mint-cell-value{
+    .heat_box >>> .mint-cell-value{
         font-size: 1.7rem;
         margin-right: 10px
     }
-    .heat_box .mint-cell-text{
+    .heat_box >>> .mint-cell-text{
         display: inline-block;
         width: 100%;
         font-size: 1.7rem;
         text-align: left;
     }
-    .heat_box .mint-cell-label{
+    .heat_box >>> .mint-cell-label{
         text-align: left;
         font-size: 1.3rem;
     }
-    .heat_box .mint-cell-title{
+    .heat_box >>> .mint-cell-title{
         font-size: 1.3rem;
         box-sizing: border-box;
         padding-left: 3rem;
         position: relative;
     }
-    .heat_box .mint-cell-title div{
+    .heat_box >>> .mint-cell-title div{
         position: absolute;
         left: 0;
         width:3rem;
@@ -232,5 +232,8 @@ export default {
         justify-content: center;
         align-items: center;
         float: left;
+    }
+    .icon-yduicuowukongxin{
+        font-size: 2rem
     }
 </style>

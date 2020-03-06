@@ -92,12 +92,12 @@ const heat = () => get(`/search/hot/detail`)
 
 //单曲
 //limit : 返回数量 , 默认为 30 offset
-const single  = (keywords,num) =>{
+const single  = (keywords,num,limit=16) =>{
     // console.log(keywords)
     let keyWord = {
         keywords,
         type:1,
-        limit:16,
+        limit,
         offset:num
     }
     return get('/search',keyWord) ///song/detail
@@ -322,6 +322,25 @@ const sublist = (timestamp,token) =>{
     return get('/artist/sublist')
 }
 
+//每日推荐歌曲
+const redSong = ()=>{
+    return get('/recommend/songs')
+}
+
+//歌单分类
+const songCatList = ()=>{
+    return get('/playlist/hot')
+}
+
+//获取精品歌单
+const playlist = (cat,before=null)=>{
+    let keyWord = {
+        cat,
+        before,
+        limit:10
+    }
+    return get('/top/playlist/highquality',keyWord)
+}
 
 export default {
     get,
@@ -354,5 +373,8 @@ export default {
     artist,
     logStatus,
     refresh,
-    sublist
+    sublist,
+    redSong,
+    songCatList,
+    playlist
 }

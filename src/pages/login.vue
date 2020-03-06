@@ -86,12 +86,12 @@ export default {
     }
     .btn{
         width: 100%;
-        height: 3.5rem;
+        height: 4rem;
         background-color: white;
         color: #3e9cff;
-        border-radius: 3.5rem;
+        border-radius: 4rem;
         font-size: 2rem;
-        line-height: 3.5rem;
+        line-height: 4rem;
     }
     .inpt::placeholder{
         font-size: 2rem;

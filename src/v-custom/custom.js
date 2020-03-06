@@ -12,7 +12,14 @@ Vue.directive('focus', {
 
 //处理歌曲详情
 Vue.prototype.SongArray = (array,variable) =>{
-        if(array){
+        if(array.length&&array instanceof Array){
+                // variable.map(item=>{
+                //         let index = array.findIndex(i=>item.id===i.id)
+                //         if(index >=0){
+                //                 console.log(index)
+                //                 array.splice(index,1);
+                //         }
+                // })
                 let arr = [];
                 array.map(item=>{  //遍历数组里的歌曲
                         let artists = []
@@ -34,7 +41,7 @@ Vue.prototype.SongArray = (array,variable) =>{
                 })
                 variable.push(...arr)
         }else{
-                throw new Error('第一个参数不是数组类型，无法处理')
+                throw new Error('第一个参数不是数组类型或者为空，无法处理')
         }
 }
 

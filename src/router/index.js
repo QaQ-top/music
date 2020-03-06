@@ -6,6 +6,16 @@ Vue.use(Router)
 
 //footer
 import MusicG from '../pages/musicG'
+      //电台
+      import Dj from '../pages/home/dj.vue';
+      //每日推荐
+      import Red from '../pages/home/recommend.vue';
+      //排行
+      import Rank from '../pages/home/rank.vue';
+      //歌单
+      import Sl from '../pages/home/songList.vue'
+
+
 import Recommend from '../pages/recommend'
 import Dynamic from '../pages/dynamic.vue'
 import Mine from '../pages/mine'
@@ -24,6 +34,8 @@ import songList from '../pages/search_res/song_list'
 
 //登录
 import login from '../pages/login'
+
+
 
 
 export default new Router({
@@ -94,6 +106,26 @@ export default new Router({
       path:'/login',
       name:'login',
       component:login //登录页面
+    },
+    {
+      path:'/dj',
+      name:'dj',
+      component:Dj
+    },
+    {
+      path:'/red',
+      name:'red',
+      component:Red
+    },
+    {
+      path:'/rank',
+      name:'rank',
+      component:Rank
+    },
+    {
+      path:'/sl',
+      name:'sl',
+      component:Sl
     }
   ]
 })

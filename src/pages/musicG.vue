@@ -83,7 +83,7 @@ export default {
         rankingList,
         djHot
     },
-    beforeMount(){
+    created(){
         this.$request.banner().then(res=>{
             this.bannerArray = res.banners;
         });

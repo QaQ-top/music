@@ -29,7 +29,7 @@ export default {
         font-size: 1.5rem;
         background: white;
         width:20rem;
-        height: 2rem;
+        height: 2.5rem;
         border-radius: 2rem;
         display: flex;
         align-items: center;

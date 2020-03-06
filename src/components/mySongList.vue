@@ -100,7 +100,7 @@ export default {
         align-items: center;
         width: 96%;
         margin: 0 auto;
-        margin-top: 2rem;
+        margin-top: 4rem;
     }
     .con{
         font-size: 1rem;
@@ -112,7 +112,7 @@ export default {
     }
     .con h3{
         font-size: 1rem;
-        line-height: 1rem;
+        line-height: 4rem;
         white-space: nowrap;
     }
     .switColor{
@@ -131,9 +131,10 @@ export default {
         margin-top: 1rem;
         display: flex;
         justify-content: left;
+        text-align: left;
     }
     .builb>div>img{
-        width:40%;
+        width:35%;
         border-radius: 0.5rem;
     }
     .builb>div>div{
@@ -151,7 +152,7 @@ export default {
         margin-top: 1rem;
     }
     .collection>div>img{
-        width:40%;
+        width:35%;
         border-radius: 0.5rem;
     }
     .collection>div>div{

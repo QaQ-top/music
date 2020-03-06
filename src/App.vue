@@ -124,6 +124,18 @@ export default {
     }
   },
 }
+
+// document.body.addEventListener("veb",function(e){
+//          alert(e.eventType)
+// })
+// var event = document.createEvent('HTMLEvents');
+// // initEvent接受3个参数：
+// // 事件类型，是否冒泡，是否阻止浏览器的默认行为
+// event.initEvent("veb", false, true);
+// //通过eventType传递事件信息
+// event.eventType="I love Veblen"
+// //触发document上绑定的click事件
+// document.body.dispatchEvent(event);
 </script>
 
 <style>
@@ -140,10 +152,16 @@ export default {
   color: #2c3e50;
   overflow: hidden;
   /* background: rgb(252,252,252); */
-  padding-top: 4rem;
-  padding-bottom: 8.3rem;
+  padding-top: 6rem;
+  padding-bottom: 10.3rem;
 }
 input[placeholder]{
   font-size:1.2rem;
+}
+
+image[lazy=loading] {
+  width: 40px;
+  height: 300px;
+  margin: auto;
 }
 </style>

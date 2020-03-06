@@ -50,8 +50,8 @@
                             <span class="iocn iconfont icon-step-backward" @click="LastSong()"></span>
                         </div>
                         <div class="playpase">
-                            <span class="iocn iconfont icon-bofang" v-if="!getAudioData.play" @click.stop="AudioPlay()"></span>
-                            <span class="iocn iconfont icon-poweroff-circle-fill" v-if="getAudioData.play" @click.stop="AudioPlay()"></span>
+                            <span class="iocn iconfont icon-bofang" v-if="!getAudioData.play" @click="AudioPlay()"></span>
+                            <span class="iocn iconfont icon-poweroff-circle-fill" v-if="getAudioData.play" @click="AudioPlay()"></span>
                         </div>
                         <div>
                             <span class="iocn iconfont icon-step-forward" @click="NextSong()"></span>
@@ -201,9 +201,6 @@ export default {
     watch:{
 
     },
-    mounted() {
-        
-    },
     activated(){
         this.setUp = false;
         this.routePath = this.$route.params.routePath;
@@ -250,7 +247,7 @@ export default {
         width: 100%;
         height: 100%;
         box-sizing: border-box;
-        padding-top: 4rem;
+        padding-top: 6rem;
         position: fixed;
         left: 0;
         right: 0;

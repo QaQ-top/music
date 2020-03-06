@@ -20,6 +20,7 @@ Vue.use(ElementUI)
 router.beforeEach((to,fom, next) => {
   console.log('从哪个页面来？',fom)  // 从哪个页面来？
   console.log('到哪个页面去？',to)  // 到哪个页面去？
+  window.scrollTo(0,0)
   next()
 })
 // Router.afterEach(to,fom)
@@ -44,6 +45,10 @@ Vue.component(Cell.name, Cell);
 //无限滚动加载
 import { InfiniteScroll } from 'mint-ui';
 Vue.use(InfiniteScroll);
+
+//图片懒加载
+import { Lazyload } from 'mint-ui';
+Vue.use(Lazyload);
 
 
 

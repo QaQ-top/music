@@ -41,7 +41,7 @@ export default {
     }
     .atteChoi{
         width: 20rem;
-        height: 2rem;
+        height: 2.5rem;
         background:rgb(235,235,235);
         display: flex;
         justify-content:space-around;
@@ -53,7 +53,7 @@ export default {
         flex: 1;
         font-size: 1.4rem;
         height: 100%;
-        line-height: 2rem;
+        line-height: 2.5rem;
         position: relative;
         z-index: 2;
     }

@@ -25,7 +25,7 @@ export default {
     methods:{
         
     },
-    mounted(){
+    created(){
        this.$request.singer(this.$store.state.searchVal,0).then(res=>{
             this.singerList = res.result.artists
         })
@@ -36,15 +36,18 @@ export default {
 <style scoped>
     .blurb{
         width: 96%;
+        height: 8rem;
         margin: 0 auto;
         display: flex;
         padding: 1rem 0 1rem 0;
         justify-content: left;
         align-items: center;
         position: relative;
+        font-size:1.7rem;
     }
     .blurb img{
-        width: 15%;
+        width: 8rem;
+        height: 8rem;
         border-radius: 50%;
         margin-right: 2rem;
     }

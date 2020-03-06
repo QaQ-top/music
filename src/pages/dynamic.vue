@@ -16,7 +16,7 @@
 
                 </watch-slides>
                 <div v-for="(item, index) in singerList" :key="index" class="blurb">
-                    <img :src="item.img1v1Url" alt="">
+                    <img v-lazy="item.img1v1Url">
                     <span>
                         {{item.name}}
                     </span>
@@ -28,7 +28,7 @@
             </div>
             <div v-if="!switchs" @click="logStatus">
                 <div v-for="(item, index) in likeList" :key="index" class="blurb">
-                    <img :src="item.img1v1Url" alt="">
+                    <img v-lazy="item.img1v1Url">
                     <span>
                         {{item.name}}
                     </span>

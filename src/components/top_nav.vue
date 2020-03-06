@@ -25,7 +25,7 @@ export default {
 <style>
 .topNav{
     width: 100%;
-    height: 4rem;
+    height: 6rem;
     display: flex;
     justify-content: space-around;
     align-items: center;
@@ -39,7 +39,7 @@ export default {
     color:#000
 }
 .topNav span:nth-child(3){
-    font-size: 3rem;
+    font-size: 3.5rem;
     color: rgb(100, 100, 100);
 }
 </style>

@@ -33,11 +33,15 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
     ._ke{
         width: 15rem;
         display: flex;
         justify-content: center;
+        border-left: 2.5rem;
+        border-right: 2.5rem;
+        border-color: transparent;
+        border-style: solid;
     }
     .atteChoi{
         width: 20rem;

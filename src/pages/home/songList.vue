@@ -1,5 +1,5 @@
 <template>
-    <div class="box">
+    <div>
         <my-prev-nav :tabRoutePath ='routePath'>
             <div slot='prev_center' class="name">
                 <span>歌单</span>
@@ -14,8 +14,9 @@
         >
           <div class="list">
             <song-list-type :arr='arr' @esName='viet' @transmission='creat'>
+
             </song-list-type>
-            <div v-for="(item, index) in playlist" :key="index" class="playlist">
+            <div v-for="(item, index) in playlist" :key="index" class="playlist" @click="details(item.id)">
               <img v-lazy='item.coverImgUrl'>
               <div class="txt">
                 <p>{{item.name}}</p>
@@ -56,7 +57,6 @@ export default {
           if(res.code = 200){
             this.lasttime = res.lasttime;
             this.playlist = res.playlists;
-            console.log(res)
           }
         })
       },
@@ -85,7 +85,17 @@ export default {
                 this.playlist.push(...res.playlists);
               }
             });
-        },
+      },
+      details(id){
+        this.$router.push({
+          name:'songBox',
+          params:{
+            id,
+            targetType:1000,
+            path:this.$route.path
+          }
+        })
+      }
     },
     created(){
         this.routePath = this.$route.query.routePath;
@@ -103,13 +113,19 @@ export default {
 </script>
 
 <style scoped>
+    .switchs {
+        width: 96%;
+        margin: 0 auto;
+    }
     .name{
         display: block;
         width: 70%;
         text-align: left;
+        font-size: 1.2rem;
     }
     .list{
-      width: 96%;
+      padding-top: 7rem;
+      width: 100%;
       margin: 0 auto
     }
     .playlist{

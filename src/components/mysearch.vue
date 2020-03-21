@@ -17,14 +17,17 @@ export default {
     methods: {
         search(){
             this.$router.push({
-                name:"search"
+                name:"search",
+                query:{
+                    path:this.$route.path
+                }
             })
         }
     },
 }
 </script>
 
-<style>
+<style scoped>
     .mySearch{
         font-size: 1.5rem;
         background: white;

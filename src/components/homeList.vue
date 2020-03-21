@@ -30,7 +30,7 @@
                    <span class="iconfont icon-diantai"></span>
                </div>
                <p>
-                   电台
+                   推荐电台
                </p>
            </router-link>
         </div> 

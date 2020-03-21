@@ -39,7 +39,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
     .foot{
         width: 100%;
         height: 6.3rem;

@@ -17,7 +17,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .coll_h1{
    text-align: left;
    width:96%;

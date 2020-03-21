@@ -46,7 +46,7 @@ export default {
             })
         },
         song(id,index){ //点击触发
-            this.$store.state.audio.arr = this.arr;
+            this.getAudioData.arr = this.arr;
             this.newSrc({
                 id,
                 album:{

@@ -123,15 +123,17 @@ export default {
     .dailySongSheet{
         text-align: left;
         width: 96%;
-        margin: 2rem auto
+        margin: 0 auto;
+        padding:2rem 0 2rem 0;
     }
     .dailySongSheet>span{
-        font-size: 2rem;
-        line-height: 2.5rem;
+        font-size: 1.8rem;
+        line-height: 3rem;
+        font-weight: bold;
     }
     .rank img{
         width: 15%;
-        border-radius: 0.5rem;
+        border-radius: 1rem;
     }
     .rank > div{
         display:flex;
@@ -140,7 +142,7 @@ export default {
         padding: 1%;
     }
     .rank > h3{
-        font-size: 1.8rem;
+        font-size: 1.2rem;
     }
     .txt{
         width: 80%;

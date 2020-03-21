@@ -3,6 +3,7 @@ import qs from 'qs'
 
 //加载弹框
 import { Indicator } from 'mint-ui';
+import Vue from 'vue';
 
 axios.interceptors.request.use( //请求前
     function (config) {
@@ -267,11 +268,34 @@ const djProgram = () => { //
 //热门电台
 const hotDj = () =>{
     let keyWord = {
-        limit:8,
+        limit:16,
         offset:1
     }
     return get('/dj/hot',keyWord)
 }
+
+//电台分类
+const djType = () =>{
+    return get('/dj/catelist')
+}
+
+//电台分类推荐
+const djs = (type) =>{
+    let keyWord = {
+        type
+    }
+    return get('/dj/recommend/type',keyWord)
+}
+// 电台详情
+const djDetails = (rid) =>{
+    let keyWord = {
+        rid
+    }
+    return get('/dj/program',keyWord)
+}
+
+
+
 
 
 //手机登录 /login/cellphone?phone=xxx&password=yyy
@@ -297,8 +321,8 @@ const usePlaylist = (id)=>{
 }
 
 
+
 //获取歌手
- 
 const artist = (cat,offset=1) =>{
     let keyWord = {
         limit:16,
@@ -307,6 +331,15 @@ const artist = (cat,offset=1) =>{
     }
     return get('/artist/list',keyWord)
 }
+
+//歌手歌曲
+const artistSong = (id) =>{
+    let keyWord = {
+        id
+    }
+    return get('/artists',keyWord)
+}
+
 
 // 查看登录状态
 const logStatus = () => {
@@ -340,6 +373,46 @@ const playlist = (cat,before=null)=>{
         limit:10
     }
     return get('/top/playlist/highquality',keyWord)
+}
+
+//
+const songListDetails = (id) =>{
+    let keyWord = {
+        id
+    }
+    return get('/playlist/detail',keyWord)
+}
+
+//排行榜
+const rankType = (idx) =>{
+    let keyWord = {
+        idx,
+    }
+    return get('/top/list',keyWord)
+}
+
+//获取专辑内容
+const albumDetails = (id) =>{
+    let keyWord = {
+        id
+    }
+    return get('album',keyWord)
+}
+
+//获取 mv 数据
+const mvDetails = (mvid) =>{
+    let keyWord = {
+        mvid
+    }
+    return get('/mv/detail',keyWord)
+}
+
+//mv 地址
+const mvUrl = (id) =>{
+    let keyWord = {
+        id
+    }
+    return get('/mv/url',keyWord)
 }
 
 export default {
@@ -376,5 +449,37 @@ export default {
     sublist,
     redSong,
     songCatList,
-    playlist
+    playlist,
+    rankType,
+    djType,
+    djs,
+    albumDetails,
+    songListDetails,
+    mvDetails,
+    mvUrl,
+    djDetails,
+    artistSong
 }
+
+Vue.prototype.Type = [
+    {
+        type:10,
+        name:'专辑',
+        request:albumDetails
+    },
+    {
+        type:100,
+        name:'歌手',
+        request:artistSong
+    },
+    {
+        type:1000,
+        name:'歌单',
+        request:songListDetails
+    },
+    {
+        type:1009,
+        name:'电台',
+        request:djDetails
+    }
+]

@@ -1,5 +1,5 @@
 <template>
-    <div>
+    <div class="slides">
         <swiper :options="swiperOption" ref="slTypeSwiper">
             <swiper-slide v-for="(item, index) in arr" :key="index" >
                 <div @click="visit(item.name)" :class="{color:name===item.name,vis:true}">
@@ -52,6 +52,13 @@ export default {
 </script>
 
 <style scoped>
+    .slides{
+        position: fixed;
+        width: 96%;
+        top:6rem;
+        height:7rem;
+        background-color:white;
+    }
     .vis{
         font-size: 1.5rem;
         line-height: 3rem;

@@ -1,7 +1,7 @@
 <template>
   <swiper :options="swiperOption" ref="mySwiper" class="swiper">
     <!-- slides -->
-    <swiper-slide v-for="(item, index) in bannerArray" :key="index">
+    <swiper-slide v-for="(item, index) in bannerArray" :key="index" @click.native="deilt(item)">
       <div class="img">
         <img :src="item.pic" alt="">
         <div>
@@ -48,6 +48,11 @@
         return this.$refs.mySwiper.swiper
       }
     },
+    methods: {
+      deilt(item){
+        this.$emit('bannerDst',item)
+      }
+    },
     mounted() {
       // current swiper instance
       // 然后你就可以使用当前上下文内的swiper对象去做你想做的事了
@@ -66,7 +71,7 @@
   }
   .img img{
     width: 100%;
-    border-radius: 0.5rem;
+    border-radius: 1rem;
   }
   .img div{
     position: absolute;
@@ -77,6 +82,6 @@
     background-color:#007aff;
     padding: 1%;
     font-size: 1rem;
-    border-radius: 0.5rem 0 0.5rem 0
+    border-radius: 1rem 0 1rem 0
   }
 </style>

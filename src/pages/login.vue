@@ -39,8 +39,9 @@ export default {
                         bgUrl:res.profile.backgroundUrl, //用户背景
                         token:res.token  //token
                     })
-                    local.setItem('user',str);
-                    this.setCookie('MUSIC_U','Synchronize with server cookie',15)
+                    local.setItem('user',str); //将用户信息出入本地缓存
+                    this.setCookie('MUSIC_U','Synchronize with server cookie',15) //标记为15天已登录
+                    window.history.back();
                 }
             })
         },

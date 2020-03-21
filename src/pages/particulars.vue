@@ -10,7 +10,7 @@
 
             <!-- 背景虚化 -->
             <div class="partBoxBack">
-                <img :src="getAudioData.img" alt="">
+                <img :src="getAudioData.img" alt="" @load="srcChange">
             </div>
 
             <div class="partBox" >
@@ -19,7 +19,7 @@
                     <!-- 专辑封面 -->
                     <div class="albumImg" v-if="!isLrc" @mousedown="down" @mouseup="up">
                         <div>
-                            <img :src="getAudioData.img" alt="">
+                            <img :src="getAudioData.img" alt="" ref="albumImg">
                         </div>
                     </div>
                     <div class="lyrc" v-if="isLrc">
@@ -196,6 +196,12 @@ export default {
         },
         noSetUp(){
             this.setUp = false;
+        },
+        srcChange(){ //确保图片为正方形
+            let img = this.$refs.albumImg
+            if(this.$route.name==='particulars'){
+                img.style.height = `${img.width}px`
+            }
         }
     },
     watch:{
@@ -222,7 +228,9 @@ export default {
                 }
             })
             this.getAudioData.type = 'used' //标记为 used 
-        }  
+            let img = this.$refs.albumImg
+            img.style.height = `${img.width}px`
+        }
     }
 }
 </script>

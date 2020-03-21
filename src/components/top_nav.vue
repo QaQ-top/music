@@ -22,7 +22,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 .topNav{
     width: 100%;
     height: 6rem;
@@ -35,7 +35,7 @@ export default {
     z-index: 9999;
 }
 .topNav h1:nth-child(1){
-    font-size: 3rem;
+    font-size: 2.5rem;
     color:#000
 }
 .topNav span:nth-child(3){

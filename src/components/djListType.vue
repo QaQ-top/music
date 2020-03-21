@@ -1,9 +1,9 @@
 <template>
     <div class="slides">
-        <swiper :options="swiperOption" ref="wtSlideSwiper">
+        <swiper :options="swiperOption" ref="slTypeSwiper">
             <swiper-slide v-for="(item, index) in arr" :key="index" >
                 <div @click="visit(item.id)" :class="{color:id===item.id,vis:true}">
-                    {{item.type}}
+                    {{item.name}}
                 </div>
             </swiper-slide>
         </swiper>
@@ -12,7 +12,7 @@
 
 <script>
 export default {
-    name:'slide',
+    name:'djType',
     data() {
         return {
             swiperOption: {
@@ -23,22 +23,31 @@ export default {
                 freeModeMomentum : true,
                 freeModeMomentumRatio : 0.5,
             },
-            arr:[],
             id:5001
+        }
+    },
+    props:{
+        arr:{
+            default:[],
+            type:Array
+        }
+    },
+    watch:{
+        arr:{
+            handler:function (to,from) {
+                this.id = to[0].id
+                this.$emit('transmission',this.id);
+            }
         }
     },
     methods:{
         visit(id){
             if(id !== this.id){
                 this.id = id
-                this.$emit('esid',id)
+                this.$emit('esName',id)
             }
         }
     },
-    created(){
-        this.arr = this.singerType;
-        this.$emit('created',this.id)
-    }
 }
 </script>
 
@@ -54,6 +63,7 @@ export default {
         font-size: 1.5rem;
         line-height: 3rem;
         margin:2rem 0 2rem 0;
+        border-radius: 2rem;
     }
     .color{
         font-size: 1.5rem;

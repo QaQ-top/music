@@ -10,7 +10,7 @@
         >
         </audio>
 
-        <div :class="{audioBox:isAudioBox,audioBox2:!isAudioBox,transition:true}" @click="particulars(routeName)" v-if="this.$route.name!=='login'">
+        <div :class="{audioBox:isAudioBox,audioBox2:!isAudioBox,transition:true}" @click="particulars(routePath)" v-if="this.$route.name!=='login'">
             
             <div class="audioDetail">
                 <!-- 歌曲图片 名称 专辑名称 -->
@@ -43,7 +43,7 @@ export default {
     data () {
         return {
            isAudioBox : true,
-           routeName:this.$route.name
+           routePath:this.$route.path //获取默认路径
         }
     },
     watch: {
@@ -51,7 +51,7 @@ export default {
             handler:function(to,from){
                 let ret = ['musicG','recommend','dynamic','mine']
                 this.isAudioBox = ret.includes(this.$route.name)
-                this.routeName = this.$route.path
+                this.routePath = this.$route.path //获取当前页面路径
             }
         }
     },
@@ -81,7 +81,7 @@ export default {
     
     .audioBox{
         width: 100%;
-        height:4.8rem;
+        height:5rem;
         box-shadow: 0 0 1rem -0.68rem #000;
         z-index: 100;
         position: fixed;
@@ -120,8 +120,8 @@ export default {
         transition: all ease 0.2s;
     }
     .audioImg{
-        width: 4rem;
-        height: 4rem;
+        width: 5rem;
+        height: 5rem;
         border-radius: 50%;
         position: relative;
         left: 0.7rem;
@@ -131,8 +131,8 @@ export default {
         overflow: hidden;
     }
     .audioImg img{
-        width: 4rem;
-        height: 4rem;
+        width: 5rem;
+        height: 5rem;
     }
     .audioDetail{
         height: 100%;

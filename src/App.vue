@@ -164,4 +164,12 @@ image[lazy=loading] {
   height: 300px;
   margin: auto;
 }
+.mint-msgbox {
+  width: 60%;
+  border-radius: 1.5rem;
+}
+.mint-msgbox>.mint-msgbox-content{
+  font-size: 1rem;
+}
+
 </style>

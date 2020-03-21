@@ -73,11 +73,13 @@ export default {
     .dailySongSheet{
         text-align: left;
         width: 96%;
-        margin: 2rem auto
+        margin: 0 auto;
+        padding:2rem 0 2rem 0;
     }
     .dailySongSheet>span{
-        font-size: 2rem;
-        line-height: 2.5rem;
+        font-size: 1.8rem;
+        line-height: 3rem;
+        font-weight: bold;
     }
     .boxImgTxt{
         width: 100%;
@@ -85,14 +87,14 @@ export default {
     }
     .boxImgTxt img{
         width: 100%;
-        border-radius: 0.5rem;
+        border-radius: 1.5rem;
     }
     .boxImgTxt p{
         font-size: 1rem;
     }
     .palyVolume{
         position: absolute;
-        right: 0;
+        right: 0.5rem;
         top:0;
         color: white;
         font-size: 1rem;

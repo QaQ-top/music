@@ -45,14 +45,17 @@ const state = {
     //储存精确搜索的值
     searchVal:'',
 
-    //进入搜索页面时，储存点击前的页面路径
-    route:'/musicG',
     
     //进入歌曲详情页面时，储存点击前一个页面路径
     previous:'',
 
     //keep
     cache:'search',
+
+    //歌曲列表 是否显示
+    audioList:{
+        type:false
+    }
 
 
 }
@@ -63,9 +66,6 @@ const getters = {
     },
     getAudioState(){
         return state.audioState
-    },
-    getFooterRoute(state){
-        return state.footerRoute
     },
     getCache(state){
         return state.cache

@@ -2,9 +2,9 @@
     <div>
         <top-nav txt='歌手'>
             <atte-choi slot="cun" txt_1='精选' txt_2='关注' @chengar='breha'>
-
             </atte-choi>
-            <span class="icon iconfont icon-tubiaozhizuomoban" slot="icon"></span>
+            <audio-list slot="icon">
+            </audio-list>
         </top-nav>
         <div class="switchs"
         :infinite-scroll-disabled='true'
@@ -15,19 +15,21 @@
                 <watch-slides @esid='visit' @created='Obtain'>
 
                 </watch-slides>
-                <div v-for="(item, index) in singerList" :key="index" class="blurb">
-                    <img v-lazy="item.img1v1Url">
-                    <span>
-                        {{item.name}}
-                    </span>
-                    <!-- <div>
-                        <span class="iconfont icon-heart" v-if="!item.followed"></span>
-                        <span class="iconfont icon-heart-fill" v-if="item.followed"></span>
-                    </div> -->
+                <div class="top">
+                    <div v-for="(item, index) in singerList" :key="index" class="blurb" @click="details(item.id)">
+                        <img v-lazy="item.img1v1Url">
+                        <span>
+                            {{item.name}}
+                        </span>
+                        <!-- <div>
+                            <span class="iconfont icon-heart" v-if="!item.followed"></span>
+                            <span class="iconfont icon-heart-fill" v-if="item.followed"></span>
+                        </div> -->
+                    </div>
                 </div>
             </div>
             <div v-if="!switchs" @click="logStatus">
-                <div v-for="(item, index) in likeList" :key="index" class="blurb">
+                <div v-for="(item, index) in likeList" :key="index" class="blurb" @click="details(item.id)">
                     <img v-lazy="item.img1v1Url">
                     <span>
                         {{item.name}}
@@ -47,6 +49,7 @@ import topNav from '../components/top_nav'
 import atteChoi from '../components/attention_choiceness'
 import watchSlides from '../components/watchSlides';
 import {mapState} from 'vuex'
+import audioList from '../components/audioList'
 /**
  * 弹框
  */
@@ -68,11 +71,11 @@ export default {
             messBox:false
         }
     },
-    computed:{
-        ...mapState(['cookie'])
-    },
     components: {
-        topNav,atteChoi,watchSlides
+        topNav,atteChoi,watchSlides,audioList
+    },
+    computed:{
+
     },
     methods: {
         visit(id){
@@ -128,6 +131,16 @@ export default {
             this.$request.logStatus().then(res=>{
                 console.log(res)
             });
+        },
+        details(id){
+            this.$router.push({
+                name:'songBox',
+                params:{
+                    id,
+                    targetType:100,
+                    path:this.$route.path
+                }
+            })
         }
     },
     activated(){
@@ -140,7 +153,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
     .switchs {
         width: 96%;
         margin: 0 auto;
@@ -155,5 +168,8 @@ export default {
         width: 15%;
         border-radius: 50%;
         margin-right: 2rem;
+    }
+    .top{
+        padding-top: 7rem;
     }
 </style>

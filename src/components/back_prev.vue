@@ -7,7 +7,6 @@
 </template>
 
 <script>
-import {mapGetters} from 'vuex'
 export default {
     name:'backPrev',
     data() {
@@ -15,12 +14,10 @@ export default {
             
         }
     },
-    computed:{
-        ...mapGetters(['getFooterRoute'])
-    },
     props:['tabRoutePath'],  //父组件传递过来的routeName
     methods:{
         toTab(){
+            console.log(this.tabRoutePath)
             this.$router.push({
                 path:this.tabRoutePath
             })
@@ -29,7 +26,7 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
     .prev{
         width: 100%;
         height: 6rem;

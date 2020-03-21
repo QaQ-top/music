@@ -2,7 +2,7 @@
     <div>
         <div v-for="(item, index) in singerList" :key="index" class="blurb">
             <img :src="item.img1v1Url" alt="">
-                <span>
+                <span class="name">
                     {{item.name}}
                 </span>
             <div>
@@ -57,5 +57,8 @@ export default {
     }
     .blurb .iconfont{
         color: red;
+    }
+    .name{
+        white-space: nowrap;
     }
 </style>

@@ -1,11 +1,12 @@
 <template>
     <div>
-        <top-nav txt='音乐'>
+        <top-nav txt='音遇'>
             <my-search slot="cun" txt='搜索'></my-search>
-            <span class="icon iconfont icon-tubiaozhizuomoban" slot="icon"></span>
+            <audio-list slot="icon">
+            </audio-list>
         </top-nav>
 
-        <my-banner  :bannerArray='bannerArray'>
+        <my-banner  :bannerArray='bannerArray' @bannerDst='bannerDst'>
         </my-banner>
 
         <home-list>
@@ -15,7 +16,7 @@
         <my-swiper-grid 
         :imgArray='dailySongSheet' 
         :row='1' :column='3.2' 
-        :bet='10'
+        :bet='15'
         columnType='推荐歌单'
         >
         </my-swiper-grid>
@@ -23,7 +24,7 @@
         <recommend-new-song 
         :imgArray='recommendNewSong' 
         :row='5' :column='1' 
-        :bet='10'
+        :bet='15'
         columnType='推荐新歌'
         >
         </recommend-new-song>
@@ -31,7 +32,7 @@
         <ranking-list
         :imgArray='rankingList' 
         :row='1' :column='1.05' 
-        :bet='10'
+        :bet='15'
         columnType='排行榜'
         :original='original'
         :soar='soar'
@@ -42,8 +43,8 @@
         <dj-hot
         :imgArray='djhot' 
         :row='1' :column='3.2' 
-        :bet='10'
-        columnType='推荐电台'
+        :bet='15'
+        columnType='热门电台'
         >
         </dj-hot>
     </div>
@@ -57,7 +58,9 @@ import mySwiperGrid from '../components/swiperGrid'
 import homeList from '../components/homeList'
 import recommendNewSong from '../components/recommendNewSong'
 import rankingList from '../components/rankingList';
-import djHot from '../components/djhot'
+import djHot from '../components/djhot';
+import audioList from '../components/audioList';
+import {mapActions,mapState} from 'vuex'
 export default {
     name:"musicG",
     data () {
@@ -71,6 +74,7 @@ export default {
             soar:[],//飙升
             electricSound:[],//电音
             djhot:[], //推荐电台
+            bannerArr:[]
         }
     },
     components: {
@@ -81,7 +85,83 @@ export default {
         homeList,
         recommendNewSong,
         rankingList,
-        djHot
+        djHot,
+        audioList
+    },
+    computed:{
+        ...mapState(['audio'])
+    },
+    methods: {
+        ...mapActions(['newSrc']),
+        bannerDst(item){ 
+            switch (item.targetType) {
+                case 1:  //单曲
+                    let songArr = [];
+                    if(!this.bannerArr.length){  //判断 是否已经找到歌曲
+                        for(let i of this.bannerArray){
+                            if(i.targetType===1){
+                                songArr.push(i.song)
+                            }
+                        }
+                        this.SongArray(songArr,this.bannerArr); //找到banner所有单曲
+                    }
+                    this.audio.arr = [...this.bannerArr] //将banner 所有单曲整理成这个歌单
+                    let arr = [];
+                    this.SongArray([item.song],arr) //播放当前歌曲
+                    this.newSrc(arr[0])
+                    console.log('单曲')
+                    break;
+
+                case 10: //专辑
+                    this.$router.push({
+                        name:'songBox',
+                        params:{
+                            id:item.targetId,
+                            targetType:item.targetType,
+                            path:this.$route.path
+                        }
+                    })
+                    console.log('专辑')
+                    break;
+
+                case 1000: //歌单
+                    this.$router.push({
+                        name:'songBox',
+                        params:{
+                            id:item.targetId,
+                            targetType:item.targetType,
+                            path:this.$route.path
+                        }
+                    })
+                    console.log('歌单')
+                    break;
+                case 1004: //mv
+                    // this.$router.push({
+                    //     name:'bannerDst',
+                    //     params:{
+                    //         id:item.targetId,
+                    //         type:item.targetType
+                    //     }
+                    // })
+                    console.log('MV')
+                    break;
+            
+                default:
+                    if(item.url){ //广告活动
+                        this.$router.push({
+                            name:'advertisement',
+                            params:{
+                                id:item.targetId,
+                                type:'url'
+                            }
+                        });
+                         console.log('广告')
+                    }
+                    break;
+            }
+            
+            
+        }
     },
     created(){
         this.$request.banner().then(res=>{
@@ -106,7 +186,6 @@ export default {
         this.$request.rankingList(4).then(res=>{
             this.electricSound = res.playlist.tracks.slice(0,3);
         })
-
         //热门电台
         this.$request.djProgram().then(res=>{
             this.djhot = res.result
@@ -118,6 +197,6 @@ export default {
 }
 </script>
 
-<style>
+<style scoped>
 
 </style>

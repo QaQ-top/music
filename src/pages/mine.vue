@@ -2,7 +2,8 @@
     <div>
         <top-nav txt='我的'>
             <my-search txt='搜索' slot="cun"></my-search>
-            <span class="icon iconfont icon-tubiaozhizuomoban" slot="icon"></span>
+            <audio-list slot="icon">
+            </audio-list>
         </top-nav>
         <div class="mine">
             <div class="user">
@@ -60,6 +61,7 @@ import mySearch from '../components/mysearch'
 import mineList from '../components/mineList'
 import {mapState} from 'vuex';
 import mySongList from '../components/mySongList';
+import audioList from '../components/audioList'
 export default {
     name:"mine",
     data () {
@@ -77,7 +79,8 @@ export default {
         topNav,
         mySearch,
         mineList,
-        mySongList
+        mySongList,
+        audioList
     },
     computed:{
        ...mapState(['audio','audioState'])
@@ -124,7 +127,7 @@ export default {
                     return item.ordered===true;  //ordered 为 true  收藏歌单
                 });
                 this.newbuild = arr.filter(item => {
-                    return item.ordered===false; //ordered 为 true  新键歌单
+                    return item.ordered===false; //ordered 为 false  新键歌单
                 })
                 // console.log(this.ilikeIt,this.collection,this.newbuild)
             })

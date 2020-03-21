@@ -85,11 +85,13 @@ export default {
     .dailySongSheet{
         text-align: left;
         width: 96%;
-        margin: 2rem auto
+        margin: 0 auto;
+        padding:2rem 0 2rem 0;
     }
     .dailySongSheet>span{
-        font-size: 2rem;
-        line-height: 2.5rem;
+        font-size: 1.8rem;
+        line-height: 3rem;
+        font-weight: bold;
     }
     .song{
         display:flex;
@@ -99,7 +101,7 @@ export default {
     }
     .song img{
         width:13%;
-        border-radius: 0.5rem;
+        border-radius: 1rem;
     }
     .play{
         color:rgb(64,158,255);
@@ -109,10 +111,11 @@ export default {
         width: 80%;
     }
     .txt p:nth-child(1){
-        font-size: 1.8rem;
+        font-size: 1.7rem;
         font-weight: bold;
     }
     .txt p:nth-child(2){
-        font-size: 0.8rem
+        font-size: 1rem;
+        color: #888;
     }
 </style>

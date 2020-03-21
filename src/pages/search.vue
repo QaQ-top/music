@@ -135,9 +135,9 @@ export default {
                 })
             });
             this.heatTG = [...arr]
-        }),
-        this.routePath = this.$store.state.route //接收vuex传递过来的routePath
-    },
+        })
+        this.routePath = this.$route.query.path
+    }
     
 }
 </script>

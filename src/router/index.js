@@ -35,8 +35,11 @@ import songList from '../pages/search_res/song_list'
 //登录
 import login from '../pages/login'
 
+//广告
+import advertisement from '../pages/advertisement'
 
-
+//歌单，专辑，电台节目，歌手详情
+import songBox from '../pages/songBox'
 
 export default new Router({
   routes: [
@@ -108,24 +111,34 @@ export default new Router({
       component:login //登录页面
     },
     {
-      path:'/dj',
+      path:'/dj', //电台
       name:'dj',
       component:Dj
     },
     {
-      path:'/red',
+      path:'/red', //每日推荐
       name:'red',
       component:Red
     },
     {
-      path:'/rank',
+      path:'/rank', //排行榜
       name:'rank',
       component:Rank
     },
     {
-      path:'/sl',
+      path:'/sl', //歌单
       name:'sl',
       component:Sl
+    },
+    {
+      path:'/advertisement',  //广告
+      name:'advertisement',
+      component:advertisement
+    },
+    {
+      path:'/songBox',  //歌单，专辑，电台节目，歌手详情
+      name:'songBox',
+      component:songBox
     }
   ]
 })

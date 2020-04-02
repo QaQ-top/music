@@ -105,7 +105,9 @@ export default {
             })
         },
         abme(){
-            console.log('%c专辑','color:red;font-size:100px')
+            this.$router.push({
+                name:'gab'
+            })
         },
         
     },

@@ -11,7 +11,7 @@ module.exports = {
     assetsPublicPath: '/',
     proxyTable: { //
       '/music':{
-        target:'http://localhost:3000',
+        target:'http://39.108.182.125:3000',
         changeOrigin:true,
         secure:true,
         pathRewrite:{

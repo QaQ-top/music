@@ -22,6 +22,7 @@
 
 <script>
 //屏蔽路由二次点击错误
+
 import Router from 'vue-router'
 const routerPush = Router.prototype.push
 Router.prototype.push = function push(location) {
@@ -97,12 +98,14 @@ export default {
     }
   },
   //----------------------
-  beforeCreate() { //数据加载前不能使用 mapState,mapActions,mapGetters,mapMutations 所以只能使用this.$store.state
+  beforeCreate(){
     let audio = window.localStorage.getItem('audio')
     let audioState = window.localStorage.getItem('audioState')
     if(audio){
       this.$store.state.audio = JSON.parse(audio) //获取上次播放歌曲
       this.$store.state.audioState = JSON.parse(audioState) //获取此播放歌曲状态
+    }else{
+      this.$store.state.isAudio = false
     }
     this.$router.push('/musicG');
   },
@@ -146,7 +149,12 @@ export default {
         this.stroeAudio.index = -1;
         let storage = window.localStorage;
         storage.setItem('audio',JSON.stringify(this.$store.state.audio)) //关闭网页时将audio的数据存入本地缓存
-        storage.setItem('audioState',JSON.stringify(this.$store.state.audioState))
+        if(!this.$store.state.audioState){
+          storage.setItem('audioState',JSON.stringify({randomPlay:false,disabled:false}))
+        }else{
+          storage.setItem('audioState',JSON.stringify(this.$store.state.audioState))
+        }
+        
       });
     }
     setTimeout(() => {
@@ -159,85 +167,5 @@ export default {
 </script>
 
 <style>
-*{
-  margin: 0;
-  padding: 0;
-}
 
-#app {
-  font-family: 'Avenir', Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  overflow: hidden;
-  /* background: rgb(252,252,252); */
-  padding-top: 6rem;
-  padding-bottom: 10.3rem;
-}
-*{
-  padding: 0;
-  margin: 0;
-}
-input[placeholder]{
-  font-size:1.2rem;
-}
-
-image[lazy=loading] {
-  width: 40px;
-  height: 20px;
-  margin: auto;
-}
-.lazy{
-  background-color: rgb(250, 250, 250);
-}
-
-
-.mint-msgbox {
-  width: 60%;
-  border-radius: 1.5rem;
-}
-.mint-msgbox-title{
-  font-size: 2rem;
-}
-.mint-msgbox-btns,.mint-msgbox-confirm,.mint-msgbox-cancel{
-  height: 5rem;
-  font-size: 1.7rem;
-}
-.mint-msgbox>.mint-msgbox-content{
-  height: 10rem;
-  font-size: 1.5rem;
-}
-.mint-cell-wrapper{
-  padding: 0 1rem 0 1rem;
-  height:100%;
-}
-.mint-indicator-wrapper{
-  z-index: 9999;
-}
-.logo-leave{
-  transition: all 0.35s;
-  transform:translateX(0);
-}
-.logo-leave-active{
-  transition: all 0.35s;
-  transform:translateX(50%);
-}
-.logo-leave-to{
-  transition: all 0.35s;
-  transform:translateX(100%);
-}
-
-.handle-leave{
-  transition: all 0.35s;
-  transform:translateX(0);
-}
-.handle-leave-active{
-  transition: all 0.35s;
-  transform:translateX(50%);
-}
-.handle-leave-to{
-  transition: all 0.35s;
-  transform:translateX(100%);
-}
 </style>

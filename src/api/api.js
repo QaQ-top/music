@@ -522,6 +522,9 @@ const setUser = (data) =>{
     return post('/user/update',keyWord)
 }
 
+const gAlbum = ()=>{
+    return get('/album/sublist')
+}
 
 export default {
     get,
@@ -571,7 +574,8 @@ export default {
     songListDel,
     songListUpdate,
     getUser,
-    setUser
+    setUser,
+    gAlbum
 }
 
 Vue.prototype.Type = [

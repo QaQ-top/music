@@ -16,7 +16,7 @@
             <song-list-type :arr='arr' @esName='viet' @transmission='creat'>
 
             </song-list-type>
-            <div v-for="(item, index) in playlist" :key="index" class="playlist" @touchstart="details(item.id)">
+            <div v-for="(item, index) in playlist" :key="index" class="playlist" @click="details(item.id)">
               <img v-lazy='item.coverImgUrl' class="lazy">
               <div class="txt">
                 <p>{{item.name}}</p>

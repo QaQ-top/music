@@ -30,6 +30,7 @@ const state = {
         type:'', //是否是新url
         arr:[], //歌单
     },
+    isAudio:true,
     audioState:{
         randomPlay:false,//是否循环播放整个歌单
         disabled:false,
@@ -274,6 +275,7 @@ const mutations = {
             state.audio.play=true;
         }
         request.song(data.id).then(res=>{ //通过歌曲id发送请求
+            state.isAudio = true;
             state.audio.type = 'new' //标记未新歌曲
             state.audio.id = data.id //将歌曲id 存入audio详情
             state.audio.albumId = data.album.albumId; //将点击的歌曲专辑id 存入audio详情

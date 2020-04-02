@@ -4,7 +4,8 @@ import Vue from 'vue'
 
 //渲染dom
 import App from './App'
-
+//vuex
+import store from './store/vuex';
 
 //路由
 import router from './router'
@@ -50,7 +51,7 @@ Vue.component(Popup.name, Popup);
 import { Picker } from 'mint-ui';
 Vue.component(Picker.name, Picker);
 
-
+import './assets/css/index.css'
 
 
 //swiper轮播图
@@ -61,9 +62,6 @@ Vue.use(Swiper)
 
 //字体图标fonts
 import "./assets/fonts/iconfont.css"
-
-//vuex
-import store from './store/vuex';
 
 //vue 自定义指令
 import './v-custom/custom'

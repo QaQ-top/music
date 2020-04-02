@@ -13,7 +13,7 @@
             </dj-list-type>
 
             <div class="clity">
-                <div v-for="(item, index) in prci" :key="index" class="djDst" @touchstart="details(item.id)">
+                <div v-for="(item, index) in prci" :key="index" class="djDst" @click="details(item.id)">
                     <img v-lazy='item.picUrl'  class="lazy">
                     <div class="txt">
                         <p>{{item.lastProgramName}}</p>

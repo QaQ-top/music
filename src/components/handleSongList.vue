@@ -4,7 +4,7 @@
       <div v-if="this.$store.state.isSongBox" class="songBox">
             <div class="iocn iconfont icon-jiantou-zuo-cuxiantiao" @touchend='isSongBox'>
             </div>
-            <div class="builb">
+            <div class="builb" v-if="this.$store.state.mySongList.length>0">
                     <div v-for="(item, index) in this.$store.state.mySongList" :key="index" class="builblist" @click="listAdd(item.id)">
                         <img v-lazy="item.coverImgUrl" class="lazy">
                         <div>
@@ -12,6 +12,9 @@
                             <p>{{item.trackCount}} 首</p>
                         </div>
                     </div>
+                </div>
+                <div v-if="this.$store.state.mySongList.length===0" class="login" @click="login">
+                    去登录
                 </div>
         </div>
          </transition>
@@ -32,6 +35,12 @@ export default {
     },
     methods:{
         ...mapActions(['add']),
+        login(){
+            this.$store.state.isSongBox = false;
+            this.$router.push({
+                path:'/login'
+            })
+        },
         listAdd(id){
             this.songListData.listId = id;
             this.add();
@@ -111,5 +120,15 @@ export default {
         white-space: nowrap;
         text-overflow: ellipsis;
         overflow: hidden;
+    }
+    .login{
+        width: 70%;
+        height: 5rem;
+        margin: 7rem auto;
+        color: white;
+        background-color:  rgb(64,158,255);
+        font-size: 2rem;
+        line-height: 5rem;
+        border-radius: 5rem;
     }
 </style>

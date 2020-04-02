@@ -18,6 +18,7 @@ import MusicG from '../pages/musicG'
 import rec from '../pages/recommend'
 import Dynamic from '../pages/dynamic.vue'
 import Mine from '../pages/mine'
+import gab from '../pages/galbum'
 
 //搜索
 import Search from '../pages/search'
@@ -43,9 +44,11 @@ import songBox from '../pages/songBox'
 export default new Router({
   scrollBehavior (to, fom, savePosition) {
     if(store.state.scroll.has(to.name)){
-      let top = store.state.scroll.get(to.name);
-      if(top){
-        return {x:0 , y: top}
+      let toTop = store.state.scroll.get(to.name);
+      let fomTop = store.state.scroll.get(fom.name);
+      if(!toTop&&!fomTop){
+      }else{
+        return {x:0 , y: toTop}
       }
     }
   },
@@ -146,6 +149,11 @@ export default new Router({
       path:'/songBox',  //歌单，专辑，电台节目，歌手详情
       name:'songBox',
       component:songBox
+    },
+    {
+      path:'/gab',
+      name:'gab',
+      component:gab
     }
   ]
 })

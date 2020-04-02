@@ -32,7 +32,7 @@ export default {
     background: rgb(252,252,252);
     position: fixed;
     top:0;
-    z-index: 9999;
+    z-index: 2041;
 }
 .topNav h1:nth-child(1){
     font-size: 2.5rem;

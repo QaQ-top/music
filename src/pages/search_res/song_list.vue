@@ -4,8 +4,9 @@
         :infinite-scroll-disabled='true'
         v-infinite-scroll="loadMore"
         infinite-scroll-distance="10">
-            <div v-for="(item, index) in list" :key="index" class="list">
-                <img :src="item.coverImgUrl" alt="">
+            <div v-for="(item, index) in list" :key="index" class="list" @click="details(item.id)">
+                <img v-lazy='item.coverImgUrl'  class="lazy">
+
                 <div class="txt">
                     <p>{{item.name}}</p>
                     <p>播放量：{{item.playCount}}</p>
@@ -34,6 +35,16 @@ export default {
                 this.list.push(...res.result.playlists[res.result.playlists.length-1])
             })
         },
+        details(id){
+        this.$router.push({
+          name:'songBox',
+          params:{
+            id,
+            targetType:1000,
+            path:this.$route.path
+          }
+        })
+      }
     },
     created(){
         this.$request.songList(this.$store.state.searchVal,0).then(res=>{

@@ -2,7 +2,7 @@
     <div class="slides">
         <swiper :options="swiperOption" ref="wtSlideSwiper">
             <swiper-slide v-for="(item, index) in arr" :key="index" >
-                <div @click="visit(item.id)" :class="{color:id===item.id,vis:true}">
+                <div @touchstart="startDev" @touchmove='move' @touchend="visit(item.id)" :class="{color:id===item.id,vis:true}">
                     {{item.type}}
                 </div>
             </swiper-slide>
@@ -24,15 +24,33 @@ export default {
                 freeModeMomentumRatio : 0.5,
             },
             arr:[],
+            moveing:false,
+            strat:null,
             id:5001
         }
     },
     methods:{
+        startDev(){
+            this.strat = new Date()
+        },
+        move(){
+            this.moveing = true;
+        },
         visit(id){
-            if(id !== this.id){
-                this.id = id
-                this.$emit('esid',id)
+	        let date = new Date()
+            if(date-this.strat<200&&!this.moveing){
+              	if(id !== this.id){
+                    window.scrollTo({
+                        top:0,
+                        behavior:'instant'
+                    })
+                    this.id = id
+                    this.$emit('esid',id)
+                }
+            }else{
+                this.moveing = false
             }
+            
         }
     },
     created(){

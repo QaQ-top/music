@@ -7,15 +7,18 @@
         :loop="getAudioData.loop"
         @timeupdate="time()" 
         @canplay='getDuration()'
+        @error="error"
+        @unhandledrejection='fun'
         >
         </audio>
 
-        <div :class="{audioBox:isAudioBox,audioBox2:!isAudioBox,transition:true}" @click="particulars(routePath)" v-if="this.$route.name!=='login'">
+        <div :class="{audioBox:isAudioBox,audioBox2:!isAudioBox,transition:true}" @click="particulars(routePath)" v-if="this.$route.name!=='login'&&this.$route.name!=='particulars'">
             
             <div class="audioDetail">
                 <!-- 歌曲图片 名称 专辑名称 -->
                 <div class="audioImg">
-                    <img :src="getAudioData.img" alt="">
+                    <img v-lazy="getAudioData.img" class="lazy">
+
                 </div>
                 <div class="audioTitle">
                     <p>{{getAudioData.title}}</p>
@@ -49,7 +52,7 @@ export default {
     watch: {
         '$route':{
             handler:function(to,from){
-                let ret = ['musicG','recommend','dynamic','mine']
+                let ret = ['musicG','rec','dynamic','mine']
                 this.isAudioBox = ret.includes(this.$route.name)
                 this.routePath = this.$route.path //获取当前页面路径
             }
@@ -68,6 +71,14 @@ export default {
             'time', //获取当前时间，和已播放百分比
             'particulars',//进入详情
         ]),
+        error(error){
+            this.$request.song(this.getAudioData.id).then(res=>{
+                this.getAudioData.url = res.data[0].url; //将audio的src替换
+            })
+        },
+        fun(error){
+            console.log(error)
+        }
     },
     mounted() {
         this.getAudioData.dom = this.$refs.audio;
@@ -120,8 +131,8 @@ export default {
         transition: all ease 0.2s;
     }
     .audioImg{
-        width: 5rem;
-        height: 5rem;
+        width: 5.5rem;
+        height: 5.5rem;
         border-radius: 50%;
         position: relative;
         left: 0.7rem;
@@ -131,8 +142,8 @@ export default {
         overflow: hidden;
     }
     .audioImg img{
-        width: 5rem;
-        height: 5rem;
+        width: 5.5rem;
+        height: 5.5rem;
     }
     .audioDetail{
         height: 100%;
@@ -153,6 +164,8 @@ export default {
         margin-top: 0.3rem;
         padding-left: 1.7rem;
         white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis
     }
     .audioTitle>p:nth-child(2){
         font-size: 1rem;
@@ -161,5 +174,7 @@ export default {
         padding-left: 1.7rem;
         margin-bottom: 0.3rem;
         white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis
     }
 </style>

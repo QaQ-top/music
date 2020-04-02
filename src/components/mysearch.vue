@@ -1,27 +1,35 @@
 <template>
-    <div class="mySearch" @click="search()">
+    <div class="mySearch" @touchstart="startDev" @touchend="searchs">
         <span class="icon iconfont icon-iconfonticonfontsousuo1"></span>
         {{txt}}
     </div>
 </template>
 
 <script>
+import {mapState} from 'vuex'
 export default {
     name:'search',
     data () {
         return {
-            
+            strat:null,
         }
+    },
+    computed:{
+        ...mapState(['search'])
     },
     props: ['txt'],
     methods: {
-        search(){
-            this.$router.push({
-                name:"search",
-                query:{
-                    path:this.$route.path
-                }
-            })
+        startDev(){
+            this.strat = new Date()
+        },
+        searchs(){
+            let date = new Date()
+            if(date-this.strat<200){
+              	this.search.path = this.$route.path
+                this.$router.push({
+                    name:"search",
+                })
+            }
         }
     },
 }

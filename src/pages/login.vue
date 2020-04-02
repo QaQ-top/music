@@ -1,6 +1,6 @@
 <template>
     <div class="login">
-        <div class="iocn iconfont icon-jiantou-zuo-cuxiantiao" @click="fh">
+        <div class="iocn iconfont icon-jiantou-zuo-cuxiantiao" @touchstart="fh">
 
         </div>
         <div class="loginCon">
@@ -10,7 +10,7 @@
             <div class="input">
                 <input type="password" v-model="password" class="inpt" placeholder="请输入密码">
             </div>
-            <div class="btn" @click="login">
+            <div class="btn" @touchstart="login">
                 登录
             </div>
         </div>
@@ -40,8 +40,21 @@ export default {
                         token:res.token  //token
                     })
                     local.setItem('user',str); //将用户信息出入本地缓存
-                    this.setCookie('MUSIC_U','Synchronize with server cookie',15) //标记为15天已登录
+                    this.setCookie('MUSIC','Synchronize with server cookie',15) //标记为15天已登录
+                    if(this.$store.state.mySongList.length===0){
+                            this.$request.usePlaylist(res.profile.userId).then(res=>{  //获取用户歌单
+                            let arr = res.playlist;
+                            let ilikeIt = arr.slice(0,1)[0]  //数组中第一个对象 永远为我喜欢的音乐
+                            arr.splice(0,1)
+                            let newbuild = arr.filter(item => {
+                                return item.ordered===false; //ordered 为 false  新键歌单
+                            })
+                            newbuild.unshift(ilikeIt)
+                            this.$store.state.mySongList.push(...newbuild)
+                        })
+                    }
                     window.history.back();
+                    
                 }
             })
         },

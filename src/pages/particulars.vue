@@ -1,30 +1,25 @@
 <template>
     <div class="heiop">
-        <div @click="noSetUp()">
+        <div>
             <my-prev-nav :tabRoutePath ='routePath'>
                 <div slot='prev_center' class="music_name">
                     <span>{{getAudioData.title}}</span>
                 </div>
-                <span slot='prev_right' class="icon iconfont icon-diandiandianshu dian_part" @click.stop="setUps()"></span>
+                <span slot='prev_right' class="icon iconfont icon-diandiandianshu dian_part" @click="noSetUp"></span>
             </my-prev-nav>
 
             <!-- 背景虚化 -->
             <div class="partBoxBack">
-                <img :src="getAudioData.img" alt="" @load="srcChange">
+                <img :src="getAudioData.img" alt="">
             </div>
 
             <div class="partBox" >
                 
                 <div class="albLrc">
                     <!-- 专辑封面 -->
-                    <div class="albumImg" v-if="!isLrc" @mousedown="down" @mouseup="up">
-                        <div>
-                            <img :src="getAudioData.img" alt="" ref="albumImg">
-                        </div>
-                    </div>
-                    <div class="lyrc" v-if="isLrc">
+                    <div class="lyrc" ref="lyrc" @scroll="scroll">
                         <!-- 歌词 -->
-                        <div v-for="(item, index) in lrc" :key="index" @click="playDate(index)" @mousedown="down" @mouseup="up">
+                        <div v-for="(item, index) in lrc" :key="index" @click="playDate(index)" class="lyrcBox" :class="{color:playde(index)<=vtime&&vtime<playde(index+1)}"> <!-- -->
                             {{item}}
                         </div>
                     </div>
@@ -47,14 +42,14 @@
                     <div class="control">
                         
                         <div>
-                            <span class="iocn iconfont icon-step-backward" @click="LastSong()"></span>
+                            <span class="iocn iconfont icon-step-backward" @touchstart="LastSong()"></span>
                         </div>
                         <div class="playpase">
-                            <span class="iocn iconfont icon-bofang" v-if="!getAudioData.play" @click="AudioPlay()"></span>
-                            <span class="iocn iconfont icon-poweroff-circle-fill" v-if="getAudioData.play" @click="AudioPlay()"></span>
+                            <span class="iocn iconfont icon-bofang" v-if="!getAudioData.play" @touchstart="AudioPlay()"></span>
+                            <span class="iocn iconfont icon-poweroff-circle-fill" v-if="getAudioData.play" @touchstart="AudioPlay()"></span>
                         </div>
                         <div>
-                            <span class="iocn iconfont icon-step-forward" @click="NextSong()"></span>
+                            <span class="iocn iconfont icon-step-forward" @touchstart="NextSong()"></span>
                         </div>
                     </div>
                 </div>
@@ -64,7 +59,12 @@
 
 
         <!-- 设置 -->
-        <div class="setUp" v-if="setUp">
+        <mt-popup
+        v-model="setUp"
+        position="right">
+            <div class="mint-cell-title">
+                <span>设置</span>
+            </div>
             <!-- 开关静音 -->
             <div class="setList">
                 <div>
@@ -123,13 +123,19 @@
                 >
                 </el-slider>
             </div>
-        </div>
+            <div class="setList add" @touchstart="start" @touchend='end' :class="{addhover:hover}">
+                添加到歌单
+            </div>
+        </mt-popup>
+        
     </div>
 </template>
 
 <script>
 import myPrevNav from '../components/back_prev'
 import { mapState,mapGetters,mapActions } from 'vuex';
+import { MessageBox } from 'mint-ui';
+
 export default {
     components:{
         myPrevNav
@@ -143,20 +149,31 @@ export default {
             isLrc:false,
             old:null,
             setUp:false,
+            position:true,
+            setTime:null,
+            hover:false,
+            songBox:false
         }
     },
     computed:{
         ...mapGetters(['getAudioData','getAudioState']),
+        ...mapState(['songListData']),
+        vtime(){
+            return this.getAudioData.currentTime
+        },
+        newType(){
+            return  this.getAudioData.type
+        },
         curTimeMS(){
-            let num = this.$store.state.audio.currentTime/60
-            let second = parseInt(this.$store.state.audio.currentTime - (Math.floor(num)*60))
+            let num = this.getAudioData.currentTime/60
+            let second = parseInt(this.getAudioData.currentTime - (Math.floor(num)*60))
             return `${Math.floor(num)<10?`0${Math.floor(num)}`:Math.floor(num)}:${second<10?`0${second}`:second}`
         },
         durationMS(){
-            let num = this.$store.state.audio.duration/60
+            let num = this.getAudioData.duration/60
             let minute,second;
             minute = Math.floor(num)<10?`0${Math.floor(num)}`:Math.floor(num);
-            second = parseInt(this.$store.state.audio.duration - (Math.floor(num)*60))<10?`0${parseInt(this.$store.state.audio.duration - (Math.floor(num)*60))}`:parseInt(this.$store.state.audio.duration - (Math.floor(num)*60))
+            second = parseInt(this.getAudioData.duration - (Math.floor(num)*60))<10?`0${parseInt(this.getAudioData.duration - (Math.floor(num)*60))}`:parseInt(this.$store.state.audio.duration - (Math.floor(num)*60))
             return `${minute}:${second}`
         }
     },
@@ -172,53 +189,56 @@ export default {
             'LastSong',//上一曲
             'NextSong',//下一曲
             'isListFor',
+            'del',
+            'add'
         ]),
-        playDate(index){
-            let data = this.lrcDate[index].split(':');
-            let date = (parseInt(data[0])*60)+Number(data[1])
-            console.log(this.lrc[index],this.lrcDate[index],date)
-            this.toPlay(date)
-        },
-        //长按切换歌词和专辑封面
-        down(){
-            clearTimeout(this.old);
-            this.old = setTimeout(()=>{
-                this.isLrc = !this.isLrc
-            },1000)
-        },
-        up(){
-            clearTimeout(this.old);
-        },
-
-        //设置栏显示与关闭
-        setUps(){
-            this.setUp = !this.setUp;
-        },
-        noSetUp(){
-            this.setUp = false;
-        },
-        srcChange(){ //确保图片为正方形
-            let img = this.$refs.albumImg
-            if(this.$route.name==='particulars'){
-                img.style.height = `${img.width}px`
+        playde(index){
+            if(this.lrcDate.length&&this.lrcDate[index]){
+                let data = this.lrcDate[index].split(':');
+                return (parseInt(data[0])*60)+Number(data[1])
             }
-        }
-    },
-    watch:{
-
-    },
-    activated(){
-        this.setUp = false;
-        this.routePath = this.$route.params.routePath;
-        if(this.getAudioData.type==='new'){ //如果是新src 发送歌词请求
-            this.$request.ci(this.$store.state.audio.id).then(res=>{
-                let lrcDate = res.lrc.lyric.replace(/[^\[(0-9:.)\]$]/g,'').split(/[\[\]]/); //将时间戳 提取  为数组
-                let lrc = res.lrc.lyric.replace(/[\[(0-9:.)]/g,'').split(']'); //将歌词提取 为数组
-                lrc.splice(0,1)
-                screen(lrcDate);
-                this.lrcDate = lrcDate;
-                this.lrc = lrc;
-                this.isLrc = false;
+        },
+        playDate(index){
+            if(this.lrcDate.length){
+                let data = this.lrcDate[index].split(':');
+                let date = (parseInt(data[0])*60)+Number(data[1])
+                this.toPlay(date)
+            }
+        },
+        //设置栏显示与关闭
+        noSetUp(){
+            this.setUp = true;
+        },
+        ci(){
+            this.$request.ci(this.getAudioData.id).then(res=>{
+                if(res.hasOwnProperty('lrc')){
+                    let lrcDate = res.lrc.lyric.replace(/[^\[(0-9:.)\]$]/g,'').split(/[\[\]]/); //将时间戳 提取  为数组
+                    let lrc = res.lrc.lyric.replace(/[\[(0-9:.)]/g,'').split(']'); //将歌词提取 为数组
+                    lrc.splice(0,1)
+                    screen(lrcDate);
+                    function dats(i){
+                        let data = i.split(':');
+                        return (parseInt(data[0])*60)+Number(data[1])
+                    }
+                    for(var i = 0;i<lrcDate.length;i++){
+                        if(i<lrcDate.length-1){
+                            let a = dats(lrcDate[i])
+                            let b = dats(lrcDate[i+1])
+                            if(Math.abs(a-b)>100){
+                                if(a<b){
+                                    lrcDate.splice(i+1,1);
+                                    lrc.splice(i+1,1)
+                                    i--
+                                }
+                            }
+                        }
+                    }
+                    this.lrcDate = lrcDate;
+                    this.lrc = lrc;
+                }else{
+                    this.lrcDate = [];
+                    this.lrc = ['该歌曲没有歌词~']
+                }
                 function screen(array) {
                     array.forEach((item,index)=>{
                         if(item.length!==8){ //如果 item 不是时间戳 将其删除
@@ -227,11 +247,83 @@ export default {
                     });
                 }
             })
-            this.getAudioData.type = 'used' //标记为 used 
-            let img = this.$refs.albumImg
-            img.style.height = `${img.width}px`
+        },
+        scroll(ev){
+            this.position = false;
+            clearTimeout(this.setTime)
+            this.setTime = setTimeout(()=>{
+                this.position = true;
+            },2500)
+        },
+        start(){
+            this.hover = true;
+        },
+        end(){
+            this.hover = false;
+            this.setUp = false;
+            let user = window.localStorage.getItem('user');
+             if(user&&JSON.parse(user).userId){
+                 this.$store.state.isSongBox = true;
+                 this.songListData.songId.push(this.getAudioData.id);
+             }else{
+                 setTimeout(()=>{
+                     window.history.back();
+                     MessageBox.confirm('您还没有登录，是否前往登录？').then(action => {
+                        this.$router.push({
+                        path:'/login'
+                        })
+                    })
+                 },100)
+             }
+        },
+    },
+    watch:{
+        'newType':{
+            handler:function () {
+                if(this.getAudioData.type === 'new'){
+                    this.ci()
+                    this.getAudioData.type = 'used' //标记为 used 
+                }
+            },
+            deep:true
+        },
+        'vtime':{
+            handler:function(){
+                let lrc = this.$refs.lyrc
+                let nodeArr = Array.from(lrc.children)
+                // if(nodeArr.length<22) return
+                nodeArr.map(i=>{
+                    if(i.getAttribute('class').includes('color')){
+                        if(i.offsetTop>lrc.offsetHeight/2&&this.position){
+                            lrc.scrollTo({
+                                top: i.offsetTop-lrc.offsetHeight/2, 
+                                behavior: "smooth"
+                            })
+                        }else if(this.position){
+                            lrc.scrollTo({
+                                top: 0, 
+                                behavior: "smooth"
+                            })
+                        }
+                    }
+                })
+            },
+            deep:true
         }
+    },
+    created(){
+        this.setUp = false;
+        if(this.getAudioData.type==='new'){ //如果是新src 发送歌词请求
+            this.isLrc = false;
+            this.ci();
+            this.getAudioData.type = 'used' //标记为 used 
+        }
+        
+    },
+    activated(){
+        this.routePath = this.$route.params.routePath;
     }
+       
 }
 </script>
 
@@ -249,6 +341,9 @@ export default {
         overflow: hidden;
     }
     .dian_part{
+        display: block;
+        width: 4rem;
+        height: 4rem;
         font-size: 4.1rem
     }
     .partBox{
@@ -261,24 +356,24 @@ export default {
         right: 0;
         top: 0;
         bottom: 0;
-        z-index: 999;
+        z-index: 99;
     }
     .partBoxBack{
         width: 100%;
         height: 100%;
         box-sizing: border-box;
-        padding-top: 4rem;
+        padding-top: 6rem;
         position: fixed;
         left: 0;
         right: 0;
         top: 0;
         bottom: 0;
-        z-index: 998;
+        z-index: 99;
     }
     .partBoxBack img{
         height: 100%;
         margin-left: -35%;
-        filter: blur(90px)
+        filter: blur(300px)
     }
     .albumImg{
         padding: 28% 0;
@@ -292,7 +387,7 @@ export default {
         position: absolute;
         bottom: 0;
         width: 100%;
-        z-index: 999;
+        z-index: 99;
         background-color: white
     }
     .ms{
@@ -309,15 +404,12 @@ export default {
     }
     .lyrc{
         position: absolute;
+        top: 10%;
         width: 100%;
         height: 75%;
         overflow: scroll;
     }
-    .lyrc div {
-        height: 3rem;
-        line-height: 3rem;
-        font-size: 2rem
-    }
+    
     .control{
         width: 100%;
         display: flex;
@@ -336,7 +428,7 @@ export default {
         width: 40%;
         height: 50%;
         background-color: white;
-        z-index: 9999;
+        z-index: 99;
         right: 0;
     }
     .setList{
@@ -344,7 +436,12 @@ export default {
         justify-content: space-around;
         align-items: center;
         width: 100%;
-        height: 4rem;
+        box-sizing: border-box;
+        padding-left: 1%;
+        height: 5rem;
+        background-color: white;
+        font-size: 1.6rem;
+        margin: 1rem 0;
     }
     .setList div:nth-child(1){
         text-align: left;
@@ -354,4 +451,53 @@ export default {
         width: 58%;
         text-align: right;
     }
+    .heiop >>> .mint-popup,.mint-popup-right {
+        width:60%;
+        height: 100%;
+        background-color: rgb(250,250,250);
+    }
+    .mint-cell-title{
+        display: flex;
+        justify-content: flex-start;
+        align-items: center;
+        font-size: 2rem;
+        width: 100%;
+        height: 6rem;
+        font-size: 1.7rem;
+        font-weight: bold;
+        line-height: 4rem;
+        text-align: left;
+        box-sizing: border-box;
+        padding: 1rem;
+        box-shadow: 0 0 1rem -0.68rem #000;
+        background-color: white;
+    }
+    .heiop >>> .icon-icon-test{
+        font-size: 2.5rem;
+    }
+    .lyrcBox{
+        width: 70%;
+        /* tab-size: ; */
+        line-height: 2.5rem;
+        font-size: 2rem;
+        margin:  1rem auto;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+    .color{
+        color: rgb(64,158,255);
+    }
+    .add{
+        width: 70%;
+        margin: 0 auto;
+        background-color: rgb(64,158,255);
+        transition: all ease-in-out 0.1s;
+        color: #fff;
+        border-radius: 1rem;
+        font-size: 1.7rem;
+    }
+    .addhover{
+        transform: scale(0.9);
+    }
+    
 </style>

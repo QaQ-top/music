@@ -16,13 +16,7 @@ import ElementUI from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 Vue.use(ElementUI)
 
-//路由守卫
-router.beforeEach((to,fom, next) => {
-  console.log('从哪个页面来？',fom)  // 从哪个页面来？
-  console.log('到哪个页面去？',to)  // 到哪个页面去？
-  window.scrollTo(0,0)
-  next()
-})
+
 // Router.afterEach(to,fom)
 
 //axios
@@ -50,7 +44,11 @@ Vue.use(InfiniteScroll);
 import { Lazyload } from 'mint-ui';
 Vue.use(Lazyload);
 
+import { Popup } from 'mint-ui';
+Vue.component(Popup.name, Popup);
 
+import { Picker } from 'mint-ui';
+Vue.component(Picker.name, Picker);
 
 
 
@@ -70,6 +68,9 @@ import store from './store/vuex';
 //vue 自定义指令
 import './v-custom/custom'
 
+import lottie from 'vue-lottie';
+import { set } from 'shelljs'
+Vue.component('lottie', lottie)
 
 /* eslint-disable no-new */
 new Vue({
@@ -78,4 +79,13 @@ new Vue({
   store,
   components: { App },
   template: '<App/>',
+})
+
+//路由守卫
+router.beforeEach((to,fom, next) => {
+  let scrollTop = document.documentElement.scrollTop || document.body.scrollTop
+  store.state.scroll.set(fom.name,scrollTop)
+  // console.log('从哪个页面来？',fom)  // 从哪个页面来？
+  // console.log('到哪个页面去？',to)  // 到哪个页面去？
+  next()
 })

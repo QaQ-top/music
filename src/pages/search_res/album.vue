@@ -4,8 +4,8 @@
         :infinite-scroll-disabled='true'
         v-infinite-scroll="loadMore"
         infinite-scroll-distance="10">
-            <div v-for="(item, index) in list" :key="index" class="list">
-                <img :src="item.picUrl" alt="">
+            <div v-for="(item, index) in list" :key="index" class="list" @click="details(item.id)">
+                <img v-lazy='item.picUrl'  class="lazy">
                 <div class="txt">
                     <p>{{item.name}}</p>
                     <p>{{item.artist.name}}</p>
@@ -33,7 +33,16 @@ export default {
                 this.list.push(...res.result.albums[res.result.albums.length-1])
             })
         },
-        
+        details(id){
+            this.$router.push({
+                name:'songBox',
+                params:{
+                    id,
+                    targetType:10,
+                    path:this.$route.path
+                }
+            })
+        },
     },
     created(){
         this.$request.album(this.$store.state.searchVal,0).then(res=>{

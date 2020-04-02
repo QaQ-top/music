@@ -146,7 +146,10 @@ Vue.prototype.cookieKey = ()=>{
         let cookieArray = document.cookie.split(';')
         let key = []
         cookieArray.map(item=>{
-                key.push(item.split('=')[0])
+                key.push(item.split('=')[0].replace(/\s*/g,""))
         })
         return key;
 }
+Vue.prototype.Str = '网易云';
+
+

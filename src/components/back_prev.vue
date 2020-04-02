@@ -1,6 +1,6 @@
 <template>
     <div class="prev">
-        <span class="iocn iconfont icon-jiantou-zuo-cuxiantiao" @click="toTab()"></span>
+        <span class="iocn iconfont icon-jiantou-zuo-cuxiantiao" @touchstart="startDev" @touchend="toTab()"></span>
         <slot name="prev_center"></slot>
         <slot name="prev_right"></slot>
     </div>
@@ -11,16 +11,21 @@ export default {
     name:'backPrev',
     data() {
         return {
-            
+            strat:null
         }
     },
     props:['tabRoutePath'],  //父组件传递过来的routeName
     methods:{
+        startDev(){
+            this.strat = new Date()
+        },
         toTab(){
-            console.log(this.tabRoutePath)
-            this.$router.push({
+            let date = new Date()
+            if(date-this.strat<200){
+              this.$router.push({
                 path:this.tabRoutePath
-            })
+            })	
+            }
         }
     }
 }
@@ -36,7 +41,8 @@ export default {
         position: fixed;
         top:0;
         background:rgb(252,252,252);
-        z-index: 9999;
+        z-index: 999;
+        font-size: 2rem;
 
     }
     .icon-jiantou-zuo-cuxiantiao{

@@ -67,7 +67,6 @@ fs.readdirSync(path.join(__dirname, 'module')).reverse().forEach(file => {
 
   app.use(route, (req, res) => {
     let query = Object.assign({}, req.query, req.body, {cookie: req.cookies})
-    console.log(query)
     question(query, request)
       .then(answer => {
         console.log('[OK]', decodeURIComponent(req.originalUrl))

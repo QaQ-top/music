@@ -11,34 +11,30 @@
         v-infinite-scroll="loadMore"
         infinite-scroll-distance="10"
         >
-            <div v-if="switchs">
+             <div v-if="switchs">
                 <watch-slides @esid='visit' @created='Obtain'>
 
                 </watch-slides>
                 <div class="top">
-                    <div v-for="(item, index) in singerList" :key="index" class="blurb" @click="details(item.id)">
-                        <img v-lazy="item.img1v1Url">
-                        <span>
-                            {{item.name}}
-                        </span>
-                        <!-- <div>
-                            <span class="iconfont icon-heart" v-if="!item.followed"></span>
-                            <span class="iconfont icon-heart-fill" v-if="item.followed"></span>
-                        </div> -->
-                    </div>
+                    <transition-group name="gs" tag="div" appear>
+                        <div v-for="(item, index) in singerList"  :key="`gs${index}`" class="blurb" @click="details(item.id)">
+                            <img v-lazy="item.img1v1Url" class="lazy">
+                            <span class="arlname">
+                                {{item.name}}
+                            </span>
+                        </div>
+                    </transition-group>
                 </div>
             </div>
-            <div v-if="!switchs" @click="logStatus">
-                <div v-for="(item, index) in likeList" :key="index" class="blurb" @click="details(item.id)">
-                    <img v-lazy="item.img1v1Url">
-                    <span>
+            <div v-if="!switchs">
+                <transition-group name="sc" tag="div" appear>
+                <div v-for="(item, index) in likeList" :key="`sc${index}`" class="blurb" @click="details(item.id)">
+                    <img v-lazy="item.img1v1Url" class="lazy">
+                    <span class="arlname">
                         {{item.name}}
                     </span>
-                    <!-- <div>
-                        <span class="iconfont icon-heart" v-if="!item.followed"></span>
-                        <span class="iconfont icon-heart-fill" v-if="item.followed"></span>
-                    </div> -->
                 </div>
+                </transition-group>
             </div>
         </div>
     </div>
@@ -88,7 +84,7 @@ export default {
             this.switchs = bol;
            
             if(!bol){
-                let isLogin = this.cookieKey().includes('MUSIC_U')
+                let isLogin = this.cookieKey().includes('MUSIC')
                 if(isLogin){
                     this.$request.sublist().then(res=>{
                         this.likeList = res.data;
@@ -125,11 +121,6 @@ export default {
                     }
                 }
                 this.singerList.push(...res.artists);
-            });
-        },
-        logStatus(){
-            this.$request.logStatus().then(res=>{
-                console.log(res)
             });
         },
         details(id){
@@ -171,5 +162,32 @@ export default {
     }
     .top{
         padding-top: 7rem;
+    }
+    .arlname{
+        font-size: 1.8rem;
+    }
+    .gs-enter{
+        transition: all ease-in-out 0.35s;
+        transform: translateX(-100%);
+    }
+    .gs-enter-active{
+        transition: all ease-in-out 0.35s;
+        transform: translateX(-50%);
+    }
+    .gs-enter-to{
+        transition: all ease-in-out 0.35s;
+        transform: translateX(0%);
+    }
+    .sc-enter{
+        transition: all ease-in-out 0.35s;
+        transform: translateX(100%);
+    }
+    .sc-enter-active{
+        transition: all ease-in-out 0.35s;
+        transform: translateX(50%);
+    }
+    .sc-enter-to{
+        transition: all ease-in-out 0.35s;
+        transform: translateX(0%);
     }
 </style>

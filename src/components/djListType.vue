@@ -2,7 +2,7 @@
     <div class="slides">
         <swiper :options="swiperOption" ref="slTypeSwiper">
             <swiper-slide v-for="(item, index) in arr" :key="index" >
-                <div @click="visit(item.id)" :class="{color:id===item.id,vis:true}">
+                <div @touchstart="startDev" @touchmove='move' @touchend="visit(item.id)" :class="{color:id===item.id,vis:true}">
                     {{item.name}}
                 </div>
             </swiper-slide>
@@ -23,6 +23,8 @@ export default {
                 freeModeMomentum : true,
                 freeModeMomentumRatio : 0.5,
             },
+            strat:null,
+            moveing:false,
             id:5001
         }
     },
@@ -41,11 +43,23 @@ export default {
         }
     },
     methods:{
+         startDev(){
+            this.strat = new Date()
+        },
+        move(){
+            this.moveing = true;
+        },
         visit(id){
-            if(id !== this.id){
-                this.id = id
-                this.$emit('esName',id)
+            let date = new Date()
+            if(date-this.strat<200&&!this.moveing){
+              	if(id !== this.id){
+                    this.id = id
+                    this.$emit('esName',id)
+                }
+            }else{
+                this.moveing = false
             }
+            
         }
     },
 }

@@ -5,9 +5,9 @@
                 <p><span class=" iconfont icon-yinyue"></span></p>
                 <p>{{musicG}}</p>
             </router-link>
-            <router-link to="/recommend" tag="div" active-class="font-color">
+            <router-link to="/rec" tag="div" active-class="font-color">
                 <p><span class="iconfont icon-jinrituijian"></span></p>
-                <p>{{recom}}</p>
+                <p>{{rec}}</p>
             </router-link>
             <router-link to="/dynamic" tag="div" active-class="font-color">
                 <p><span class="iconfont icon-changge"></span></p>
@@ -31,11 +31,11 @@ export default {
     },
     watch: {
         "$route":function () {
-            let ret = ['musicG','recommend','dynamic','mine']
+            let ret = ['musicG','rec','dynamic','mine']
             this.isFoot = ret.includes(this.$route.name)
         }
     },
-    props:['musicG','recom','dynamic','mine']
+    props:['musicG','rec','dynamic','mine']
 }
 </script>
 

@@ -44,7 +44,7 @@
         :imgArray='djhot' 
         :row='1' :column='3.2' 
         :bet='15'
-        columnType='热门电台'
+        columnType='电台推荐'
         >
         </dj-hot>
     </div>
@@ -92,7 +92,7 @@ export default {
         ...mapState(['audio'])
     },
     methods: {
-        ...mapActions(['newSrc']),
+        ...mapActions(['newSrc','particulars']),
         bannerDst(item){ 
             switch (item.targetType) {
                 case 1:  //单曲
@@ -105,11 +105,12 @@ export default {
                         }
                         this.SongArray(songArr,this.bannerArr); //找到banner所有单曲
                     }
-                    this.audio.arr = [...this.bannerArr] //将banner 所有单曲整理成这个歌单
+                    this.audio.arr.length = 0
+                    this.audio.arr.push(...this.bannerArr) //将banner 所有单曲整理成这个歌单
                     let arr = [];
                     this.SongArray([item.song],arr) //播放当前歌曲
                     this.newSrc(arr[0])
-                    console.log('单曲')
+                    this.particulars('/musicG')
                     break;
 
                 case 10: //专辑
@@ -121,7 +122,6 @@ export default {
                             path:this.$route.path
                         }
                     })
-                    console.log('专辑')
                     break;
 
                 case 1000: //歌单
@@ -133,30 +133,20 @@ export default {
                             path:this.$route.path
                         }
                     })
-                    console.log('歌单')
                     break;
                 case 1004: //mv
-                    // this.$router.push({
-                    //     name:'bannerDst',
-                    //     params:{
-                    //         id:item.targetId,
-                    //         type:item.targetType
-                    //     }
-                    // })
-                    console.log('MV')
+                     //广告活动
+                    this.$router.push({
+                        name:'advertisement',
+                        params:{
+                            id:item.targetId,
+                            type:'url'
+                         }
+                    });
                     break;
             
                 default:
-                    if(item.url){ //广告活动
-                        this.$router.push({
-                            name:'advertisement',
-                            params:{
-                                id:item.targetId,
-                                type:'url'
-                            }
-                        });
-                         console.log('广告')
-                    }
+                    
                     break;
             }
             
@@ -186,9 +176,9 @@ export default {
         this.$request.rankingList(4).then(res=>{
             this.electricSound = res.playlist.tracks.slice(0,3);
         })
-        //热门电台
+        //电台-推荐
         this.$request.djProgram().then(res=>{
-            this.djhot = res.result
+            this.djhot = res.djRadios
         })
     },
     mounted(){

@@ -3,7 +3,7 @@
       <span>{{columnType}}</span>
       <swiper ref='rankingList' :options='optionsSwiper' class="grid">
           <swiper-slide>
-              <div class="rank">
+              <div class="rank" @touchstart="startDev" @touchmove='move' @touchend="rankList(2)">
                   <h3>原创歌曲榜</h3>
                   <div v-for="(item, index) in original" :key="index">
                       <img :src="item.al.picUrl" alt="">
@@ -17,10 +17,10 @@
               </div>
           </swiper-slide>
           <swiper-slide>
-               <div class="rank">
+               <div class="rank" @touchstart="startDev" @touchmove='move' @touchend="rankList(3)">
                   <h3>飙升榜</h3>
                   <div v-for="(item, index) in soar" :key="index">
-                      <img :src="item.al.picUrl" alt="">
+                        <img v-lazy="item.al.picUrl" class="lazy">
                       <div class="txt">
                           <span>{{index+1}}</span>
                           <div>
@@ -31,11 +31,11 @@
               </div>
           </swiper-slide>
           <swiper-slide>
-               <div class="rank">
+               <div class="rank" @touchstart="startDev" @touchmove='move' @touchend="rankList(4)">
                   <h3>电音榜</h3>
                   <div v-for="(item, index) in electricSound" :key="index">
-                      <img :src="item.al.picUrl" alt="">
-                      <div class="txt">
+                        <img v-lazy="item.al.picUrl" class="lazy">
+                        <div class="txt">
                           <span>{{index+1}}</span>
                           <div>
                               {{item.name}}
@@ -61,7 +61,9 @@ export default {
                 freeMode : this.free, //free模式，slide会根据惯性滑动可能不止一格且不会贴合
                 freeModeMomentum : true,
                 freeModeMomentumRatio : 0.5,
-            }
+            },
+            strat:null,
+            moveing:false,
         }
     },
     props:{
@@ -108,7 +110,26 @@ export default {
         }
     },
     methods:{
-
+        move(){
+            this.moveing = true;
+        },
+        startDev(){
+            this.strat = new Date()
+        },
+        rankList(id){
+            let date = new Date()
+            if(date-this.strat<200&&!this.moveing){
+              	this.$router.push({
+                    name:'rank',
+                    params:{
+                        id,
+                    }
+                })
+            }else{
+                this.moveing = false
+            }
+            
+        }
     },
     watch:{
         
@@ -146,7 +167,7 @@ export default {
     }
     .txt{
         width: 80%;
-        font-size: 1rem;
+        font-size: 1.2rem;
     }
     .txt span{
         font-size: 1.8rem;

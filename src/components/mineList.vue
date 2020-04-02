@@ -1,20 +1,20 @@
 <template>
     <div>
        <div class="list">
-           <div>
+           <div @touchend="like" @touchstart="startDev">
                <div class="icon">
-                   <span class="iconfont icon-jinrituijian"></span>
+                   <span class="iconfont icon-aixin"></span>
                </div>
                <p>
-                   我的电台
+                   我喜欢的音乐
                </p>
            </div>
-           <div>
+           <div @touchend="abme" @touchstart="startDev">
                <div class="icon">
                    <span class="iconfont icon-yinle2"></span>
                </div>
                <p>
-                   我的收藏
+                  收藏专辑
                </p>
            </div>
         </div> 
@@ -26,9 +26,26 @@ export default {
     name:'homeList',
     data() {
         return {
-            
+            strat:null,
         }
     },
+    methods:{
+        startDev(){
+            this.strat = new Date()
+        },
+        like(){
+            let date = new Date()
+            if(date-this.strat<200){
+              	this.$emit('like')
+            }
+        },
+        abme(){
+            let date = new Date()
+            if(date-this.strat<200){
+              	this.$emit('abme')
+            }
+        }
+    }
 }
 </script>
 
@@ -37,6 +54,7 @@ export default {
         width: 100%;
         box-sizing: border-box;
         padding: 4%;
+        padding-top:7rem;
         display:flex;
         justify-content:space-between;
         align-items: center;

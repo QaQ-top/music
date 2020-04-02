@@ -1,11 +1,22 @@
 <template>
-  <div id="app" :style="height" ref='app'>
+  <div id="app" ref='app'>
     <my-audio></my-audio>
-    <my-footer musicG='音遇' recom='推荐' dynamic='歌手' mine='我的'></my-footer>
+    <my-footer musicG='音遇' rec='推荐' dynamic='歌手' mine='我的'></my-footer>
 
-      <keep-alive :exclude="this.$store.state.cache"> 
-        <router-view></router-view>
+      <keep-alive :exclude="this.$store.state.cache">
+        <router-view class="view"></router-view>
       </keep-alive>
+
+      <handle-song-list>
+        
+      </handle-song-list>
+     
+
+      <transition name="logo">
+        <my-lottie v-if="logo">
+        </my-lottie>
+      </transition>
+
   </div>
 </template>
 
@@ -25,48 +36,44 @@ import myFooter from './components/footer';
 //vuex
 import {mapState,mapActions,mapGetters,mapMutations} from 'vuex';
 
+import { MessageBox } from 'mint-ui';
+
+import handleSongList from './components/handleSongList';
+
+import myLottie from './components/lottie'
+
 export default {
   name: 'App',
   //------------------
   components: {
-      myAudio,myFooter
+      myAudio,myFooter,handleSongList,myLottie
   },
   //-----------------
   data () {
     return {
-        transName:'rlcut-left',
         routeIndex:0,
         active:0, //当前页面路径在getFooterRoute的索引
-        height:{
-          
-        }
+        logo:true,
     }
   },
   //------------------
   computed:{
     ...mapState({
       stroeAudio:'audio',
-      stroeFooterRoute:'footerRoute'
+      stroeFooterRoute:'footerRoute',
     })
   },
   //-----------------
   methods: {
-    
   },
 
   //------------------
-  watch: { // 使用 mapState,mapGetters 会出现settr gettr报错 用this.$store比较好
+  watch: { 
     'active'(to, from) {
       this.$router.push(this.stroeFooterRoute[to])
     },
     '$route':{ 
       handler:function(to,from){
-          if(this.stroeFooterRoute.includes(to.path)&&this.stroeFooterRoute.includes(from.path)){
-          let toIndex = this.stroeFooterRoute.findIndex(item=>to.path==item)
-          let fromIndex = this.stroeFooterRoute.findIndex(item=>from.path==item)
-          this.$store.state.route = to.path  //将当前路径存入vuex
-          this.active = toIndex //储存当前页面路径索引
-        }
         if(to.name==='particulars'){
           this.$store.state.previous = from.name
         }
@@ -74,10 +81,17 @@ export default {
         //判断是否缓存搜索页面
         let current = ['songList','album','singer','single'].includes(to.name); //判断当前页面是否符合数组条件
         let previous = ['songList','album','singer','single'].includes(from.name); //判断之前页面是否符合数组条件
-        if(current||(previous&&to.name==='particulars')){
-            this.$store.state.cache = ''; //缓存页面
+        if(current||(previous&&to.name==='particulars')||(previous&&to.name==='songBox')){
+            this.$store.state.cache = 'songBox'; //缓存页面
         }else {
-          this.$store.state.cache = 'search';
+          this.$store.state.cache = 'search';//不缓存
+        }
+        if((to.name==='particulars'&&from.name==='songBox')||to.name==='songBox'){
+            this.$store.state.cache = '';
+        }else if(this.$store.state.cache==='search'){
+            this.$store.state.cache = 'search,songBox';
+        }else{
+            this.$store.state.cache = 'songBox';
         }
       }
     }
@@ -92,13 +106,31 @@ export default {
     }
     this.$router.push('/musicG');
   },
+  created(){
+    let user = window.localStorage.getItem('user');
+    if(user&&JSON.parse(user).userId){
+      let _user = JSON.parse(user)
+      this.$request.usePlaylist(_user.userId).then(res=>{  //获取用户歌单
+                let arr = res.playlist;
+                let ilikeIt = arr.slice(0,1)[0]  //数组中第一个对象 永远为我喜欢的音乐
+                arr.splice(0,1)
+                let newbuild = arr.filter(item => {
+                    return item.ordered===false; //ordered 为 false  新键歌单
+                })
+                newbuild.unshift(ilikeIt)
+                this.$store.state.mySongList.length = 0;
+                this.$store.state.mySongList.push(...newbuild)
+            })
+    }else{
+      MessageBox.confirm('您还没有登录，是否前往登录？').then(action => {
+        this.$router.push({
+          path:'/login'
+        })
+      })
+    }
+  },
   //---------------------
    mounted() {
-    // if(window.innerHeight>this.$refs.app.offsetHeight){
-    //   this.height = {
-    //         'height':`${window.innerHeight}px`
-    //       }
-    // }
     if (typeof document.addEventListener === "undefined") {
       console.error("浏览器不支持addEventListener,请升级");
     } else {
@@ -122,7 +154,11 @@ export default {
         storage.setItem('audioState',JSON.stringify(this.$store.state.audioState))
       });
     }
+    setTimeout(() => {
+      this.logo = false
+    }, 4000)
   },
+  
 }
 
 // document.body.addEventListener("veb",function(e){
@@ -155,21 +191,69 @@ export default {
   padding-top: 6rem;
   padding-bottom: 10.3rem;
 }
+*{
+  padding: 0;
+  margin: 0;
+}
 input[placeholder]{
   font-size:1.2rem;
 }
 
 image[lazy=loading] {
   width: 40px;
-  height: 300px;
+  height: 20px;
   margin: auto;
 }
+.lazy{
+  background-color: rgb(250, 250, 250);
+}
+
+
 .mint-msgbox {
   width: 60%;
   border-radius: 1.5rem;
 }
+.mint-msgbox-title{
+  font-size: 2rem;
+}
+.mint-msgbox-btns,.mint-msgbox-confirm,.mint-msgbox-cancel{
+  height: 5rem;
+  font-size: 1.7rem;
+}
 .mint-msgbox>.mint-msgbox-content{
-  font-size: 1rem;
+  height: 10rem;
+  font-size: 1.5rem;
+}
+.mint-cell-wrapper{
+  padding: 0 1rem 0 1rem;
+  height:100%;
+}
+.mint-indicator-wrapper{
+  z-index: 9999;
+}
+.logo-leave{
+  transition: all 0.35s;
+  transform:translateX(0);
+}
+.logo-leave-active{
+  transition: all 0.35s;
+  transform:translateX(50%);
+}
+.logo-leave-to{
+  transition: all 0.35s;
+  transform:translateX(100%);
 }
 
+.handle-leave{
+  transition: all 0.35s;
+  transform:translateX(0);
+}
+.handle-leave-active{
+  transition: all 0.35s;
+  transform:translateX(50%);
+}
+.handle-leave-to{
+  transition: all 0.35s;
+  transform:translateX(100%);
+}
 </style>

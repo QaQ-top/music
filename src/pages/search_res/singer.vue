@@ -1,7 +1,8 @@
 <template>
     <div>
-        <div v-for="(item, index) in singerList" :key="index" class="blurb">
-            <img :src="item.img1v1Url" alt="">
+        <div v-for="(item, index) in singerList" :key="index" class="blurb" @click="details(item.id)">
+            <img v-lazy='item.img1v1Url'  class="lazy">
+
                 <span class="name">
                     {{item.name}}
                 </span>
@@ -23,7 +24,16 @@ export default {
         }
     },
     methods:{
-        
+        details(id){
+            this.$router.push({
+                name:'songBox',
+                params:{
+                    id,
+                    targetType:100,
+                    path:this.$route.path
+                }
+            })
+        }
     },
     created(){
        this.$request.singer(this.$store.state.searchVal,0).then(res=>{

@@ -8,13 +8,14 @@
             </span>
         </my-prev-nav>
         <div class="advertisement">
-            活动已过期！
+            活动与直播正在努力开发中！
         </div>
     </div>
 </template>
 
 <script>
 import myPrevNav from '../components/back_prev';
+import { MessageBox } from 'mint-ui';
 export default {
     name:'advertisement',
     data(){
@@ -29,7 +30,12 @@ export default {
     methods: {
         
     },
+    created(){
+    },
     activated() {
+        MessageBox.alert('活动与直播正在努力开发中~').then(action => {
+            window.history.back();
+        });
         console.log(this.$route.params)
         
     },

@@ -39,7 +39,7 @@ export default {
         display: flex;
         position: fixed;
         top: 6rem;
-        z-index: 9999;
+        z-index: 1;
         background: rgb(252,252,252);
         box-shadow: 0 5px 7px -10px #000
     }
@@ -51,5 +51,8 @@ export default {
         justify-content:space-around;
         align-items:center;
         font-size: 2rem;
+    }
+    .font-color{
+        color:#007aff;
     }
 </style>

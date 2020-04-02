@@ -1,6 +1,6 @@
 <template>
   <div class="list">
-      <div v-for="(item, index) in type" :key="index" @click="idx(item.idx)" :class="{back:index===boxIndex}">
+      <div v-for="(item, index) in type" :key="index" @touchstart="startDev" @touchend="idx(item.idx)" :class="{back:item.idx===id}">
           {{item.name}}
       </div>
   </div>
@@ -11,7 +11,7 @@ export default {
     name:'rankType',
     data() {
         return {
-            boxIndex:0,
+            strat:null,
             type:[
                 {
                     name:'新歌榜',
@@ -36,10 +36,17 @@ export default {
             ]
         }
     },
+    props:['id'],
     methods:{
+        startDev(){
+            this.strat = new Date()
+        },
         idx(id){
-            this.$emit('idx',id)
-            this.boxIndex = id;
+            let date = new Date()
+            if(date-this.strat<200){
+              	this.$emit('idx',id)
+            }
+            
         }
     }
 }

@@ -16,8 +16,8 @@
             <song-list-type :arr='arr' @esName='viet' @transmission='creat'>
 
             </song-list-type>
-            <div v-for="(item, index) in playlist" :key="index" class="playlist" @click="details(item.id)">
-              <img v-lazy='item.coverImgUrl'>
+            <div v-for="(item, index) in playlist" :key="index" class="playlist" @touchstart="details(item.id)">
+              <img v-lazy='item.coverImgUrl' class="lazy">
               <div class="txt">
                 <p>{{item.name}}</p>
                 <div>
@@ -35,7 +35,7 @@
 import myPrevNav from '../../components/back_prev';
 import songListType from '../../components/songLsitType'
 export default {
-    name:'red',
+    name:'sl',
     data(){
         return {
             routePath:null,
@@ -121,7 +121,8 @@ export default {
         display: block;
         width: 70%;
         text-align: left;
-        font-size: 1.2rem;
+        font-size: 1.7rem;
+
     }
     .list{
       padding-top: 7rem;

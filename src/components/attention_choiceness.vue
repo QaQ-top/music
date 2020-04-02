@@ -1,8 +1,8 @@
 <template>
     <div class="_ke">
         <div class="atteChoi">
-            <span @click="isleft()">{{txt_1}}</span>
-            <span @click="isright()">{{txt_2}}</span>
+            <span @touchstart="startDev" @touchend="denisleft">{{txt_1}}</span>
+            <span @touchstart="startDev" @touchend="denisright">{{txt_2}}</span>
             <div :class="{di_back_left:left,di_back_right:right}" class="di_back"></div>
         </div>
     </div>
@@ -14,20 +14,30 @@ export default {
     data () {
         return {
             left:true,
-            right:false
+            right:false,
+            strat:null
         }
     },
     props:['txt_1','txt_2'],
     methods: {
-        isleft(){
-            this.left = true;
-            this.right = false;
-            this.$emit('chengar',this.left)
+        startDev(){
+            this.strat = new Date()
         },
-        isright(){
-            this.left = false;
-            this.right = true;
-            this.$emit('chengar',this.left)
+        denisleft(){
+            let date = new Date()
+            if(date-this.strat<200){
+                this.left = true;
+                this.right = false;
+                this.$emit('chengar',this.left)
+            }
+        },
+        denisright(){
+            let date = new Date()
+            if(date-this.strat<200){
+                this.left = false;
+                this.right = true;
+                this.$emit('chengar',this.left)
+            }
         }
     },
 }

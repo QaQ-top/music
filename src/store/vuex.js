@@ -2,6 +2,7 @@ import Vuex from 'vuex'
 import Vue from 'vue'
 import router from '@/router'
 import request from '@/api/api'
+import { MessageBox } from 'mint-ui';
 
 
 Vue.use(Vuex)
@@ -32,12 +33,11 @@ const state = {
     audioState:{
         randomPlay:false,//是否循环播放整个歌单
         disabled:false,
-        alreadyPlay:[]
     },
     //首页app的foot的四个路径
     footerRoute:[
         '/musicG',
-        '/recommend',
+        '/rec',
         '/dynamic',
         '/mine'
       ],
@@ -45,9 +45,19 @@ const state = {
     //储存精确搜索的值
     searchVal:'',
 
+    mySongList:[],
+    isSongBox:false,
+    songListData:{
+        listId:null,
+        songId:[],
+    },
     
     //进入歌曲详情页面时，储存点击前一个页面路径
     previous:'',
+    
+    search:{
+        path:''
+    },
 
     //keep
     cache:'search',
@@ -55,8 +65,11 @@ const state = {
     //歌曲列表 是否显示
     audioList:{
         type:false
-    }
+    },
 
+    everyday:[],
+
+    scroll:new Map()
 
 }
 
@@ -132,7 +145,14 @@ const actions = {
     },
     //控制
     
-    
+    //将歌曲添加到某个歌单
+    add({commit}){
+        commit('add')
+    },
+    //将歌曲从某个歌单删除
+    del({commit}){
+        commit('del')
+    }
     
     //single album singer songList MV lyric FM video
 }
@@ -253,11 +273,11 @@ const mutations = {
             state.audio.dom.play();
             state.audio.play=true;
         }
-        state.audio.albumId = data.album.albumId; //将点击的歌曲专辑id 存入audio详情
-        state.audio.albumName = data.album.albumName; //将点击的歌曲专辑名称 存入audio详情
-        state.audio.id = data.id //将歌曲id 存入audio详情
         request.song(data.id).then(res=>{ //通过歌曲id发送请求
             state.audio.type = 'new' //标记未新歌曲
+            state.audio.id = data.id //将歌曲id 存入audio详情
+            state.audio.albumId = data.album.albumId; //将点击的歌曲专辑id 存入audio详情
+            state.audio.albumName = data.album.albumName; //将点击的歌曲专辑名称 存入audio详情
             state.audio.url = res.data[0].url; //将audio的src替换
             state.audio.storage = false; //关闭storage缓存状态
             state.audio.dom.addEventListener('canplay',plays())
@@ -266,17 +286,6 @@ const mutations = {
                 state.audio.img = res.songs[0].al.picUrl; //歌曲封面
                 state.audio.title = res.songs[0].name //歌曲名称
                 state.audio.dom.removeEventListener('canplay',plays())
-
-                if(state.audioState.alreadyPlay.includes(data.id)){ //如果最近已经播放，再次播放，将其放置第一个
-                    let index = state.audioState.alreadyPlay.findIndex(item => item === data.id)
-                    state.audioState.alreadyPlay.splice(index,1); //先删
-                }
-                if(state.audioState.alreadyPlay.length===10){ //最多储存最近10首
-                    state.audioState.alreadyPlay.pop(); //删掉最后一个
-                    state.audioState.alreadyPlay.unshift(data.id) 
-                }else{
-                    state.audioState.alreadyPlay.unshift(data.id)
-                }
             })
         })
     },
@@ -289,6 +298,80 @@ const mutations = {
             }
         })
     },
+    add(state){
+        let str = `您确定将该歌曲加入到这个歌单吗？`
+        let strSongId = ''
+        let user = JSON.parse(window.localStorage.getItem('user'));
+        if(state.songListData.songId instanceof Array){
+            strSongId = String(state.songListData.songId);
+            if(state.songListData.songId.length>1){
+                str = `您确定将这些歌曲加入到这个歌单吗？`
+            }
+        }
+        MessageBox.confirm(str).then(action => {
+            request.add(state.songListData.listId,strSongId).then(res=>{
+                if(res.code===200){
+                    request.usePlaylist(user.userId).then(res=>{  //获取用户歌单
+                        MessageBox('提示', '歌曲添加成功');
+                        let arr = res.playlist;
+                        let ilikeIt = arr.slice(0,1)[0]  //数组中第一个对象 永远为我喜欢的音乐
+                        arr.splice(0,1)
+                        let newbuild = arr.filter(item => {
+                            return item.ordered===false; //ordered 为 false  新键歌单
+                        })
+                        
+                        newbuild.unshift(ilikeIt)
+                        state.mySongList.length = 0;
+                        state.mySongList.push(...newbuild)
+                        state.songListData.songId.length = 0;
+                        state.songListData.listId = ''
+                        state.isSongBox = false
+                    })
+                }
+            })
+        }).catch(err=>{
+            state.songListData.songId.length = 0;
+            state.songListData.listId = ''
+            state.isSongBox = false
+        })
+    },
+    del(state){
+        let str = `您确定将该歌曲从这个歌单删除吗？`
+        let strSongId = ''
+        let user = JSON.parse(window.localStorage.getItem('user'));
+        if(state.songListData.songId instanceof Array){
+            strSongId = String(state.songListData.songId);
+            if(state.songListData.songId.length>1){
+                str = `您确定将这些歌曲从这个歌单删除吗？`
+            }
+        }
+        MessageBox.confirm(str).then(action => {
+            request.del(state.songListData.listId,strSongId).then(res=>{
+                if(res.code===200){
+                    request.usePlaylist(user.userId).then(res=>{  //获取用户歌单
+                        MessageBox('提示', '歌单已跟新，快去看看吧~');
+                        let arr = res.playlist;
+                        let ilikeIt = arr.slice(0,1)[0]  //数组中第一个对象 永远为我喜欢的音乐
+                        arr.splice(0,1)
+                        let newbuild = arr.filter(item => {
+                            return item.ordered===false; //ordered 为 false  新键歌单
+                        })
+                        
+                        newbuild.unshift(ilikeIt)
+                        state.mySongList.length = 0;
+                        state.mySongList.push(...newbuild)
+                        state.songListData.songId.length = 0;
+                        state.songListData.listId = '';
+                        state.isSongBox = false
+                    })
+                }
+            })
+        }).catch(err=>{
+            state.songListData.songId.length = 0;
+            state.songListData.listId = '';
+            state.isSongBox = false
+        })
+    }
 
     /************************* 全局使用事件函数 ****************************/
     // prev(){ //上一个路由
@@ -326,3 +409,4 @@ const store = new Vuex.Store({
 })
 
 export default store
+

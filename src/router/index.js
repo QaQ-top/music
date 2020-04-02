@@ -1,7 +1,7 @@
 import Vue from 'vue'
 import Router from 'vue-router'
 Vue.use(Router)
-
+import store from '../store/vuex'
 
 
 //footer
@@ -15,8 +15,7 @@ import MusicG from '../pages/musicG'
       //歌单
       import Sl from '../pages/home/songList.vue'
 
-
-import Recommend from '../pages/recommend'
+import rec from '../pages/recommend'
 import Dynamic from '../pages/dynamic.vue'
 import Mine from '../pages/mine'
 
@@ -42,6 +41,14 @@ import advertisement from '../pages/advertisement'
 import songBox from '../pages/songBox'
 
 export default new Router({
+  scrollBehavior (to, fom, savePosition) {
+    if(store.state.scroll.has(to.name)){
+      let top = store.state.scroll.get(to.name);
+      if(top){
+        return {x:0 , y: top}
+      }
+    }
+  },
   routes: [
     {
       path:"/",
@@ -53,9 +60,9 @@ export default new Router({
       component:MusicG //音遇页面
     },
     {
-      path:"/recommend",
-      name:"recommend",
-      component:Recommend //推荐页面
+      path:"/rec",
+      name:"rec",
+      component:rec //音遇页面
     },
     {
       path:"/dynamic",

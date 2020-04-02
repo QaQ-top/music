@@ -3,6 +3,7 @@ import qs from 'qs'
 
 //加载弹框
 import { Indicator } from 'mint-ui';
+import { MessageBox } from 'mint-ui';
 import Vue from 'vue';
 
 axios.interceptors.request.use( //请求前
@@ -37,17 +38,26 @@ axios.interceptors.response.use( //响应前
     function (error) {
     // 对响应错误做点什么
         Indicator.close();
+        if(error.response&&error.response.hasOwnProperty('data')){
+            if(error.response.data.message){
+                MessageBox('提示', error.response.data.message);
+            }else if(error.response.data.msg){
+                MessageBox('提示', error.response.data.msg);
+            }else{
+                MessageBox('提示', '出现未知错误');
+            }
+        }else{
+            MessageBox('提示', '网络超时');
+        }
         return Promise.reject(error);
     }
 );
 //page=1
 axios.defaults.timeout = 10000;
-axios.defaults.withCredentials=true;//让ajax携带cookie
-// axios.defaults.baseURL = '/music' //npm run dev  启动后使用代理后的没问题
-//为什么npm run build后不能使用了，显示跨域
+axios.defaults.withCredentials=true;//
+// axios.defaults.baseURL = '/music' //npm run dev  
 
-axios.defaults.baseURL = 'http://39.108.182.125:3000' //npm run dev  启动后使用代理后 显示跨域
-// //为什么npm run build可用使用
+axios.defaults.baseURL = 'http://39.108.182.125:3000' //npm run dev  
 
 
 const get = (url,data={})=>{
@@ -59,10 +69,11 @@ const get = (url,data={})=>{
         .then((response)=>{
             resolve(response.data)
         },
-        (err)=>{
-            reject(err)
+        // (err)=>{
+        //     reject(err)
             
-        })
+        // }
+        )
     })
 };
 
@@ -73,9 +84,10 @@ const post = (url,data) =>{
         .then((response)=>{
             resolve(response.data)
         },
-        (err)=>{
-            reject(err)
-        })
+        // (err)=>{
+        //     reject(err)
+        // }
+        )
     })
 }
 
@@ -208,7 +220,7 @@ const ci = (id) => {
    * 热搜
    */
   const  HotSearchKey = ()=>{
-    return fetchGet('/search/hot')
+    return get('/search/hot')
  }
 
 
@@ -260,9 +272,9 @@ const category = () => { ///personalized/djprogram
     return get('dj/category/recommend')
 }
 
-//电台 - 推荐电台
+//电台 - 推荐
 const djProgram = () => { //
-    return get('/personalized/djprogram')
+    return get('/dj/recommend')
 }
 
 //热门电台
@@ -339,6 +351,15 @@ const artistSong = (id) =>{
     }
     return get('/artists',keyWord)
 }
+//收藏,取消收藏 歌手 t:操作,1 为收藏,其他为取消收藏
+const subArtist = (id,t) =>{
+    let keyWord = {
+        id,
+        t
+    }
+    return get('/artist/sub',keyWord)
+}
+
 
 
 // 查看登录状态
@@ -399,21 +420,108 @@ const albumDetails = (id) =>{
     return get('album',keyWord)
 }
 
-//获取 mv 数据
-const mvDetails = (mvid) =>{
+// 收藏/取消收藏歌单
+// 说明 : 调用此接口 , 传入类型和歌单 id 可收藏歌单或者取消收藏歌单 t : 类型,1:收藏,2:取消收藏 
+const subPlaylist = (id,t) =>{
     let keyWord = {
-        mvid
+        id,
+        t
     }
-    return get('/mv/detail',keyWord)
+    return get('/playlist/subscribe',keyWord)
 }
 
-//mv 地址
-const mvUrl = (id) =>{
+// 收藏/取消收藏专辑
+// 说明 : 调用此接口,可收藏/取消收藏专辑  t : 1 为收藏,其他为取消收藏
+
+const subAlbum = (id,t) =>{
+    let keyWord = {
+        id,
+        t
+    }
+    return get('/album/sub',keyWord)
+}
+//对歌单添加或删除歌曲 op: 从歌单增加单曲为 add, 删除为 del pid: 歌单 id tracks: 歌曲 id,可多个,用逗号隔开
+const add = (pid,tracks) =>{
+    let keyWord = {
+        tracks,
+        pid,
+        op:'add'
+    }
+    return get('/playlist/tracks',keyWord)
+}
+const del = (pid,tracks) =>{
+    let keyWord = {
+        tracks,
+        pid,
+        op:'del'
+    }
+    return get('/playlist/tracks',keyWord)
+}
+
+// 新建歌单
+// 说明 : 调用此接口 , 传入歌单名字可新建歌单 必选参数 : name : 歌单名 
+const songListAdd = (name) =>{
+    let keyWord = {
+        name
+    }
+    return post('/playlist/create',keyWord)
+}
+
+// 删除歌单
+// 说明 : 调用此接口 , 传入歌单id可删除歌单 // 必选参数 : id : 歌单id  ?id=2947311456
+const songListDel = (id) =>{
     let keyWord = {
         id
     }
-    return get('/mv/url',keyWord)
+    return post('/playlist/delete',keyWord)
 }
+
+// 更新歌单
+ //参数: // id:歌单id name:歌单名字 desc:歌单描述
+const songListUpdate = (id,name,desc) =>{
+    let keyWord = {
+        id,
+        name,
+        desc,
+        tags:''
+    }
+    return post('/playlist/update',keyWord)
+}
+
+// 获取用户信息 
+// 说明 : 登陆后调用此接口 , 可以获取用户信息
+const getUser = () =>{
+    return get('/user/subcount')
+}
+
+// 更新用户信息
+// 说明 : 登陆后调用此接口 , 传入相关信息,可以更新用户信息
+
+// 必选参数 :
+
+// gender: 性别 0:保密 1:男性 2:女性
+
+// birthday: 出生日期,时间戳 unix timestamp
+
+// nickname: 用户昵称
+
+// province: 省份id
+
+// city: 城市id
+
+// signature：用户签名
+const setUser = (data) =>{
+    let keyWord = {
+        nickname:data.nickname,
+        province:data.province,
+        gender:data.gender,
+        birthday:data.birthday,
+        city:data.city,
+        signature:data.signature,
+    }
+    return post('/user/update',keyWord)
+}
+
 
 export default {
     get,
@@ -455,26 +563,40 @@ export default {
     djs,
     albumDetails,
     songListDetails,
-    mvDetails,
-    mvUrl,
     djDetails,
-    artistSong
+    artistSong,
+    add,
+    del,
+    songListAdd,
+    songListDel,
+    songListUpdate,
+    getUser,
+    setUser
 }
 
 Vue.prototype.Type = [
     {
         type:10,
         name:'专辑',
-        request:albumDetails
+        request:albumDetails,
+        isLike:subAlbum,
     },
     {
         type:100,
         name:'歌手',
-        request:artistSong
+        request:artistSong,
+        isLike:subArtist,
     },
+
     {
         type:1000,
         name:'歌单',
+        request:songListDetails,
+        isLike:subPlaylist,
+    },
+    {
+        type:520,
+        name:'我喜欢',
         request:songListDetails
     },
     {

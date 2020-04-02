@@ -2,14 +2,17 @@
   <div class="dailySongSheet">
       <span>{{columnType}}</span>
       <swiper ref='recommendNewSong' :options='optionsSwiper' class="grid">
-          <swiper-slide v-for="(item, index) in imgArray" :key="index">
+          <swiper-slide v-for="(item, index) in imgArray" :key="index" @touchstart.native="startDev" @touchmove.native='move' @touchend.native="song(item.id,index)">
               <div class="song">
-                  <img :src="item.picUrl" alt="">
-                  <div class="txt">
-                      <p>{{arr[index].name}}</p>
-                      <p>{{arr[index].album.albumName}}</p>
-                  </div>
-                  <span class="icon iconfont icon-caret-right play"></span>
+                    <img v-lazy="item.picUrl" class="lazy">
+                    <div class="txt">
+                        <p>{{arr[index].name}}</p>
+                        <p>{{arr[index].album.albumName}}</p>
+                    </div>
+                    <span class="icon iconfont icon-caret-right play" @touchstart.stop="play(item.id,index)" v-if="!audio.play||item.id!==audio.id">
+                    </span>
+                    <span class="icon iconfont icon-iconstop pause" @touchstart.stop="play(item.id,index)" v-if="audio.play&&item.id===audio.id">
+                    </span>
               </div>
           </swiper-slide>
       </swiper>
@@ -17,6 +20,7 @@
 </template>
 
 <script>
+import {mapActions,mapState} from 'vuex'
 export default {
     name:'recommendNewSong',
     data() {
@@ -29,7 +33,9 @@ export default {
                 freeMode : this.free, //free模式，slide会根据惯性滑动可能不止一格且不会贴合
                 freeModeMomentum : true,
                 freeModeMomentumRatio : 0.5,
-            }
+            },
+            strat:null,
+            moveing:false,
         }
     },
     props:{
@@ -61,10 +67,49 @@ export default {
     computed:{
         swiper(){
             return this.$refs.recommendNewSong.swiper
-        }
+        },
+        ...mapState(['audio'])
     },
     methods:{
-
+        move(){
+            this.moveing = true;
+        },
+        startDev(){
+            this.strat = new Date()
+        },
+        ...mapActions(['newSrc','particulars','AudioPlay']),
+        song(id,index){ //点击触发
+        	let date = new Date()
+            if(date-this.strat<200&&!this.moveing){
+                this.audio.arr.length = 0
+                this.audio.arr.push(...this.arr)
+                this.newSrc({
+                    id,
+                    album:{
+                        albumId : this.arr[index].album.albumId, //将点击的歌曲专辑id 存入audio详情
+                        albumName : this.arr[index].album.albumName //将点击的歌曲专辑名称 存入audio详情
+                    }
+                })
+                this.particulars('/musicG')
+            }else{
+                this.moveing = false
+            }
+        },
+        play(id,index){
+            if(id===this.audio.id){
+                this.AudioPlay()
+            }else{
+                this.audio.arr.length = 0
+                this.audio.arr.push(...this.arr)
+                this.newSrc({
+                id,
+                album:{
+                    albumId : this.arr[index].album.albumId, //将点击的歌曲专辑id 存入audio详情
+                    albumName : this.arr[index].album.albumName //将点击的歌曲专辑名称 存入audio详情
+                }
+            })
+            }
+        }
     },
     watch:{
         imgArray(to,from){
@@ -75,6 +120,7 @@ export default {
             this.SongArray(arr,this.arr);
         }
     },
+    
     mounted() {
         
     },
@@ -107,15 +153,25 @@ export default {
         color:rgb(64,158,255);
         font-size: 2rem
     }
+    .pause{
+        color:rgb(64,158,255);
+        font-size: 2rem
+    }
     .song .txt{
         width: 80%;
     }
     .txt p:nth-child(1){
         font-size: 1.7rem;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
         font-weight: bold;
     }
     .txt p:nth-child(2){
-        font-size: 1rem;
+        font-size: 1.2rem;
+        overflow: hidden;
+        white-space: nowrap;
+        text-overflow: ellipsis;
         color: #888;
     }
 </style>

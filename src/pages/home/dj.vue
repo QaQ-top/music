@@ -13,8 +13,8 @@
             </dj-list-type>
 
             <div class="clity">
-                <div v-for="(item, index) in prci" :key="index" class="djDst" @click="details(item.id)">
-                    <img v-lazy='item.picUrl'>
+                <div v-for="(item, index) in prci" :key="index" class="djDst" @touchstart="details(item.id)">
+                    <img v-lazy='item.picUrl'  class="lazy">
                     <div class="txt">
                         <p>{{item.lastProgramName}}</p>
                         <span>{{item.name}}</span>
@@ -29,9 +29,10 @@
 
 <script>
 import myPrevNav from '../../components/back_prev';
-import djListType from '../../components/djListType'
+import djListType from '../../components/djListType';
+
 export default {
-    name:'red',
+    name:'dj',
     data(){
         return {
             routePath:null,
@@ -89,7 +90,7 @@ export default {
         display: block;
         width: 70%;
         text-align: left;
-        font-size: 1.2rem;
+        font-size: 1.7rem;
     }
     .clity{
         padding-top: 7rem;

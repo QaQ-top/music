@@ -2,13 +2,11 @@
   <div class="dailySongSheet">
       <span>{{columnType}}</span>
       <swiper ref='myGrid' :options='optionsSwiper' class="grid">
-          <swiper-slide v-for="(item, index) in imgArray" :key="index">
+          <swiper-slide v-for="(item, index) in imgArray" :key="index" @touchstart.native="startDev" @touchmove.native='move' @touchend.native="details(item.id)">
               <div class="boxImgTxt">
-                  <div class="palyVolume">
-                      <span class="iconfont icon-z"></span>
-                      <span>{{item.playCount}}</span>
-                  </div>
-                  <img :src="item.picUrl" alt="">
+                    <div class="hide">
+                         <img v-lazy="item.picUrl" class="lazy">
+                    </div>
                   <p>{{item.name}}</p>
               </div>
           </swiper-slide>
@@ -28,7 +26,8 @@ export default {
                 freeMode : this.free, //free模式，slide会根据惯性滑动可能不止一格且不会贴合
                 freeModeMomentum : true,
                 freeModeMomentumRatio : 0.5,
-            }
+            },
+            strat:null,
         }
     },
     props:{
@@ -62,6 +61,30 @@ export default {
             return this.$refs.myGrid.swiper
         }
     },
+    methods: {
+        startDev(){
+            this.strat = new Date()
+        },
+        move(){
+            this.moveing = true;
+        },
+        details(id){
+            let date = new Date()
+            if(date-this.strat<200&&!this.moveing){
+              	this.$router.push({
+                    name:'songBox',
+                    params:{
+                        id,
+                        targetType:1000,
+                        path:this.$route.path
+                    }
+                })
+            }else{
+                this.moveing = false
+            }
+            
+        }
+    },
     mounted() {
         // console.log(this.swiper)
     },
@@ -85,18 +108,21 @@ export default {
         width: 100%;
         position: relative;
     }
-    .boxImgTxt img{
-        width: 100%;
+    .hide{
+        width: 15.5rem;
+        height: 15.5rem;
+        display: flex;
+        border-radius: 1.5rem;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+    }
+    .hide img{
+        width: 120%;
         border-radius: 1.5rem;
     }
     .boxImgTxt p{
-        font-size: 1rem;
+        font-size: 1.2rem;
     }
-    .palyVolume{
-        position: absolute;
-        right: 0.5rem;
-        top:0;
-        color: white;
-        font-size: 1rem;
-    }
+    
 </style>

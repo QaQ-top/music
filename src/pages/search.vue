@@ -13,9 +13,11 @@
         <search-router single='单曲' singer='歌手' album='专辑' songList='歌单' v-if='isSearch'>
         </search-router>
         <router-view v-if='isSearch'></router-view>
-        <coll txt='历史记录' v-if="!isSearch">
-            <div slot="dom">
-                
+        <coll txt='热门搜索' v-if="!isSearch">
+            <div slot="dom" class="heat_boxs">
+                 <div v-for="(item, index) in hotSearchKey" :key="index" @click="search(item.first,true)">
+                     {{item.first}}
+                </div>
             </div>
         </coll>
 
@@ -60,7 +62,8 @@ export default {
             routePath:null,
             isX:false ,//搜索框 一键清空 是否显示
             ismohu:false, //显示模糊搜索列表
-            isHuo:false
+            isHuo:false,
+            hotSearchKey:[]
         }
     },
     //--------------------
@@ -136,7 +139,11 @@ export default {
             });
             this.heatTG = [...arr]
         })
-        this.routePath = this.$route.query.path
+        this.routePath = this.$store.state.search.path;
+
+        this.$request.HotSearchKey().then(res=>{
+            this.hotSearchKey.push(...res.result.hots);
+        })
     }
     
 }
@@ -168,11 +175,11 @@ export default {
     .search_result{
         width: 100%;
         position:fixed;
-        top:4rem;
+        top:6rem;
         background: white;
         height: 100%;
         box-sizing: border-box;
-        padding-bottom: 4rem;
+        padding-bottom: 12rem;
         overflow:scroll;
     }
     .search_result div{
@@ -183,11 +190,11 @@ export default {
         text-align: left;
     }
     .sousuo_img{
-        font-size:2.5rem;
+        font-size:2rem;
         margin-left: 1rem;
     }
     .sousuo_text{
-        font-size:2rem;
+        font-size:1.6rem;
     }
     .heat_box{
         width: 100%;
@@ -235,5 +242,21 @@ export default {
     }
     .icon-yduicuowukongxin{
         font-size: 2rem
+    }
+    .heat_boxs{
+        width: 96%;
+        margin: 0 auto;
+        display: flex;
+        justify-content: flex-start;
+        flex-wrap: wrap;
+        align-content: center;
+    }
+    .heat_boxs>div{
+        padding: 0.5rem 1rem;
+        margin: .5rem;
+        font-size: 1.2rem;
+        border-radius: 2.2rem;
+        background-color:rgb(250,250,250);
+
     }
 </style>

@@ -2,10 +2,10 @@
     <div class="dailySongSheet">
          <span>{{columnType}}</span>
         <swiper ref='djhot' :options='optionsSwiper' class="grid">
-            <swiper-slide v-for="(item, index) in imgArray" :key="index">
+            <swiper-slide v-for="(item, index) in imgArray" :key="index" @touchstart.native="startDev" @touchend.native="details(item.id)"  @touchmove.native="move">
                 <div class="boxImgTxt">
-                  <img :src="item.picUrl" alt="">
-                  <p>{{item.copywriter}}</p>
+                    <img v-lazy="item.picUrl" class="lazy">
+                    <p>{{item.copywriter}}</p>
               </div>
             </swiper-slide>
         </swiper>
@@ -24,7 +24,9 @@ export default {
                 freeMode : this.free, //free模式，slide会根据惯性滑动可能不止一格且不会贴合
                 freeModeMomentum : true,
                 freeModeMomentumRatio : 0.5,
-            }
+            },
+            strat:null,
+            moveing:false,
         }
     },
     computed:{
@@ -58,6 +60,29 @@ export default {
             default:''
         },
     },
+    methods:{
+        move(){
+            this.moveing = true;
+        },
+        startDev(){
+            this.strat = new Date()
+        },
+        details(id){
+            let date = new Date()
+            if(date-this.strat<200&&!this.moveing){
+              	this.$router.push({
+                    name:'songBox',
+                    params:{
+                        id,
+                        targetType:1009,
+                        path:this.$route.path
+                    }
+                })
+            }else{
+                this.moveing = false
+            }
+        }
+    },
     mounted(){
         // console.log(this.swiper,this.imgArray)
     },
@@ -85,6 +110,6 @@ export default {
         border-radius: 1.5rem;
     }
     .boxImgTxt p{
-        font-size: 1rem;
+        font-size: 1.2rem;
     }
 </style>

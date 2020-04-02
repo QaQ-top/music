@@ -132,16 +132,11 @@ export default {
   //---------------------
    mounted() {
     if (typeof document.addEventListener === "undefined") {
-      console.error("浏览器不支持addEventListener,请升级");
     } else {
       document.addEventListener("visibilitychange", () => {
         if (document.visibilityState == "hidden") {
-          // _this.sendCurVideoTime(localStorage.getItem("webviewDuration"));
-          
-          console.log('隐藏')
         };
         if(document.visibilityState == "visible"){
-          console.log('显示')
         }
       });
       window.addEventListener("beforeunload", () => {
@@ -161,17 +156,6 @@ export default {
   
 }
 
-// document.body.addEventListener("veb",function(e){
-//          alert(e.eventType)
-// })
-// var event = document.createEvent('HTMLEvents');
-// // initEvent接受3个参数：
-// // 事件类型，是否冒泡，是否阻止浏览器的默认行为
-// event.initEvent("veb", false, true);
-// //通过eventType传递事件信息
-// event.eventType="I love Veblen"
-// //触发document上绑定的click事件
-// document.body.dispatchEvent(event);
 </script>
 
 <style>

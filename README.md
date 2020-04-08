@@ -1,6 +1,7 @@
-# music
+# 轻音
 
-> A Vue.js project
+> 项目是我在之前公司末期常与研发
+>第一次接触这类项目，特次记录一下~
 
 ## Build Setup
 

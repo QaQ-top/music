@@ -101,8 +101,9 @@ export default {
         },
     },
     created(){
-        let key = this.cookieKey();//获取cookie所有的键 array类型
-        if(key.includes('MUSIC')){ //判断用户是否登录
+        let loginDate = window.localStorage.getItem('login')
+        let key = 1296000000 > Date.parse(new Date()) - Date.parse(loginDate)
+        if(key){ //判断用户是否登录
             if(this.$store.state.everyday.length===0){
                 this.$request.redSong().then(res=>{
                     this.SongArray(res.recommend,this.song.data)
@@ -124,13 +125,15 @@ export default {
         }
     },
     activated(){
-        let key = this.cookieKey();//获取cookie所有的键 array类型
-        this.isLogin = key.includes('MUSIC');
-        if(!key.includes('MUSIC')){
+        // let key = this.cookieKey();//获取cookie所有的键 array类型 1,296,000,000
+        let loginDate = window.localStorage.getItem('login')
+        let key = 1296000000 > Date.parse(new Date()) - Date.parse(loginDate)
+        this.isLogin = key;
+        if(!key){
             this.song.data.length = 0,
             this.song.details.length = 0 
         }
-        if(key.includes('MUSIC')&&this.song.data.length===0&&this.messBox){ //避免请求重复
+        if(key&&this.song.data.length===0&&this.messBox){ //避免请求重复
             if(this.$store.state.everyday.length===0){
                 this.$request.redSong().then(res=>{
                     this.SongArray(res.recommend,this.song.data)

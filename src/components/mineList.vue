@@ -1,7 +1,7 @@
 <template>
     <div>
        <div class="list">
-           <div @touchend="like" @touchstart="startDev">
+           <div @touchend="like"  @touchstart="startDev">
                <div class="icon">
                    <span class="iconfont icon-aixin"></span>
                </div>

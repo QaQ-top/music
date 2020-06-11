@@ -36,7 +36,7 @@
                 :label="`${item.artists.map(item=>item.artistsName).join(' / ')}`" 
                 v-for="(item, index) in arr" 
                 :key="index"
-                @touchstart.native="startTime" @touchend.native='end(item.id,index)'
+                @touchstart.native="startTime"  @touchmove.native='move' @touchend.native='end(item.id,index)'
             >
             <div class="checkbox" v-if='mag.handle==="del"&&dels' :class="{checkedTrueDel:checkArr.includes(item.id)&&mag.handle==='del',del:mag.handle==='del'}" @touchstart.stop='addCheckArr(item.id)'>
 
@@ -113,7 +113,8 @@ export default {
             strat:null,
             ishandlers:false,
             name:'',
-            desc:''
+            desc:'',
+            moveing:false,
         }
     },
     computed:{
@@ -210,11 +211,17 @@ export default {
                 this.dels = true;
             }, 1500);
         },
+        move(){
+            this.moveing = true;
+        },
+
         end(id,index){
             clearTimeout(this.setTiem);
             let date = new Date();
-            if(date-this.strat<200){
+            if(date-this.strat<200&&!this.moveing){
                 this.song(id,index)
+            }else{
+                this.moveing = false
             }
         },
         addCheckArr(id){

@@ -9,7 +9,7 @@
         <div class="nav">
             歌曲列表
         </div>
-        <div v-for="(item, index) in audio.arr" :key="index" class="list" :class="{isback:item.id===audio.id}" @touchstart.stop="startDev" @touchend.stop="newSrcDev(item)">
+        <div v-for="(item, index) in audio.arr" :key="index" class="list" :class="{isback:item.id===audio.id}" @touchstart.stop="startDev" @touchmove.stop='move' @touchend.stop="newSrcDev(item)">
             {{item.name}}
         </div>
         </mt-popup>
@@ -23,7 +23,8 @@ export default {
     data() {
         return {
             visible:false,
-            strat:null
+            strat:null,
+            moveing:false,
         }
     },
     computed:{
@@ -35,13 +36,18 @@ export default {
         startDev(){
             this.strat = new Date()
         },
+        move(){
+            this.moveing = true;
+        },
         list(){
             this.visible = true
         },
         newSrcDev(i){
             let date = new Date()
-            if(date-this.strat<200){
+            if(date-this.strat<200&&!this.moveing){
                this.newSrc(i)
+            }else{
+                this.moveing = false
             }
             
         }

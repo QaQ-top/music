@@ -75,13 +75,14 @@ export default {
     }
     .builb>div{
         width: 45%;
+        height: 8rem;
         margin-top: 1rem;
         display: flex;
         justify-content: left;
         text-align: left;
     }
     .builb>div>img{
-        width:35%;
+        width:8rem;
         border-radius: 1rem;
     }
     .builb>div>div{

@@ -13,10 +13,10 @@
                 <div class="name">
                     {{name}}
                 </div>
-                <div @touchstart="login" v-if="!isLogin">
+                <div @click="login" v-if="!isLogin">
                     立即登录
                 </div>
-                <div @touchstart="logout" v-if="isLogin">
+                <div @click="logout" v-if="isLogin">
                     切换账号
                 </div>
             </div>
@@ -77,7 +77,7 @@ export default {
         logout(){
             this.$request.logout().then(res=>{
                 if(res.code===200){
-                this.setCookie('MUSIC',null,-1)
+                window.localStorage.removeItem('login')
                 let local = window.localStorage;
                     let str = JSON.stringify({
                         name:'',

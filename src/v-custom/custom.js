@@ -134,22 +134,31 @@ Vue.prototype.singerType = [
 ]
 
 //封装设置cookie
-Vue.prototype.setCookie = (name,value,exdays)=>{ 
+Vue.prototype.setCookie = (key,value,exdays)=>{ 
         let date = new Date();
         date.setTime(date.getTime()+(exdays*24*60*60*1000));
         let expires =  `expires=${date.toGMTString()}`;
-        document.cookie = `${name}=${value};${expires}`
+        document.cookie = `${key}=${value};${expires}`
 }
 
 //获取cookie的键
-Vue.prototype.cookieKey = ()=>{
+Vue.prototype.getCookie = (key)=>{
         let cookieArray = document.cookie.split(';')
-        let key = []
+        let value = null;
         cookieArray.map(item=>{
-                key.push(item.split('=')[0].replace(/\s*/g,""))
+                let cookieKey = item.split('=')[0].replace(/\s*/g,"")
+                if(cookieKey===key){
+                        value = item.split('=')[1]
+                }
         })
-        return key;
+        return value;
 }
 Vue.prototype.Str = '网易云';
+
+Vue.prototype.setLoginDate = ()=>{
+        let date = new Date();
+        let local = window.localStorage;
+        local.setItem('login',date);
+}
 
 

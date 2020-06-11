@@ -1,6 +1,6 @@
 <template>
   <div id="app" ref='app'>
-    <my-audio></my-audio>
+    <my-audio v-show="this.$store.state.isAudio"></my-audio>
     <my-footer musicG='音遇' rec='推荐' dynamic='歌手' mine='我的'></my-footer>
 
       <keep-alive :exclude="this.$store.state.cache">
@@ -8,9 +8,9 @@
       </keep-alive>
 
       <handle-song-list>
-        
+
       </handle-song-list>
-     
+
 
       <transition name="logo">
         <my-lottie v-if="logo">
@@ -69,11 +69,11 @@ export default {
   },
 
   //------------------
-  watch: { 
+  watch: {
     'active'(to, from) {
       this.$router.push(this.stroeFooterRoute[to])
     },
-    '$route':{ 
+    '$route':{
       handler:function(to,from){
         if(to.name==='particulars'){
           this.$store.state.previous = from.name
@@ -87,7 +87,7 @@ export default {
         }else {
           this.$store.state.cache = 'search';//不缓存
         }
-        if((to.name==='particulars'&&from.name==='songBox')||to.name==='songBox'){
+        if((to.name==='particulars'&&from.name==='songBox')||to.name==='songBox'||(to.name==='login'&&from.name==='songBox')){
             this.$store.state.cache = '';
         }else if(this.$store.state.cache==='search'){
             this.$store.state.cache = 'search,songBox';
@@ -108,6 +108,35 @@ export default {
       this.$store.state.isAudio = false
     }
     this.$router.push('/musicG');
+    document.onbeforeunload = () => {
+        this.$store.commit('pause'); //暂停歌曲
+        this.stroeAudio.storage = true; //改变状态
+        this.stroeAudio.type = 'new'
+        this.stroeAudio.index = -1;
+        let storage = window.localStorage;
+        storage.setItem('audio',JSON.stringify(this.$store.state.audio)) //关闭网页时将audio的数据存入本地缓存
+        if(!this.$store.state.audioState){
+          storage.setItem('audioState',JSON.stringify({randomPlay:false,disabled:false}))
+        }else{
+          storage.setItem('audioState',JSON.stringify(this.$store.state.audioState))
+        }
+      }
+      let _this = this
+      document.addEventListener("plusready", function() { 
+        // 注册返回按键事件 
+        plus.key.addEventListener('backbutton', function() {
+            // 事件处理 
+            if(['/musicG','/rec','/dynamic','/mine'].includes( _this.$route.path)){
+              plus.nativeUI.confirm("退出程序？", function(event) {
+                if (event.index) {
+                    plus.runtime.quit();
+                }
+              }, null, ["确定", "取消"]);
+            }else{
+              window.history.back();
+            }
+        }, false);
+    });
   },
   created(){
     let user = window.localStorage.getItem('user');
@@ -134,34 +163,10 @@ export default {
   },
   //---------------------
    mounted() {
-    if (typeof document.addEventListener === "undefined") {
-    } else {
-      document.addEventListener("visibilitychange", () => {
-        if (document.visibilityState == "hidden") {
-        };
-        if(document.visibilityState == "visible"){
-        }
-      });
-      window.addEventListener("beforeunload", () => {
-        this.$store.commit('pause'); //暂停歌曲
-        this.stroeAudio.storage = true; //改变状态
-        this.stroeAudio.type = 'new'
-        this.stroeAudio.index = -1;
-        let storage = window.localStorage;
-        storage.setItem('audio',JSON.stringify(this.$store.state.audio)) //关闭网页时将audio的数据存入本地缓存
-        if(!this.$store.state.audioState){
-          storage.setItem('audioState',JSON.stringify({randomPlay:false,disabled:false}))
-        }else{
-          storage.setItem('audioState',JSON.stringify(this.$store.state.audioState))
-        }
-        
-      });
+      setTimeout(() => {
+        this.logo = false
+      }, 4000)
     }
-    setTimeout(() => {
-      this.logo = false
-    }, 4000)
-  },
-  
 }
 
 </script>

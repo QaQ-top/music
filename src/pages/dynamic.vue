@@ -84,7 +84,8 @@ export default {
             this.switchs = bol;
            
             if(!bol){
-                let isLogin = this.cookieKey().includes('MUSIC')
+				let loginDate = window.localStorage.getItem('login')
+                let isLogin = 1296000000 > Date.parse(new Date()) - Date.parse(loginDate)
                 if(isLogin){
                     this.$request.sublist().then(res=>{
                         this.likeList = res.data;

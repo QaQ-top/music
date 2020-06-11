@@ -1,6 +1,6 @@
 <template>
     <div class="login">
-        <div class="iocn iconfont icon-jiantou-zuo-cuxiantiao" @touchstart="fh">
+        <div class="iocn iconfont icon-jiantou-zuo-cuxiantiao" @click="fh">
 
         </div>
         <div class="loginCon">
@@ -10,7 +10,7 @@
             <div class="input">
                 <input type="password" v-model="password" class="inpt" placeholder="请输入密码">
             </div>
-            <div class="btn" @touchstart="login">
+            <div class="btn" @click="login">
                 登录
             </div>
         </div>
@@ -40,7 +40,7 @@ export default {
                         token:res.token  //token
                     })
                     local.setItem('user',str); //将用户信息出入本地缓存
-                    this.setCookie('MUSIC','Synchronize with server cookie',15) //标记为15天已登录
+                    this.setLoginDate() //标记为15天已登录
                     if(this.$store.state.mySongList.length===0){
                             this.$request.usePlaylist(res.profile.userId).then(res=>{  //获取用户歌单
                             let arr = res.playlist;

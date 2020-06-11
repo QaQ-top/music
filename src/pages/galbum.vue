@@ -48,8 +48,9 @@ export default {
         },
     },
     activated(){
-        let key = this.cookieKey();//获取cookie所有的键 array类型
-        if(key.includes('MUSIC')){ //判断用户是否登录
+        let loginDate = window.localStorage.getItem('login') //app 无法使用cookie 只能使用本地缓存 在登陆的时候记住时间 然后每次判断今天于上次登陆的差是否超过15天
+        let key = 1296000000 > Date.parse(new Date()) - Date.parse(loginDate)
+        if(key){ //判断用户是否登录
             this.$request.gAlbum().then(res=>{
                 this.arr.length = 0;
                 this.arr.push(...res.data);

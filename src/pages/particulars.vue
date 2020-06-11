@@ -14,7 +14,7 @@
             </div>
 
             <div class="partBox" >
-                
+
                 <div class="albLrc">
                     <!-- 专辑封面 -->
                     <div class="lyrc" ref="lyrc" @scroll="scroll">
@@ -30,9 +30,9 @@
                         <div class="ms">{{curTimeMS}}</div>
                         <!-- 进度条 -->
                         <div class="block">
-                            <el-slider 
-                            v-model="getAudioData.percent" 
-                            @change="slider()" 
+                            <el-slider
+                            v-model="getAudioData.percent"
+                            @change="slider()"
                             :show-tooltip='false'
                             >
                             </el-slider>
@@ -40,16 +40,16 @@
                         <div class="ms">{{durationMS}}</div>
                     </div>
                     <div class="control">
-                        
+
                         <div>
-                            <span class="iocn iconfont icon-step-backward" @touchstart="LastSong()"></span>
+                            <span class="iocn iconfont icon-step-backward" @click="LastSong()"></span>
                         </div>
                         <div class="playpase">
-                            <span class="iocn iconfont icon-bofang" v-if="!getAudioData.play" @touchstart="AudioPlay()"></span>
-                            <span class="iocn iconfont icon-poweroff-circle-fill" v-if="getAudioData.play" @touchstart="AudioPlay()"></span>
+                            <span class="iocn iconfont icon-bofang" v-if="!getAudioData.play" @click="AudioPlay()"></span>
+                            <span class="iocn iconfont icon-poweroff-circle-fill" v-if="getAudioData.play" @click="AudioPlay()"></span>
                         </div>
                         <div>
-                            <span class="iocn iconfont icon-step-forward" @touchstart="NextSong()"></span>
+                            <span class="iocn iconfont icon-step-forward" @click="NextSong()"></span>
                         </div>
                     </div>
                 </div>
@@ -110,7 +110,7 @@
                     </el-switch>
                 </div>
             </div>
-               
+
             <!-- 音量控制 -->
             <div class="setList">
                 <div>
@@ -127,7 +127,7 @@
                 添加到歌单
             </div>
         </mt-popup>
-        
+
     </div>
 </template>
 
@@ -145,7 +145,7 @@ export default {
         return {
             routePath:'',
             lrc:[],
-            lrcDtate:[],
+            lrcDate:[],
             isLrc:false,
             old:null,
             setUp:false,
@@ -220,6 +220,7 @@ export default {
                         let data = i.split(':');
                         return (parseInt(data[0])*60)+Number(data[1])
                     }
+                    console.log(lrcDate)
                     for(var i = 0;i<lrcDate.length;i++){
                         if(i<lrcDate.length-1){
                             let a = dats(lrcDate[i])
@@ -233,11 +234,15 @@ export default {
                             }
                         }
                     }
-                    this.lrcDate = lrcDate;
+                    console.log(lrcDate,this.lrcDate,this.lrcDate.length)
+                    this.lrcDate.length = 0;
+                    this.lrcDate.push(...lrcDate);
+                    this.lrc.length = 0;
                     this.lrc = lrc;
                 }else{
-                    this.lrcDate = [];
-                    this.lrc = ['该歌曲没有歌词~']
+                    this.lrcDate.length = 0;
+                    this.lrc.length = 0;
+                    this.lrc .push('该歌曲没有歌词~')
                 }
                 function screen(array) {
                     array.forEach((item,index)=>{
@@ -282,7 +287,7 @@ export default {
             handler:function () {
                 if(this.getAudioData.type === 'new'){
                     this.ci()
-                    this.getAudioData.type = 'used' //标记为 used 
+                    this.getAudioData.type = 'used' //标记为 used
                 }
             },
             deep:true
@@ -296,12 +301,12 @@ export default {
                     if(i.getAttribute('class').includes('color')){
                         if(i.offsetTop>lrc.offsetHeight/2&&this.position){
                             lrc.scrollTo({
-                                top: i.offsetTop-lrc.offsetHeight/2, 
+                                top: i.offsetTop-lrc.offsetHeight/2,
                                 behavior: "smooth"
                             })
                         }else if(this.position){
                             lrc.scrollTo({
-                                top: 0, 
+                                top: 0,
                                 behavior: "smooth"
                             })
                         }
@@ -316,14 +321,14 @@ export default {
         if(this.getAudioData.type==='new'){ //如果是新src 发送歌词请求
             this.isLrc = false;
             this.ci();
-            this.getAudioData.type = 'used' //标记为 used 
+            this.getAudioData.type = 'used' //标记为 used
         }
-        
+
     },
     activated(){
         this.routePath = this.$route.params.routePath;
     }
-       
+
 }
 </script>
 
@@ -369,11 +374,15 @@ export default {
         top: 0;
         bottom: 0;
         z-index: 99;
+        -moz-filter:blur(50px);
+        -o-filter: blur(50px);
+        -ms-filter:blur(50px);
+        -webkit-filter: blur(50px);
+        filter: blur(50px)
     }
     .partBoxBack img{
         height: 100%;
         margin-left: -35%;
-        filter: blur(300px)
     }
     .albumImg{
         padding: 28% 0;
@@ -409,7 +418,7 @@ export default {
         height: 75%;
         overflow: scroll;
     }
-    
+
     .control{
         width: 100%;
         display: flex;
@@ -499,5 +508,5 @@ export default {
     .addhover{
         transform: scale(0.9);
     }
-    
+
 </style>

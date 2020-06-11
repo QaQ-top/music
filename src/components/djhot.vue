@@ -2,7 +2,7 @@
     <div class="dailySongSheet">
          <span>{{columnType}}</span>
         <swiper ref='djhot' :options='optionsSwiper' class="grid">
-            <swiper-slide v-for="(item, index) in imgArray" :key="index" @touchstart.native="startDev" @touchend.native="details(item.id)"  @touchmove.native="move">
+            <swiper-slide v-for="(item, index) in imgArray" :key="index" @touchstart.native="startDev"  @touchend.native="details(item.id)"  @touchmove.native="move">
                 <div class="boxImgTxt">
                     <img v-lazy="item.picUrl" class="lazy">
                     <p>{{item.copywriter}}</p>

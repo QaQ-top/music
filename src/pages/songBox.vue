@@ -118,8 +118,9 @@ export default {
 
                             break;
                         case 520: //我喜欢
-                            let key = this.cookieKey();//获取cookie所有的键 array类型
-                            if(key.includes('MUSIC')){ //判断用户是否登录
+                            let loginDate = window.localStorage.getItem('login')
+                            let key = 1296000000 > Date.parse(new Date()) - Date.parse(loginDate)
+                            if(key){ //判断用户是否登录
                                 let like = res.playlist
                                 this.message.type = '我喜欢'
                                 this.message.id = this.params.id;

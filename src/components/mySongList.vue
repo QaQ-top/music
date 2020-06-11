@@ -20,7 +20,7 @@
                     </div>
                 </div>
                 <div v-if="isnewBuilbCon" class="builb">
-                    <div v-for="(item, index) in newBuilb" :key="index" @touchstart="startDev" @touchend="detailsDel(item.id)">
+                    <div v-for="(item, index) in newBuilb" :key="index" @touchstart="startDev" @touchmove='move' @touchend="detailsDel(item.id)">
                         <img v-lazy="item.coverImgUrl" class="lazy">
                         <div>
                             <h3>{{item.name}}</h3>
@@ -81,7 +81,8 @@ export default {
             iscollEctionCon:null,
             strat:null,
             add:false,
-            listName:''
+            listName:'',
+            moveing:false,
         };
     },
     props:{
@@ -111,33 +112,39 @@ export default {
               	this.txt = false;
             }
         },
-        
+        move(){
+            this.moveing = true;
+        },
         detailsDel(id){
             let date = new Date()
-            if(date-this.strat<200){
+            if(date-this.strat<200&&!this.moveing){
               	this.$router.push({
-                name:'songBox',
-                params:{
-                    id,
-                    targetType:1000,
-                    path:this.$route.path,
-                    hendle:'del'
-                }
-            })
+                    name:'songBox',
+                    params:{
+                        id,
+                        targetType:1000,
+                        path:this.$route.path,
+                        hendle:'del'
+                    }
+                })
+            }else{
+                this.moveing = false
             }
             
         },
         details(id){
             let date = new Date()
-            if(date-this.strat<200){
+            if(date-this.strat<200&&!this.moveing){
               	this.$router.push({
-                name:'songBox',
-                params:{
-                    id,
-                    targetType:1000,
-                    path:this.$route.path,
-                }
-            })
+                    name:'songBox',
+                    params:{
+                        id,
+                        targetType:1000,
+                        path:this.$route.path,
+                    }
+                })
+            }else{
+                this.moveing = false
             }
             
         },
@@ -218,13 +225,14 @@ export default {
     }
     .builb>div{
         width: 45%;
+        height: 8rem;
         margin-top: 1rem;
         display: flex;
         justify-content: left;
         text-align: left;
     }
     .builb>div>img{
-        width:35%;
+        width:8rem;
         border-radius: 1rem;
     }
     .builb>div>div{
@@ -238,12 +246,13 @@ export default {
     }
     .collection>div{
         width: 45%;
+        height: 8rem;
         display: flex;
         justify-content: left;
         margin-top: 1rem;
     }
     .collection>div>img{
-        width:35%;
+        width:8rem;
         border-radius: 1rem;
     }
     .collection>div>div{

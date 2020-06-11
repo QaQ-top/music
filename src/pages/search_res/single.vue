@@ -10,7 +10,7 @@
             :label="`${item.artists.map(item=>item.artistsName).join(' / ')} - ${item.album.albumName}`" 
             v-for="(item, index) in arr" 
             :key="index" 
-            @touchstart.native="startTime" @touchend.native='end(item.id,index)'>
+            @touchstart.native="startTime" @touchmove.native='move' @touchend.native='end(item.id,index)'>
                 <div class="checkbox" v-if='dels' :class="{checkedTrueAdd:checkArr.includes(item.id),add:true}" @touchstart.stop='addCheckArr(item.id)'>
                 </div>
             </mt-cell>
@@ -37,6 +37,7 @@ export default {
 	        dels:false,
            	checkArr:[],
             strat:null,
+            moveing:false,
         }
     },
     computed:{
@@ -73,6 +74,9 @@ export default {
                 }
             })
         },
+        move(){
+            this.moveing = true;
+        },
         quit(){
             this.dels = false;
             this.checkArr.length = 0;
@@ -97,8 +101,10 @@ export default {
         end(id,index){
             clearTimeout(this.setTiem);
             let date = new Date();
-            if(date-this.strat<200){
+            if(date-this.strat<200&&!this.moveing){
                 this.song(id,index)
+            }else{
+                this.moveing = false
             }
         },
         addCheckArr(id){

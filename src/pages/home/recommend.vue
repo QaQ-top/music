@@ -12,7 +12,7 @@
                 <img v-lazy="imgBack" class="lazy">
             </div>
             <div class="songBox">
-                <div v-for="(item, index) in song.details" :key="index" class="song" @touchstart="startTime" @touchend='end(index)' :class="{isBule:item.id===stroeAudio.id}">
+                <div v-for="(item, index) in song.details" :key="index" class="song" @touchstart="startTime"  @touchmove='move' @touchend='end(index)' :class="{isBule:item.id===stroeAudio.id}">
                     <img v-lazy="item.album.blurPicUrl" class="lazy">
                     <div class="txt">
                         <p>{{item.name}}</p>
@@ -58,6 +58,7 @@ export default {
 	        dels:false,
            	checkArr:[],
             strat:null,
+            moveing:false,
         }
     },
     components:{
@@ -96,13 +97,18 @@ export default {
                 this.dels = true;
             }, 1500);
         },
+        move(){
+            this.moveing = true;
+        },
         end(index){
             clearTimeout(this.setTiem);
             let date = new Date();
-            if(date-this.strat<200){
+            if(date-this.strat<200&&!this.moveing){
                 this.stroeAudio.arr.length = 0
                 this.stroeAudio.arr.push(...this.song.data)
                 this.newSrc(this.song.data[index])
+            }else{
+                this.moveing = false
             }
         },
 
@@ -117,9 +123,9 @@ export default {
     },
     created(){
         this.routePath = this.$route.query.routePath;
-        let key = this.cookieKey();//获取cookie所有的键 array类型
-        console.log(key,key.includes('MUSIC'))
-        if(key.includes('MUSIC')){ //判断用户是否登录
+        let loginDate = window.localStorage.getItem('login')
+        let key = 1296000000 > Date.parse(new Date()) - Date.parse(loginDate)
+        if(key){ //判断用户是否登录
             if(this.$store.state.everyday.length===0){
                 this.$request.redSong().then(res=>{
                     this.SongArray(res.recommend,this.song.data)
@@ -142,13 +148,13 @@ export default {
         }
     },
     activated(){
-        let key = this.cookieKey();//获取cookie所有的键 array类型
-        this.isLogin = key.includes('MUSIC');
-        if(!key.includes('MUSIC')){
+        let loginDate = window.localStorage.getItem('login')
+        let key = 1296000000 > Date.parse(new Date()) - Date.parse(loginDate)
+        if(!key){
             this.song.data.length = 0,
             this.song.details.length = 0 
         }
-        if(key.includes('MUSIC')&&this.song.data.length===0&&this.messBox){ //避免请求重复
+        if(key&&this.song.data.length===0&&this.messBox){ //避免请求重复
             if(this.$store.state.everyday.length===0){
                 this.$request.redSong().then(res=>{
                     this.SongArray(res.recommend,this.song.data)

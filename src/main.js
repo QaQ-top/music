@@ -4,6 +4,7 @@ import Vue from 'vue'
 
 //渲染dom
 import App from './App'
+
 //vuex
 import store from './store/vuex';
 

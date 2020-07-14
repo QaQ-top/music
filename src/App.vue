@@ -128,7 +128,7 @@ export default {
             // 事件处理 
             if(['/musicG','/rec','/dynamic','/mine'].includes( _this.$route.path)){
               plus.nativeUI.confirm("退出程序？", function(event) {
-                if (event.index) {
+                if (!event.index) {
                     plus.runtime.quit();
                 }
               }, null, ["确定", "取消"]);
